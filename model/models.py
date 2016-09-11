@@ -15,7 +15,7 @@ DbBase = declarative_base()
 
 
 class DbInit():
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=datetime.now)
 
 
 class User(DbBase,DbInit):
@@ -119,7 +119,7 @@ class Comment(DbBase):
     __tablename__ = 'comments'
     id = Column(Integer, primary_key=True)
     content = Column(Text)
-    timestamp = Column(DateTime, default=datetime.utcnow)
+    timestamp = Column(DateTime, default=datetime.now)
     author_name = Column(String(64))
     author_email = Column(String(64))
     article_id = Column(Integer, ForeignKey('articles.id'))
@@ -154,8 +154,8 @@ class Article(DbBase):
     title = Column(String(64), unique=True)
     content = Column(Text)
     summary = Column(Text)
-    create_time = Column(DateTime, index=True, default=datetime.utcnow)
-    update_time = Column(DateTime, index=True, default=datetime.utcnow)
+    create_time = Column(DateTime, index=True, default=datetime.now)
+    update_time = Column(DateTime, index=True, default=datetime.now)
     num_of_view = Column(Integer, default=0)
     articleType_id = Column(Integer, ForeignKey('articleTypes.id'))
     source_id = Column(Integer, ForeignKey('sources.id'))
