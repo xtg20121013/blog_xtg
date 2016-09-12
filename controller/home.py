@@ -12,6 +12,7 @@ class HomeHandler(tornado.web.RequestHandler):
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
+        print self.session['st']
         st = 'hello world'
         self.session['st'] = st
         self.session.save()

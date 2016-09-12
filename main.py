@@ -23,8 +23,7 @@ handlers = [
 
 class Application(tornado.web.Application):
     def __init__(self):
-        # super(Application, self).__init__(handlers, **settings)
-        tornado.web.Application.__init__(self, handlers, **settings)
+        super(Application, self).__init__(handlers, **settings)
         self.session_manager = SessionManager(config['redis_session'])
 
 

@@ -15,7 +15,7 @@ class Session(dict):
         self.fetch_client()
 
     def get_session_id(self):
-        if self.session_id:
+        if not self.session_id:
             self.session_id = self.request_handler.get_secure_cookie(self.session_manager.session_key_name)
         return self.session_id
 
@@ -27,13 +27,13 @@ class Session(dict):
 
     def fetch_client(self):
         if self.get_session_id():
-            data = self.redis.get(self.session_id)
+            data = self.client.get(self.session_id)
             if data:
                 self.update(json.loads(data))
 
     def save(self):
         session_id = self.generate_session_id()
-        data_json = json.dumps(super(Session, self))
+        data_json = json.dumps(self)
         self.client.set(session_id, data_json)
         self.request_handler.set_secure_cookie(self.session_manager.session_key_name, session_id,
                                                expires_days=self.session_manager.session_expires_days)
