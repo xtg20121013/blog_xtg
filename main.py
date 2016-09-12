@@ -4,6 +4,7 @@ import tornado.options
 import tornado.web
 import tornado.ioloop
 from config import config
+from extends.session_redis import SessionManager
 
 settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
@@ -15,12 +16,19 @@ settings = dict(
     debug=config['debug'],
 )
 
-application = tornado.web.Application([
+handlers = [
     (r"/", "controller.home.HomeHandler"),
-], **settings)
+]
+
+
+class Application(tornado.web.Application):
+    def __init__(self):
+        # super(Application, self).__init__(handlers, **settings)
+        tornado.web.Application.__init__(self, handlers, **settings)
+        self.session_manager = SessionManager(config['redis_session'])
 
 
 if __name__ == '__main__':
-    tornado.options.parse_command_line()
-    application.listen(config['server_port']);
+    # tornado.options.parse_command_line()
+    Application().listen(config['server_port']);
     tornado.ioloop.IOLoop.current().start()
