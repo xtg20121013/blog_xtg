@@ -1,22 +1,17 @@
 # coding=utf-8
 import tornado.web
 from tornado import gen
-from extends.session_redis import Session
+from base import BaseHandler
 
 
-class HomeHandler(tornado.web.RequestHandler):
-
-    def initialize(self):
-        self.session = Session(self)
+class HomeHandler(BaseHandler):
 
     @tornado.web.asynchronous
     @gen.coroutine
     def get(self):
-        print self.session['st']
-        st = 'hello world'
-        self.session['st'] = st
-        self.session.save()
+        session = self.get_session()
+        if 'st' not in session:
+            st = 'hello world'
+            session['st'] = st
+            self.save_session()
         self.write(self.session['st'])
-
-    def on_finish(self):
-        pass
