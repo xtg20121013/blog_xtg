@@ -4,7 +4,7 @@ import tornado.options
 import tornado.web
 import tornado.ioloop
 from config import config
-from extends.session_redis import SessionManager
+from extends.session_tornadis import SessionManager
 
 settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
