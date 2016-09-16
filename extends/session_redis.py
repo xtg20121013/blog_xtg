@@ -1,7 +1,6 @@
 # coding: utf-8
 import uuid
 import json
-import hashlib
 import redis
 
 
@@ -21,8 +20,7 @@ class Session(dict):
 
     def generate_session_id(self):
         if not self.get_session_id():
-            new_id = hashlib.sha256(str(uuid.uuid4()))
-            self.session_id = new_id.hexdigest()
+            self.session_id = str(uuid.uuid1())
         return self.session_id
 
     def fetch_client(self):
