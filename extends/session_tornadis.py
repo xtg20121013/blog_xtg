@@ -31,7 +31,7 @@ class Session(dict):
     @tornado.gen.coroutine
     def fetch_client(self):
         if self.get_session_id():
-            data = yield self.client.call("GET", self.session_id)
+            data = yield self.call_client("GET", self.session_id)
             if data:
                 self.update(json.loads(data))
 
@@ -39,9 +39,18 @@ class Session(dict):
     def save(self):
         session_id = self.generate_session_id()
         data_json = json.dumps(self)
-        yield self.client.call("SET", session_id, data_json)
+        yield self.call_client("SET", session_id, data_json)
         self.request_handler.set_secure_cookie(self.session_manager.session_key_name, session_id,
                                                expires_days=self.session_manager.session_expires_days)
+
+    @tornado.gen.coroutine
+    def call_client(self, *args, **kwargs):
+        if self.client:
+            reply = yield self.client.call(*args, **kwargs)
+            if isinstance(reply, tornadis.TornadisException):
+                print reply.message
+            else:
+                raise tornado.gen.Return(reply)
 
 
 class SessionManager(object):
@@ -62,4 +71,7 @@ class SessionManager(object):
     def get_redis_client(self):
         connection_pool = self.get_connection_pool()
         with (yield connection_pool.connected_client()) as client:
-            raise tornado.gen.Return(client)
+            if isinstance(client, tornadis.TornadisException):
+                print client.message
+            else:
+                raise tornado.gen.Return(client)
