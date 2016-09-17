@@ -1,5 +1,8 @@
 # coding=utf-8
-
+import os
+import logging.config
+# 全局logging
+logging.config.fileConfig(os.path.join(os.path.dirname(__file__), 'log.conf'))
 
 redis_session_config = dict(
     db_no=0,

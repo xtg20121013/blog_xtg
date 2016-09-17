@@ -1,10 +1,11 @@
 # coding=utf-8
 import os
-import tornado.options
+from config import config  # 必须放在tornado导入前，接管全局logging
 import tornado.web
 import tornado.ioloop
-from config import config
 from extends.session_tornadis import SessionManager
+import tornado.options
+
 
 settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "templates"),
@@ -28,6 +29,5 @@ class Application(tornado.web.Application):
 
 
 if __name__ == '__main__':
-    # tornado.options.parse_command_line()
     Application().listen(config['server_port']);
     tornado.ioloop.IOLoop.current().start()

@@ -3,7 +3,9 @@ import uuid
 import json
 import tornadis
 import tornado.gen
+import logging
 
+logger = logging.getLogger('extends.session_tornadis')
 
 class Session(dict):
     def __init__(self, request_handler):
@@ -48,7 +50,7 @@ class Session(dict):
         if self.client:
             reply = yield self.client.call(*args, **kwargs)
             if isinstance(reply, tornadis.TornadisException):
-                print reply.message
+                logger.error(reply.message)
             else:
                 raise tornado.gen.Return(reply)
 
@@ -72,6 +74,6 @@ class SessionManager(object):
         connection_pool = self.get_connection_pool()
         with (yield connection_pool.connected_client()) as client:
             if isinstance(client, tornadis.TornadisException):
-                print client.message
+                logger.error(client.message)
             else:
                 raise tornado.gen.Return(client)
