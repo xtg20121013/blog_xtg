@@ -26,6 +26,7 @@ config = dict(
     cookie_secret="kjsdhfweiofjhewnfiwehfneiwuhniu",
     login_url="/auth/login",
     server_port=8888,
+    max_threads_num=500,
     database=database_config,
     redis_session=redis_session_config,
 )

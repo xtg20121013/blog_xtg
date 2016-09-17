@@ -2,3 +2,4 @@ tornado
 sqlalchemy
 redis
 tornadis
+futures

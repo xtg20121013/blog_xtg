@@ -3,8 +3,8 @@ import os
 from config import config  # 必须放在tornado导入前，接管全局logging
 import tornado.web
 import tornado.ioloop
+import concurrent.futures
 from extends.session_tornadis import SessionManager
-import tornado.options
 
 
 settings = dict(
@@ -26,6 +26,7 @@ class Application(tornado.web.Application):
     def __init__(self):
         super(Application, self).__init__(handlers, **settings)
         self.session_manager = SessionManager(config['redis_session'])
+        self.thread_executor = concurrent.futures.ThreadPoolExecutor(config['max_threads_num'])
 
 
 if __name__ == '__main__':
