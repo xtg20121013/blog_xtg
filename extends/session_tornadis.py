@@ -7,6 +7,7 @@ import logging
 
 logger = logging.getLogger('extends.session_tornadis')
 
+
 class Session(dict):
     def __init__(self, request_handler):
         super(Session, self).__init__()
