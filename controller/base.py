@@ -8,6 +8,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def initialize(self):
         self.session = None
+        self.thread_executor = self.application.thread_executor
 
     @gen.coroutine
     def init_session(self):
@@ -18,10 +19,6 @@ class BaseHandler(tornado.web.RequestHandler):
     @gen.coroutine
     def save_session(self):
         yield self.session.save()
-
-    @property
-    def thread_executor(self):
-        return self.application.thread_executor
 
     def on_finish(self):
         pass
