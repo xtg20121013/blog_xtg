@@ -1,0 +1,299 @@
+/*CSS For common appearance*/
+body {
+    /*background: #F0F0F0;*/
+    background: url('../images/background.jpg');
+}
+.blog-title a:link {
+    text-decoration: none;
+}
+.signature {
+    padding-left: 0px;
+}
+.content {
+    min-height: 800px;
+}
+.article-entry-sum {
+    margin-top: 5px;
+}
+.entry-box {
+    background: #fff;
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid #e6e6e6;
+    border-radius: 4px;
+}
+.entry-box:hover {
+    box-shadow: 2px 2px 8px rgba(0,0,0,.2);
+    border-color: #d6d6d6;
+}
+.article-entry-header {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font: inherit;
+    vertical-align: baseline;
+}
+.article-entry-title {
+    text-align: center;
+    margin-bottom: 10px;
+}
+.article-entry-title a {
+    text-decoration: none;
+}
+.article-entry-info {
+    height: 35px;
+}
+.article-entry-info .base-info {
+    float: left;
+}
+.article-entry-info .main-info {
+    float: right;
+}
+.footer {
+	background: #474E5D;
+	padding: 15px 0 5px;
+	font-size: 13px;
+}
+.footer-content {
+    text-align: center;
+    color: #8a6d3b;
+}
+div.pagination {
+    width: 100%;
+    text-align: center;
+    padding: 0px;
+    margin: 0px;
+}
+.footer-content a {
+    text-decoration: none;
+}
+
+/*CSS For Comments(Article details page)*/
+ul.comments {
+    list-style-type: none;
+    padding: 0px;
+    margin: 16px 0px 0px 0px;
+}
+ul.comments li.comment:nth-child(1) {
+    border-top: 1px solid #e0e0e0;
+}
+ul.comments li.comment {
+    margin-left: 32px;
+    padding: 8px;
+    border-bottom: 1px solid #e0e0e0;
+}
+div.comment-thumbnail {
+    position: absolute;
+}
+.profile-thumbnail {
+    position: absolute;
+}
+ul.comments div.comment-info {
+    margin-left: 48px;
+    min-height: 48px;
+}
+ul.comments li.comment:hover {
+    background-color: #f0f0f0;
+}
+ul.comments .comment-date {
+    float: right;
+    color: #8c8c8c;
+}
+ul.comments .comment-author {
+    font-weight: bold;
+    color: #337ab7;
+}
+ul.comments .delete-comment{
+    margin: 0px 5px 0px 5px;
+}
+.comment-reply-info {
+    color: #3f42cd;
+}
+
+/*CSS For Comments(admin page), use the same CSS as above*/
+ul.comments .comment-handle-admin {
+    float: right;
+}
+ul.comments .disabled-comment-admin-info {
+    color: #2c4a35;
+}
+ul.comments div.comment-info-admin {
+    margin-left: 68px;
+    min-height: 48px;
+}
+div.manage-comments .select-comments-admin {
+    margin-left: 40px;
+}
+div.manage-comments .handle-box-admin {
+    margin-bottom: -10px;
+}
+div.manage-comments .delComments {
+    float: right;
+}
+ul.comments .delete-comment-admin-btn {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+ul.comments .disabled-comment-admin-btn {
+    margin-left: 5px;
+}
+
+/*CSS For submit comment*/
+.comment-submit {
+    margin-left: 25px;
+}
+
+/*CSS For floatButton*/
+.floatButton {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    z-index: 9999999;
+}
+
+/*CSS For submit article*/
+.submit-article-title {
+    width: 450px;
+}
+.submit-article-editor {
+    margin: 10px 0px 10px 0px;
+}
+.submit-article-summary {
+    width: 500px;
+}
+.submit-article-button {
+    text-align: center;
+}
+/*.submit-article-button {*/
+    /*margin: auto;*/
+/*}*/
+
+/*CSS For edit article*/
+.article-edit {
+    text-align: right;
+}
+
+/*CSS For manage articles*/
+.articles-list {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.manage-articles th {
+    text-align: center;
+}
+.manage-articles td {
+    text-align: center;
+}
+.manage-articles .table-header {
+    background-color: #779ecb
+}
+.manage-articles .table-checkbox-or-left {
+    text-align: left;
+}
+.manage-articles .delete-article {
+    color: #c9302c;
+}
+.manage-articles .list-handle {
+    padding-bottom: 25px;
+}
+
+/*CSS For manage articleTypes*/
+.manage-articleTypes .articleTypes-box {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.manage-articleTypes th {
+    text-align: center;
+}
+.manage-articleTypes td {
+    text-align: center;
+}
+.manage-articleTypes .table-header {
+    background-color: #779ecb;
+    /*background-color: #337ab7;*/
+}
+.manage-articleTypes .table-checkbox-or-left {
+    text-align: left;
+}
+.manage-articleTypes .delete-articleType {
+    color: #c9302c;
+}
+.manage-articleTypes .add-articleType-btn {
+    float: right;
+}
+
+/*CSS For manage articleTypes nav*/
+.manage-articleTypes-nav .articleTypes-nav-box {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.manage-articleTypes-nav th {
+    text-align: center;
+}
+.manage-articleTypes-nav td {
+    text-align: center;
+}
+.manage-articleTypes-nav .table-header {
+    background-color: #779ecb;
+}
+.manage-articleTypes-nav .delete-articleType-nav {
+    color: #c9302c;
+}
+.manage-articleTypes-nav .add-articleType-nav-btn {
+    float: right;
+}
+.sort-up {
+    color: #449d44;
+}
+.sort-down {
+    color: #337ab7;
+}
+
+/*CSS For custom blog info*/
+/*.custom-blog .blog-info-box {*/
+    /*margin-left: 30px;*/
+/*}*/
+.custom-blog .info-header {
+    color: #337ab7;
+}
+
+
+/*CSS For custom blog plugin*/
+.custom-blog-plugin .blog-plugin-box {
+    margin-left: 30px;
+    margin-right: 30px;
+}
+.custom-blog-plugin th {
+    text-align: center;
+}
+.custom-blog-plugin td {
+    text-align: center;
+}
+.custom-blog-plugin .table-header {
+    background-color: #779ecb;
+}
+.custom-blog-plugin .delete-blog-plugin {
+    color: #c9302c;
+}
+.custom-blog-plugin .add-blog-plugin-btn {
+    float: right;
+}
+
+/*CSS For account*/
+.account {
+    min-height: 250px;
+}
+.account .profile-header {
+    margin-left: 135px;
+}
+.account .username {
+    color: #337ab7;
+}
+.account .email {
+    color: #337ab7;
+}
+
+/*CSS For login page*/
+.login-page {
+    margin-top: 200px;
+}

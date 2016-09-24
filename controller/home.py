@@ -2,7 +2,6 @@
 import tornado.web
 from tornado import gen
 from base import BaseHandler
-import time
 
 
 class HomeHandler(BaseHandler):
@@ -19,6 +18,3 @@ class HomeHandler(BaseHandler):
         count = yield self.thread_executor.submit(self.add, 1,2)
         self.write(str(count))
 
-    def add(self,a, b):
-        time.sleep(0.5)
-        return a+b;
