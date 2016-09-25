@@ -4,8 +4,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from config import config
 
-ENGINE_CONFIG = config['database']['engine_config']
-engine = create_engine(ENGINE_CONFIG, echo=config['database']['sql_echo'])
+ENGINE_CONFIG = config['database']['engine_url']
+engine = create_engine(ENGINE_CONFIG, **config['database']['engine_setting'])
 db = sessionmaker(bind=engine)
 session = db()
 

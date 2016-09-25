@@ -29,8 +29,8 @@ handlers = [
 
 
 def db_poll_init():
-    engine_config = config['database']['engine_config']
-    engine = create_engine(engine_config, echo=config['database']['sql_echo'])
+    engine_config = config['database']['engine_url']
+    engine = create_engine(engine_config, **config['database']["engine_setting"])
     db_poll = sessionmaker(bind=engine)
     return db_poll;
 

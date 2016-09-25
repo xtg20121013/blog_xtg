@@ -15,8 +15,17 @@ redis_session_config = dict(
 )
 
 database_config = dict(
-    engine_config='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
-    sql_echo=True,
+    engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
+    engine_setting=dict(
+        echo=True,
+        echo_pool=True,
+        pool_size=20,
+        max_overflow=20,
+    ),
+)
+
+session_keys = dict(
+    login_user="login_user"
 )
 
 config = dict(
@@ -29,4 +38,5 @@ config = dict(
     max_threads_num=500,
     database=database_config,
     redis_session=redis_session_config,
+    session_keys=session_keys,
 )
