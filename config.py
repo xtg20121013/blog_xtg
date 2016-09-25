@@ -25,7 +25,8 @@ database_config = dict(
 )
 
 session_keys = dict(
-    login_user="login_user"
+    login_user="login_user",
+    messages="messages",
 )
 
 config = dict(

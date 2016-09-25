@@ -11,6 +11,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.session = None
         self.db_session = None
+        self.messages = None
         self.thread_executor = self.application.thread_executor
 
     @gen.coroutine
@@ -34,6 +35,19 @@ class BaseHandler(tornado.web.RequestHandler):
         if not self.db_session:
             self.db_session = self.application.db_pool()
         return self.db_session
+
+    # category:['success','info', 'warning', 'danger']
+    def add_message(self, category, message):
+        item = {'category':category, 'message':message}
+        if not self.messages:
+            self.messages = [item]
+        else:
+            self.messages.append(item)
+
+    def read_messages(self):
+        all_messages = self.messages
+        self.messages = None
+        return all_messages
 
     def on_finish(self):
         if self.db_session:
