@@ -3,6 +3,7 @@ import tornado.web
 from tornado import gen
 from extends.session_tornadis import Session
 from config import session_keys
+from model.logined_user import LoginUser
 
 
 class BaseHandler(tornado.web.RequestHandler):
@@ -16,7 +17,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def prepare(self):
         yield self.init_session()
         if session_keys['login_user'] in self.session:
-            self.current_user = self.session[session_keys['login_user']]
+            self.current_user = LoginUser(self.session[session_keys['login_user']])
 
     @gen.coroutine
     def init_session(self):

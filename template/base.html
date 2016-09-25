@@ -70,19 +70,19 @@
                     {% end %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
-                    {% if current_user.is_authenticated %}
+                    {% if current_user %}
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                                <img src="{{ current_user.gravatar(size=18) }}">
-                                {{ current_user.username }} <b class="caret"></b>
+                                <img src="{{ current_user.avatar }}">
+                                {{ current_user.name }} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ url_for('admin.submitArticles') }}">发表博文</a></li>
-                                <li><a href="{{ url_for('admin.account') }}">管理博客</a></li>
-                                <li><a href="{{ url_for('auth.logout') }}">退出登陆</a></li>
+                                <li><a href="{{ reverse_url('admin.submitArticles') }}">发表博文</a></li>
+                                <li><a href="{{ reverse_url('admin.account') }}">管理博客</a></li>
+                                <li><a href="{{ reverse_url('logout') }}">退出登陆</a></li>
                             </ul>
                         </li>
-                    {% endif %}
+                    {% end %}
                 </ul>
             </div>
         </div>
@@ -138,13 +138,13 @@
 <div class="footer">
     <p class="footer-content">
         @2016
-        <a href="#">Blog_mini</a>
-        -开源博客系统
-        {% if not current_user.is_authenticated %}
-            -<a href="{{ url_for('auth.login') }}">
+        <a href="#">blog_xtg</a>
+        -基于<a href="https://github.com/xpleaf/Blog_mini">Blog_mini</a>重构的博客系统
+        {% if not current_user %}
+            -<a href="{{ login_url }}">
             <span class="glyphicon glyphicon-wrench">后台管理</span>
         </a>
-        {% endif %}
+        {% end %}
     </p>
 </div>
 <div class="btn-group-vertical floatButton">
@@ -159,22 +159,9 @@
     </button>
 </div>
 {% block script %}
-    <script src="{{ url_for('static', filename='js/jquery-2.2.1.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/floatButton.js') }}"></script>
-    {# csrfToken for Ajax   #}
-    <script>
-        var csrfToken = $('meta[name="csrf-token"]').attr('content');
-        $.ajaxSetup({
-            beforeSend: function (xhr, settings) {
-                if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type)) {
-                    xhr.setRequestHeader("X-CSRFToken", csrftoken)
-                }
-            }
-        })
-    </script>
-    {{ moment.include_moment() }}
-    {{ moment.lang('zh-cn') }}
-{% endblock %}
+    <script src="{{ static_url('js/jquery-2.2.1.min.js') }}"></script>
+    <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
+    <script src="{{ static_url('js/floatButton.js') }}"></script>
+{% end %}
 </body>
 </html>

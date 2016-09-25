@@ -25,6 +25,10 @@ settings = dict(
 handlers = [
     url(r"/", controller.home.HomeHandler, name="index"),
     url(r"/", controller.home.HomeHandler, name="articleTypes"),
+    url(r"/", controller.home.HomeHandler, name="logout"),
+    url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
+    url(r"/", controller.home.HomeHandler, name="admin.account"),
+
 ]
 
 

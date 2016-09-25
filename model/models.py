@@ -24,6 +24,7 @@ class User(DbBase,DbInit):
     email = Column(String(64), unique=True, index=True)
     username = Column(String(64), unique=True, index=True)
     password = Column(String(128))
+    avatar = Column(String(128))
 
     def verify_password(self, password):
         return self.password == password
