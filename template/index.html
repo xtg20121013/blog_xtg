@@ -1,13 +1,6 @@
 {% extends 'base.html' %}
-{% import "_macros.html" as macros %}
 
 {% block content %}
-    {% include "_article_entry.html" %}
-    <div class="pagination">
-    {% if endpoint == '.index' %}
-        {{ macros.pagination_widget(pagination, endpoint) }}
-    {% else %}
-        {{ macros.pagination_widget(pagination, endpoint, id=id) }}
-    {% endif %}
-    </div>
-{% endblock %}
+
+    hello world
+{% end %}

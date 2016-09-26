@@ -11,7 +11,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def initialize(self):
         self.session = None
         self.db_session = None
-        self.messages = None
+        self.session_save_tag = False
         self.thread_executor = self.application.thread_executor
 
     @gen.coroutine
@@ -26,9 +26,8 @@ class BaseHandler(tornado.web.RequestHandler):
             self.session = Session(self)
             yield self.session.init_fetch()
 
-    @gen.coroutine
     def save_session(self):
-        yield self.session.save()
+        self.session_save_tag = True
 
     @property
     def db(self):
@@ -36,21 +35,34 @@ class BaseHandler(tornado.web.RequestHandler):
             self.db_session = self.application.db_pool()
         return self.db_session
 
+    def has_message(self):
+        if session_keys['messages'] in self.session:
+            return bool(self.session[session_keys['messages']])
+        else:
+            return False
+
     # category:['success','info', 'warning', 'danger']
     def add_message(self, category, message):
         item = {'category':category, 'message':message}
-        if not self.messages:
-            self.messages = [item]
+        if not session_keys['messages'] in self.session:
+            self.session[session_keys['messages']] = [item]
         else:
-            self.messages.append(item)
+            self.session[session_keys['messages']].append(item)
+        self.save_session()
 
     def read_messages(self):
-        all_messages = self.messages
-        self.messages = None
-        return all_messages
+        if session_keys['messages'] in self.session:
+            all_messages = self.session[session_keys['messages']]
+            self.session[session_keys['messages']] = None
+            self.save_session()
+            return all_messages
+        return None
 
+    @gen.coroutine
     def on_finish(self):
         if self.db_session:
             self.db_session.close()
             print "db_info:", self.application.db_pool.kw['bind'].pool.status()
+        if self.session is not None and self.session_save_tag:
+            yield self.session.save()
 

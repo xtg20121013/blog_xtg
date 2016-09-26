@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 settings = dict(
-    template_path=os.path.join(os.path.dirname(__file__), "templates"),
+    template_path=os.path.join(os.path.dirname(__file__), "template"),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
     compress_response=config['compress_response'],
     xsrf_cookies=config['xsrf_cookies'],
@@ -24,8 +24,9 @@ settings = dict(
 
 handlers = [
     url(r"/", controller.home.HomeHandler, name="index"),
-    url(r"/", controller.home.HomeHandler, name="articleTypes"),
+    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleTypes"),
     url(r"/", controller.home.HomeHandler, name="logout"),
+    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSources"),
     url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
     url(r"/", controller.home.HomeHandler, name="admin.account"),
 

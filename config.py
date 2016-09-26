@@ -18,7 +18,7 @@ database_config = dict(
     engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
     engine_setting=dict(
         echo=True,
-        echo_pool=True,
+        echo_pool=False,
         pool_size=20,
         max_overflow=20,
     ),

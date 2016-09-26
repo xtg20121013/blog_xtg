@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<% from model.site_info import SiteCollection %>
+{% from model.site_info import SiteCollection %}
+{% from model.constants import Constants %}
 <html>
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -58,14 +59,12 @@
                         {% end %}
                     {% end %}
                     {% for article_type in SiteCollection.article_types_not_under_menu %}
-                        {% if not article_type.menu %}
-                            {% if not article_type.is_hide %}
-                                <li>
-                                    <a href="{{ reverse_url('articleTypes', article_type.id) }}">
+                        {% if not article_type.is_hide %}
+                            <li>
+                                <a href="{{ reverse_url('articleTypes', article_type.id) }}">
                                         {{ article_type.name }}
-                                    </a>
-                                </li>
-                            {% end %}
+                                </a>
+                            </li>
                         {% end %}
                     {% end %}
                 </ul>
@@ -88,62 +87,62 @@
         </div>
     </nav>
 </header>
-{% block Content %}
+{% block main %}
     <div class="content">
         <div class="container">
             <div class="row">
                 <div class="col-md-8 article">
-                    {% if handler.messages %}
+                    {% if handler.has_message() %}
                         {% for message in handler.read_messages() %}
                             <div class="alert alert-{{ message['category'] }} alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                                 {{ message['message'] }}
                             </div>
                         {% end %}
-                        {% block content %}
-                        {% end %}
+                    {% end %}
+                    {% block content %}
                     {% end %}
                 </div>
                 <div class="col-md-4 blog_nav">
                     {% block blog_nav_plugin %}
-                        {% for plugin in Plugin.query.order_by(Plugin.order.asc()).all() %}
-                            {% if plugin.disabled != True %}
-                                {% if plugin.content != 'system_plugin' %}
+                        {% for plugin in SiteCollection.plugins %}
+                            {% if not plugin.disabled %}
+                                {% if plugin.content != Constants.SYSTEM_PLUGIN %}
                                     <div id="{{ plugin.title }}" class="entry-box">
                                         <h5><strong>{{ plugin.title }}</strong></h5>
-                                        {{ plugin.content | safe }}
+                                        {{ plugin.content }}
                                     </div>
                                 {% else %}
                                     <div class="entry-box">
                                         <h5><strong>博客统计</strong></h5>
-                                        <p>访问量：<span class="badge">{{ BlogView.query.first().num_of_view }}</span></p>
+                                        <p>访问量：<span class="badge">{{ SiteCollection.blog_view_count }}</span></p>
                                         <p>
-                                            博文总数：<span class="badge">{{ Article.query.count() }}</span>
-                                            评论总数：<span class="badge">{{ Comment.query.count() }}</span>
+                                            博文总数：<span class="badge">{{ SiteCollection.article_count }}</span>
+                                            评论总数：<span class="badge">{{ SiteCollection.comment_count }}</span>
                                         </p>
                                         <p>
-                                            {% for source in Source.query.all() %}
-                                                <a href="{{ url_for('main.article_sources', id=source.id) }}">{{ source.name }}</a>：
+                                            {% for source in SiteCollection.article_sources %}
+                                                <a href="{{ reverse_url('articleSources', source.id) }}">{{ source.name }}</a>：
                                                 <span class="badge">{{ source.articles.count() }}</span>
-                                            {% endfor %}
+                                            {% end %}
                                         </p>
                                     </div>
-                                {% endif %}
-                            {% endif %}
-                        {% endfor %}
-                    {% endblock %}
+                                {% end %}
+                            {% end %}
+                        {% end %}
+                    {% end %}
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
+{% end %}
 <div class="footer">
     <p class="footer-content">
         @2016
-        <a href="#">blog_xtg</a>
+        <a href="#">blog_mhq</a>
         -基于<a href="https://github.com/xpleaf/Blog_mini">Blog_mini</a>重构的博客系统
         {% if not current_user %}
-            -<a href="{{ login_url }}">
+            -<a href="{{ handler.get_login_url() }}">
             <span class="glyphicon glyphicon-wrench">后台管理</span>
         </a>
         {% end %}

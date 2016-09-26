@@ -20,7 +20,5 @@ class HomeHandler(BaseHandler):
 
     @gen.coroutine
     def get(self):
-        print '111'
-        self.db
-        self.write("hello world")
+        self.render("index.html")
 
