@@ -55,4 +55,6 @@ def comment_count_init(db_session):
 def article_sources_init(db_session):
     article_sources = db_session.query(Source).all()
     if article_sources:
+        for source in article_sources:
+            source.fetch_articles_count()
         SiteCollection.article_sources = article_sources

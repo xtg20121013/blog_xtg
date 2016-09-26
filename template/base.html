@@ -123,7 +123,7 @@
                                         <p>
                                             {% for source in SiteCollection.article_sources %}
                                                 <a href="{{ reverse_url('articleSources', source.id) }}">{{ source.name }}</a>：
-                                                <span class="badge">{{ source.articles.count() }}</span>
+                                                <span class="badge">{{ source.articles_count }}</span>
                                             {% end %}
                                         </p>
                                     </div>

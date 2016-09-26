@@ -96,6 +96,9 @@ class Source(DbBase):
     name = Column(String(64), unique=True)
     articles = relationship('Article', backref='source', lazy='dynamic')
 
+    def fetch_articles_count(self):
+        self.articles_count = self.articles.count()
+
     def __repr__(self):
         return '<Source %r>' % self.name
 
