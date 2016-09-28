@@ -21,6 +21,7 @@
             <h3 class="text-center">欢迎登陆博客管理后台</h3>
             <form class="form-horizontal" role="form" method="post" action="{{ reverse_url('login') }}">
                 {% module xsrf_form_html() %}
+                <input type="hidden" name="next" value="{{ next_url }}">
                 <div class="form-group">
                     <label class="col-sm-3 control-label" >用户名</label>
                     <div class="col-sm-9">

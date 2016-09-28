@@ -13,6 +13,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.db_session = None
         self.session_save_tag = False
         self.thread_executor = self.application.thread_executor
+        self.async_do = self.thread_executor.submit
 
     @gen.coroutine
     def prepare(self):
@@ -34,6 +35,15 @@ class BaseHandler(tornado.web.RequestHandler):
         if not self.db_session:
             self.db_session = self.application.db_pool()
         return self.db_session
+
+    def save_login_user(self, user):
+        login_user = LoginUser(None)
+        login_user['id'] = user.id
+        login_user['name'] = user.username
+        login_user['avatar'] = user.avatar
+        self.session[session_keys['login_user']] = login_user
+        self.current_user = login_user
+        self.save_session()
 
     def has_message(self):
         if session_keys['messages'] in self.session:
