@@ -46,6 +46,12 @@ class BaseHandler(tornado.web.RequestHandler):
         self.current_user = login_user
         self.save_session()
 
+    def logout(self):
+        if session_keys['login_user'] in self.session:
+            del self.session[session_keys['login_user']]
+            self.save_session()
+        self.current_user = None
+
     def has_message(self):
         if session_keys['messages'] in self.session:
             return bool(self.session[session_keys['messages']])

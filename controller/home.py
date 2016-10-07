@@ -33,3 +33,12 @@ class LoginHandler(BaseHandler):
             self.add_message('danger', u'登陆失败！用户名或密码错误，请重新登陆。')
             self.get()
 
+
+class LogoutHandler(BaseHandler):
+
+    def get(self):
+        self.logout()
+        self.add_message('success', u'您已退出登陆。')
+        self.redirect("/")
+
+
