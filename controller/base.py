@@ -29,6 +29,7 @@ class BaseHandler(tornado.web.RequestHandler):
 
     def save_session(self):
         self.session_save_tag = True
+        self.session.generate_session_id()
 
     @property
     def db(self):
@@ -53,17 +54,17 @@ class BaseHandler(tornado.web.RequestHandler):
 
     # category:['success','info', 'warning', 'danger']
     def add_message(self, category, message):
-        item = {'category':category, 'message':message}
-        if not session_keys['messages'] in self.session:
-            self.session[session_keys['messages']] = [item]
-        else:
+        item = {'category': category, 'message': message}
+        if session_keys['messages'] in self.session and \
+                isinstance(self.session[session_keys['messages']], dict):
             self.session[session_keys['messages']].append(item)
+        else:
+            self.session[session_keys['messages']] = [item]
         self.save_session()
 
     def read_messages(self):
         if session_keys['messages'] in self.session:
-            all_messages = self.session[session_keys['messages']]
-            self.session[session_keys['messages']] = None
+            all_messages = self.session.pop(session_keys['messages'], None)
             self.save_session()
             return all_messages
         return None

@@ -29,6 +29,8 @@ class Session(dict):
     def generate_session_id(self):
         if not self.get_session_id():
             self.session_id = str(uuid.uuid1())
+            self.request_handler.set_secure_cookie(self.session_manager.session_key_name, self.session_id,
+                                                   expires_days=self.session_manager.session_expires_days)
         return self.session_id
 
     @tornado.gen.coroutine
@@ -43,8 +45,6 @@ class Session(dict):
         session_id = self.generate_session_id()
         data_json = json.dumps(self)
         yield self.call_client("SET", session_id, data_json)
-        self.request_handler.set_secure_cookie(self.session_manager.session_key_name, session_id,
-                                               expires_days=self.session_manager.session_expires_days)
 
     @tornado.gen.coroutine
     def call_client(self, *args, **kwargs):
