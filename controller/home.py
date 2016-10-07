@@ -17,7 +17,7 @@ class LoginHandler(BaseHandler):
 
     def get(self):
         next_url = self.get_argument('next', '/')
-        self.render("auth/login.html", next_url = next_url)
+        self.render("auth/login.html", next_url=next_url)
 
     @gen.coroutine
     def post(self):
