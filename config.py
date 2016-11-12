@@ -1,8 +1,4 @@
 # coding=utf-8
-import os
-import logging.config
-# 全局logging
-logging.config.fileConfig(os.path.join(os.path.dirname(__file__), 'log.conf'))
 
 redis_session_config = dict(
     db_no=0,
@@ -35,7 +31,7 @@ config = dict(
     xsrf_cookies=True,
     cookie_secret="kjsdhfweiofjhewnfiwehfneiwuhniu",
     login_url="/auth/login",
-    server_port=8888,
+    default_server_port=8888,
     max_threads_num=500,
     database=database_config,
     redis_session=redis_session_config,

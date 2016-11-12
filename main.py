@@ -1,7 +1,8 @@
 # coding=utf-8
 import os
-from config import config  # 必须放在tornado导入前，接管全局logging
-import tornado.web
+import log_config
+from config import config
+from tornado.options import options
 import tornado.ioloop
 import concurrent.futures
 import controller.home
@@ -10,7 +11,6 @@ from extends.session_tornadis import SessionManager
 from service.init_service import site_init
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-
 
 settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "template"),
@@ -50,5 +50,12 @@ class Application(tornado.web.Application):
         site_init(self.db_pool())
 
 if __name__ == '__main__':
-    Application().listen(config['server_port']);
+    options.define("port", default=config['default_server_port'], help="run server on a specific port", type=int)
+    options.define("console_log", default=False, help="print log to console", type=bool)
+    options.define("file_log", default=True, help="print log to file", type=bool)
+    options.define("file_log_path", default=log_config.FILE['log_path'], help="path of log_file", type=str)
+    options.logging = None
+    options.parse_command_line()
+    log_config.init(options.port, options.console_log, options.file_log, options.file_log_path)
+    Application().listen(options.port);
     tornado.ioloop.IOLoop.current().start()
