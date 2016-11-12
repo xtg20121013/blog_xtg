@@ -1,14 +1,12 @@
 # coding=utf-8
-from tornado import web
 from tornado import gen
+
 from base import BaseHandler
 from service.user_service import UserService
 
 
 class HomeHandler(BaseHandler):
 
-    # @web.authenticated
-    # @gen.coroutine
     def get(self):
         self.render("index.html")
 

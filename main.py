@@ -12,6 +12,7 @@ from service.init_service import site_init
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+# tornado server相关参数
 settings = dict(
     template_path=os.path.join(os.path.dirname(__file__), "template"),
     static_path=os.path.join(os.path.dirname(__file__), "static"),
@@ -22,6 +23,8 @@ settings = dict(
     debug=config['debug'],
 )
 
+
+# url映射
 handlers = [
     url(r"/", controller.home.HomeHandler, name="index"),
     url(r"/auth/login", controller.home.LoginHandler, name="login"),
@@ -30,10 +33,10 @@ handlers = [
     url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSources"),
     url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
     url(r"/", controller.home.HomeHandler, name="admin.account"),
-
 ]
 
 
+# sqlalchemy连接池配置以及生成链接池工厂实例
 def db_poll_init():
     engine_config = config['database']['engine_url']
     engine = create_engine(engine_config, **config['database']["engine_setting"])
@@ -41,6 +44,7 @@ def db_poll_init():
     return db_poll;
 
 
+# 继承tornado.web.Application类，可以在构造函数里做站点初始化（初始数据库连接池，初始站点配置，初始异步线程池，加载站点缓存等）
 class Application(tornado.web.Application):
     def __init__(self):
         super(Application, self).__init__(handlers, **settings)
@@ -55,7 +59,9 @@ if __name__ == '__main__':
     options.define("file_log", default=True, help="print log to file", type=bool)
     options.define("file_log_path", default=log_config.FILE['log_path'], help="path of log_file", type=str)
     options.logging = None
+    # 读取 项目启动时，命令行上添加的参数项
     options.parse_command_line()
+    # 加载日志管理
     log_config.init(options.port, options.console_log, options.file_log, options.file_log_path)
     Application().listen(options.port);
     tornado.ioloop.IOLoop.current().start()
