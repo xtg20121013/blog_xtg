@@ -66,7 +66,7 @@ class SessionManager(object):
     def get_connection_pool(self):
         if not self.connection_pool:
             self.connection_pool = tornadis.ClientPool(host=self.options['host'],port=self.options['port'],
-                                                        password=self.options['password'], #db=self.options['db_no'],
+                                                       password=self.options['password'], db=self.options['db_no'],
                                                        max_size=self.options['max_connections'])
         return self.connection_pool
 

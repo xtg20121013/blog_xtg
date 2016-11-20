@@ -79,7 +79,7 @@ class BaseHandler(tornado.web.RequestHandler):
     def on_finish(self):
         if self.db_session:
             self.db_session.close()
-            print "db_info:", self.application.db_pool.kw['bind'].pool.status()
+            # print "db_info:", self.application.db_pool.kw['bind'].pool.status()
         if self.session is not None and self.session_save_tag:
             yield self.session.save()
 

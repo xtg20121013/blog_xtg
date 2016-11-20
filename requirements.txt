@@ -1,5 +1,5 @@
 tornado
 sqlalchemy
 redis
-tornadis
+tornadis>=0.8.0
 futures
