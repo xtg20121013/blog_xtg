@@ -13,8 +13,9 @@ FILE=dict(
 )
 
 
-def init(port, console_handler=False, file_handler=True, log_path=FILE['log_path']):
+def init(port, console_handler=False, file_handler=True, log_path=FILE['log_path'], base_level="INFO"):
     logger = logging.getLogger()
+    logger.setLevel(base_level)
     # 配置控制台输出
     if console_handler:
         channel_console = logging.StreamHandler()

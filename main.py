@@ -1,8 +1,9 @@
 # coding=utf-8
 import os
 import log_config
-from config import config
+from config import config, redis_pub_sub_config
 from tornado.options import options
+import tornado.web
 import tornado.ioloop
 import concurrent.futures
 import controller.home
@@ -11,6 +12,7 @@ from extends.session_tornadis import SessionManager
 from service.init_service import site_init
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from service.pubsub_service import PubSubService
 
 # tornado server相关参数
 settings = dict(
@@ -64,4 +66,6 @@ if __name__ == '__main__':
     # 加载日志管理
     log_config.init(options.port, options.console_log, options.file_log, options.file_log_path)
     Application().listen(options.port);
-    tornado.ioloop.IOLoop.current().start()
+    loop = tornado.ioloop.IOLoop.current();
+    PubSubService(redis_pub_sub_config, loop).long_listen()
+    loop.start()

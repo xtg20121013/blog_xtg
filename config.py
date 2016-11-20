@@ -1,5 +1,6 @@
 # coding=utf-8
 
+# session相关配置（redis实现）
 redis_session_config = dict(
     db_no=0,
     host="127.0.0.1",
@@ -8,6 +9,19 @@ redis_session_config = dict(
     max_connections=10,
     session_key_name="TR_SESSION_ID",
     session_expires_days=7,
+)
+
+# 基于redis的消息订阅（发布接收缓存更新消息）
+redis_pub_sub_channels = dict(
+    cache_message_channel="cache_message_channel",
+)
+
+redis_pub_sub_config = dict(
+    host="127.0.0.1",
+    port=6379,
+    password=None,
+    autoconnect=True,
+    channels=[redis_pub_sub_channels['cache_message_channel'],],
 )
 
 database_config = dict(
