@@ -11,9 +11,18 @@ redis_session_config = dict(
     session_expires_days=7,
 )
 
+# 站点缓存(redis)
+site_cache_config = dict(
+    db_no=1,
+    host="127.0.0.1",
+    port=6379,
+    password=None,
+    max_connections=10,
+)
+
 # 基于redis的消息订阅（发布接收缓存更新消息）
 redis_pub_sub_channels = dict(
-    cache_message_channel="cache_message_channel",
+    cache_message_channel="site_cache_message_channel",
 )
 
 redis_pub_sub_config = dict(
@@ -39,6 +48,20 @@ session_keys = dict(
     messages="messages",
 )
 
+# 关联model.site_info中的字段
+site_cache_keys = dict(
+    title="title",
+    signature = "signature",
+    navbar = "navbar",
+    menus = "menus",
+    article_types_not_under_menu = "article_types_not_under_menu",
+    plugins = "plugins",
+    blog_view_count = "blog_view_count",
+    article_count = "article_count",
+    comment_count = "comment_count",
+    article_sources = "article_sources",
+)
+
 config = dict(
     debug=True,
     compress_response=True,
@@ -50,4 +73,5 @@ config = dict(
     database=database_config,
     redis_session=redis_session_config,
     session_keys=session_keys,
+    default_master=False,  # 是否为主从节点中的master节点,
 )

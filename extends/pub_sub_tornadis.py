@@ -7,7 +7,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-class PubSubTornadis:
+class PubSubTornadis(object):
 
     def __init__(self, redis_pub_sub_config, loop=None):
         self.redis_pub_sub_config = redis_pub_sub_config
@@ -57,7 +57,7 @@ class PubSubTornadis:
     # override
     @tornado.gen.coroutine
     def first_do_after_subscribed(self):
-            logger.info("订阅成功")
+        logger.info("订阅成功")
 
     # override
     @tornado.gen.coroutine
