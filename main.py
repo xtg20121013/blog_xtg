@@ -6,8 +6,7 @@ from tornado.options import options
 import tornado.web
 import tornado.ioloop
 import concurrent.futures
-import controller.home
-from tornado.web import url
+from url_mapping import handlers
 from extends.session_tornadis import SessionManager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -24,18 +23,6 @@ settings = dict(
     login_url=config['login_url'],
     debug=config['debug'],
 )
-
-
-# url映射
-handlers = [
-    url(r"/", controller.home.HomeHandler, name="index"),
-    url(r"/auth/login", controller.home.LoginHandler, name="login"),
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleTypes"),
-    url(r"/auth/logout", controller.home.LogoutHandler, name="logout"),
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSources"),
-    url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
-    url(r"/", controller.home.HomeHandler, name="admin.account"),
-]
 
 
 # sqlalchemy连接池配置以及生成链接池工厂实例
