@@ -20,7 +20,7 @@ class AlchemyEncoder(json.JSONEncoder):
             for field in [f for f in fields if not f.startswith('_') and f not in ['metadata', 'query', 'query_class']]:
                 value = o.__getattribute__(field)
                 try:
-                    json.dumps(value)
+                    json.dumps(value, cls=AlchemyEncoder)
                     data[field] = value
                 except TypeError:
                     data[field] = None
@@ -28,6 +28,12 @@ class AlchemyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, o)
 
 
-def alchemy_hook(a):
-    print a
-    return a
+#  可通过 .attr 访问的dict
+class Dict(dict):
+    def __getattr__(self, key):
+        try:
+            if isinstance(self[key], dict):
+                return Dict(self[key])
+            return self[key]
+        except KeyError:
+            raise AttributeError(key)

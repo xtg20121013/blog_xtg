@@ -3,7 +3,7 @@ import json
 import tornado.gen
 from service import init_service
 from config import site_cache_keys
-from extends.utils import AlchemyEncoder, alchemy_hook
+from extends.utils import AlchemyEncoder, Dict
 
 
 """本页字段缓存策略
@@ -62,7 +62,7 @@ class SiteCollection(object):
         if SiteCollection.menus is None:
             menus_json = yield cache_manager.call("GET", site_cache_keys['menus'])
             if menus_json:
-                menus = json.loads(menus_json);
+                menus = json.loads(menus_json, object_hook=Dict);
                 SiteCollection.menus = menus
             if SiteCollection.menus is None:
                 SiteCollection.menus = yield thread_do(init_service.get_menus, db)
@@ -76,7 +76,7 @@ class SiteCollection(object):
         if SiteCollection.article_types_not_under_menu is None:
             ats_json = yield cache_manager.call("GET", site_cache_keys['article_types_not_under_menu'])
             if ats_json:
-                ats = json.loads(ats_json, object_hook=alchemy_hook);
+                ats = json.loads(ats_json, object_hook=Dict);
                 SiteCollection.article_types_not_under_menu = ats
             if SiteCollection.article_types_not_under_menu is None:
                 SiteCollection.article_types_not_under_menu = yield \
@@ -91,7 +91,7 @@ class SiteCollection(object):
         if SiteCollection.plugins is None:
             plugins_json = yield cache_manager.call("GET", site_cache_keys['plugins'])
             if plugins_json:
-                plugins = json.loads(plugins_json);
+                plugins = json.loads(plugins_json, object_hook=Dict);
                 SiteCollection.plugins = plugins
             if SiteCollection.plugins is None:
                 SiteCollection.plugins = yield thread_do(init_service.get_plugins, db)
@@ -141,7 +141,7 @@ class SiteCollection(object):
         if SiteCollection.article_sources is None:
             article_sources_json = yield cache_manager.call("GET", site_cache_keys['article_sources'])
             if article_sources_json:
-                article_sources = json.loads(article_sources_json);
+                article_sources = json.loads(article_sources_json, object_hook=Dict);
                 SiteCollection.article_sources = article_sources
             if SiteCollection.article_sources is None:
                 SiteCollection.article_sources = yield thread_do(init_service.get_article_sources, db)
