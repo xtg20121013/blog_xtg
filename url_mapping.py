@@ -22,6 +22,5 @@ handlers = [
     url(r"/", controller.home.HomeHandler, name="admin.custom_blog_plugin"),
     url(r"/", controller.home.HomeHandler, name="admin.add_plugin"),
     url(r"/", controller.home.HomeHandler, name="admin.help"),
-    url(r"/", controller.home.HomeHandler, name="admin.change_password"),
-    url(r"/", controller.home.HomeHandler, name="admin.edit_user_info"),
+    url(r"/admin/account/(.+)", controller.admin.AdminAccountHandler, name="admin.account.update"),
 ]

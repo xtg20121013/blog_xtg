@@ -21,7 +21,7 @@
     </div>
 </div>
 
-<!-- 信息删除确认: For change password form-->
+<!-- 信息确认: For change password form-->
 <div class="modal fade" id="changePasswordFormModal">
     <div class="modal-dialog">
         <div class="modal-content message_align">
@@ -31,16 +31,16 @@
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
             <form id="changePasswordForm" method="post"
-                  action="{{ reverse_url('admin.change_password') }}">
+                  action="{{ reverse_url('admin.account.update', 'change-password') }}">
                 <div class="modal-body">
                         <div class="form-group">
                             {% module xsrf_form_html() %}
                             <label for="old_password">原密码</label>
-                            <input class="form-control" id="old_password" name="old_password" type="text" value="">
+                            <input class="form-control" id="old_password" required name="old_password" type="password" >
                             <label for="password">新密码</label>
-                            <input class="form-control" id="password" name="password" type="text" value="">
+                            <input class="form-control" id="password" required name="password" type="password" >
                             <label for="password2">新密码确认</label>
-                            <input class="form-control" id="password2" name="password2" type="text" >
+                            <input class="form-control" id="password2" required name="password2" type="password" >
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -52,7 +52,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- 信息删除确认: For edit user info form-->
+<!-- 信息确认: For edit user info form-->
 <div class="modal fade" id="editUserInfoFormModal">
     <div class="modal-dialog">
         <div class="modal-content message_align">
@@ -62,16 +62,16 @@
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
             <form id="editUserInfoForm" method="post"
-                  action="{{ reverse_url('admin.edit_user_info') }}">
+                  action="{{ reverse_url('admin.account.update', 'edit-user-info') }}">
                 <div class="modal-body">
                         <div class="form-group">
                             {% module xsrf_form_html() %}
                             <label for="username">昵称</label>
-                            <input class="form-control" id="username" name="username" type="text" value="{{current_user.name}}">
+                            <input class="form-control" id="username" required name="username"  type="text" value="{{current_user.name}}">
                             <label for="email">email</label>
-                            <input class="form-control" id="email" name="email" type="text" value="{{current_user.email}}">
+                            <input class="form-control" id="email" required name="email" type="text" value="{{current_user.email}}">
                             <label for="password">密码确认</label>
-                            <input class="form-control" id="password" name="password" type="text" >
+                            <input class="form-control" id="password" required name="password" type="text" >
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -83,3 +83,10 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {% end %}
+<!--{% block private_script %}-->
+
+<!--<script type="text/javascript">-->
+    <!---->
+<!--</script>-->
+
+<!--{% end %}-->
