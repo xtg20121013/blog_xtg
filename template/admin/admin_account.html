@@ -67,9 +67,9 @@
                         <div class="form-group">
                             {% module xsrf_form_html() %}
                             <label for="username">昵称</label>
-                            <input class="form-control" id="username" name="username" type="text" value="current_user.name">
+                            <input class="form-control" id="username" name="username" type="text" value="{{current_user.name}}">
                             <label for="email">email</label>
-                            <input class="form-control" id="email" name="email" type="text" value="current_user.email.">
+                            <input class="form-control" id="email" name="email" type="text" value="{{current_user.email}}">
                             <label for="password">密码确认</label>
                             <input class="form-control" id="password" name="password" type="text" >
                         </div>
