@@ -1,45 +1,48 @@
-{% extends 'base.html' %}
+{% extends '../base.html' %}
 
+{% block title %}
+    blog_xtg -欢迎来到blog_xtg管理平台！
+{% end %}
 
-{% block Content %}
+{% block main %}
 <div class="container">
     <div class="row">
-        <div class="col-md-2 entry-box" style="background-color: ">
+        <div class="col-md-2 entry-box" >
             <ul class="nav nav-list">
 				<li class="nav-header">博文管理</li>
-				<li><a href="{{ url_for('admin.submitArticles') }}">发表博文</a></li>
-				<li><a href="{{ url_for('admin.manage_articles') }}">管理博文</a></li>
-				<li><a href="{{ url_for('admin.manage_articleTypes') }}">博文分类</a></li>
+				<li><a href="{{ reverse_url('admin.submitArticles') }}">发表博文</a></li>
+				<li><a href="{{ reverse_url('admin.manage_articles') }}">管理博文</a></li>
+				<li><a href="{{ reverse_url('admin.manage_articleTypes') }}">博文分类</a></li>
 
 				<li class="nav-header">评论管理</li>
-				<li><a href="{{ url_for('admin.manage_comments') }}">博文评论</a></li>
+				<li><a href="{{ reverse_url('admin.manage_comments') }}">博文评论</a></li>
 
                 <li class="nav-header">博客定制</li>
-				<li><a href="{{ url_for('admin.custom_blog_info') }}">基本信息</a></li>
-				<li><a href="{{ url_for('admin.custom_blog_plugin') }}">插件管理</a></li>
-				<li><a href="{{ url_for('admin.add_plugin') }}">添加插件</a></li>
+				<li><a href="{{ reverse_url('admin.custom_blog_info') }}">基本信息</a></li>
+				<li><a href="{{ reverse_url('admin.custom_blog_plugin') }}">插件管理</a></li>
+				<li><a href="{{ reverse_url('admin.add_plugin') }}">添加插件</a></li>
 
 				<li class="nav-header">其它管理</li>
-				<li><a href="{{ url_for('admin.account') }}">用户账户</a></li>
-				<li><a href="{{ url_for('admin.help') }}">帮助</a></li>
+				<li><a href="{{ reverse_url('admin.account') }}">用户账户</a></li>
+				<li><a href="{{ reverse_url('admin.help') }}">帮助</a></li>
 			</ul>
         </div>
         <div class="col-md-10">
-            {% for category, message in get_flashed_messages(with_categories=true) %}
-                <div class="alert alert-{{category}} alert-dismissable">
+            {% if handler.has_message() %}
+                {% for message in handler.read_messages() %}
+                <div class="alert alert-{{ message['category'] }} alert-dismissable">
                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                    {{ message }}
+                        {{ message['message'] }}
                 </div>
-            {% endfor %}
-
+                {% end %}
+            {% end %}
             {% block admin_content %}
-            {% endblock %}
+            {% end %}
         </div>
     </div>
 </div>
-{% endblock %}
+{% end %}
 
 {% block script %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
-{% endblock %}
+    <script src="{{ static_url('js/admin.js') }}"></script>
+{% end %}

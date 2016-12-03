@@ -159,10 +159,12 @@
         <span class="glyphicon glyphicon-arrow-down"></span>
     </button>
 </div>
-{% block script %}
+{% block base_script %}
     <script src="{{ static_url('js/jquery-2.2.1.min.js') }}"></script>
     <script src="{{ static_url('js/bootstrap.min.js') }}"></script>
     <script src="{{ static_url('js/floatButton.js') }}"></script>
+{% end %}
+{% block script %}
 {% end %}
 </body>
 </html>

@@ -1,10 +1,12 @@
 # coding=utf-8
+from extends.utils import Dict
 
 
-class LoginUser(dict):
+class LoginUser(Dict):
         # self['id'] = None
         # self['name'] = None
         # self['avatar'] = None
+        # self['email'] = None
 
     def __init__(self, user):
         super(LoginUser, self).__init__()

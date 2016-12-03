@@ -1,24 +1,20 @@
-{% extends 'admin/admin_base.html' %}
-
-{% block title %}
-    Blog_mini -欢迎来到Blog_mini管理平台！
-{% endblock %}
+{% extends 'admin_base.html' %}
 
 {% block admin_content %}
 <div class="entry-box account">
-    <h4><strong><i>{{ current_user.username }}</i>，欢迎来到Blog_mini管理平台！</strong></h4>
+    <h4><strong><i>{{ current_user.name }}</i>，欢迎来到blog_xtg管理平台！</strong></h4>
     <hr/>
     <div class="user-info">
-        <img class="img-rounded profile-thumbnail" src="{{ current_user.gravatar(size=128) }}">
+        <img class="img-rounded profile-thumbnail" src="{{ current_user.avatar }}">
         <div class="profile-header">
             <h5>昵称：</h5>
-            <h4 class="username">{{ current_user.username }}</h4>
+            <h4 class="username">{{ current_user.name }}</h4>
             <h5>电子邮件：</h5>
             <h4 class="email">{{ current_user.email }}</h4>
             <a class="btn btn-sm btn-danger" onclick="changePassword()">
                 修改密码
             </a>
-            <a class="btn btn-sm btn-info" onclick="EditUserInfo()">
+            <a class="btn btn-sm btn-info" onclick="editUserInfo()">
                 修改信息
             </a>
         </div>
@@ -35,16 +31,16 @@
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
             <form id="changePasswordForm" method="post"
-                  action="{{ url_for('admin.change_password') }}">
+                  action="{{ reverse_url('admin.change_password') }}">
                 <div class="modal-body">
                         <div class="form-group">
-                            {{ form.csrf_token }}
-                            {{ form.old_password.label }}
-                            {{ form.old_password(class='form-control', required='') }}
-                            {{ form.password.label }}
-                            {{ form.password(class='form-control', required='') }}
-                            {{ form.password2.label }}
-                            {{ form.password2(class='form-control', required='') }}
+                            {% module xsrf_form_html() %}
+                            <label for="old_password">原密码</label>
+                            <input class="form-control" id="old_password" name="old_password" type="text" value="">
+                            <label for="password">新密码</label>
+                            <input class="form-control" id="password" name="password" type="text" value="">
+                            <label for="password2">新密码确认</label>
+                            <input class="form-control" id="password2" name="password2" type="text" >
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -66,16 +62,16 @@
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
             <form id="editUserInfoForm" method="post"
-                  action="{{ url_for('admin.edit_user_info') }}">
+                  action="{{ reverse_url('admin.edit_user_info') }}">
                 <div class="modal-body">
                         <div class="form-group">
-                            {{ form2.csrf_token }}
-                            {{ form2.username.label }}
-                            {{ form2.username(class='form-control', required='', value=current_user.username) }}
-                            {{ form2.email.label }}
-                            {{ form2.email(class='form-control', required='', value=current_user.email) }}
-                            {{ form2.password.label }}
-                            {{ form2.password(class='form-control', required='') }}
+                            {% module xsrf_form_html() %}
+                            <label for="username">昵称</label>
+                            <input class="form-control" id="username" name="username" type="text" value="current_user.name">
+                            <label for="email">email</label>
+                            <input class="form-control" id="email" name="email" type="text" value="current_user.email.">
+                            <label for="password">密码确认</label>
+                            <input class="form-control" id="password" name="password" type="text" >
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -86,4 +82,4 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-{% endblock %}
+{% end %}

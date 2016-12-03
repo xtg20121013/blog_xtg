@@ -42,6 +42,7 @@ class BaseHandler(tornado.web.RequestHandler):
         login_user['id'] = user.id
         login_user['name'] = user.username
         login_user['avatar'] = user.avatar
+        login_user['email'] = user.email
         self.session[session_keys['login_user']] = login_user
         self.current_user = login_user
         self.save_session()

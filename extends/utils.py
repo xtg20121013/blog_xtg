@@ -1,6 +1,9 @@
 # coding=utf-8
 import json
+import logging
 from sqlalchemy.ext.declarative import DeclarativeMeta
+
+logger = logging.getLogger(__name__)
 
 
 def singleton(cls, *args, **kw):
@@ -37,4 +40,5 @@ class Dict(dict):
                 return Dict(self[key])
             return self[key]
         except KeyError:
-            raise AttributeError(key)
+            logger.warning(key+" not in "+str(self))
+            return None;

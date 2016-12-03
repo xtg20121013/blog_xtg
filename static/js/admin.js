@@ -173,6 +173,6 @@ function changePassword() {
 }
 
 //JS For edit user info
-function EditUserInfo() {
+function editUserInfo() {
     $('#editUserInfoFormModal').modal();
 }
