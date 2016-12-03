@@ -1,8 +1,9 @@
-{% extends 'admin/admin_base.html' %}
+{% from model.site_info import SiteCollection %}
+{% extends 'admin_base.html' %}
 
-{% block title %}
-    Blog_mini -基本信息
-{% endblock %}
+{% block title2 %}
+    基本信息
+{% end %}
 
 {% block admin_content %}
 <div class="entry-box custom-blog">
@@ -10,20 +11,20 @@
     <hr/>
     <div class="blog-info-box">
         <h5 class="info-header"><strong>博客标题：</strong></h5>
-        <i>{{ BlogInfo.query.first().title }}</i>
+        <i>{{ SiteCollection.title }}</i>
         <h5 class="info-header"><strong>个性签名：</strong></h5>
-        <i>{{ BlogInfo.query.first().signature }}</i>
+        <i>{{ SiteCollection.signature }}</i>
         <h5 class="info-header"><strong>导航样式：</strong></h5>
         <i>
-            {% if BlogInfo.query.first().navbar == 'inverse' %}
-                魅力黑
+            {% if SiteCollection.navbar in navbar_styles %}
+                {{ navbar_styles[SiteCollection.navbar] }}
             {% else %}
-                优雅白
-            {% endif %}
+                {{ navbar_styles['default'] }}
+            {% end %}
         </i>
         <div class="add-articleType-nav">
             <a class="btn btn-sm btn-primary blog-info-btn" id="editBlogInfo"
-               onclick="get_blog_info('{{ url_for('admin.get_blog_info') }}')">
+               onclick="get_blog_info()">
                 <span class="glyphicon glyphicon-edit"></span>
                 修改
             </a>
@@ -43,13 +44,21 @@
             <form id="editBlogInfoForm" method="post" action="">
                 <div class="modal-body">
                         <div class="form-group">
-                            {{ form.csrf_token }}
-                            {{ form.title.label }}
-                            {{ form.title(class='form-control', required='') }}
-                            {{ form.signature.label }}
-                            {{ form.signature(class='form-control', required='') }}
-                            {{ form.navbar.label }}
-                            {{ form.navbar(class='form-control', required='') }}
+                            {% module xsrf_form_html() %}
+                            <label for="title">博客标题</label>
+                            <input class="form-control" id="title" required name="title"  type="text" value="{{ SiteCollection.title }}" />
+                            <label for="signature">个性签名</label>
+                            <textarea class="form-control" id="signature" required name="signature">{{ SiteCollection.signature }}</textarea>
+                            <label for="navbar">导航样式</label>
+                            <select class="form-control" id="navbar" name="navbar" required>
+                                {% for navbar in navbar_styles %}
+                                    {% if navbar == SiteCollection.navbar %}
+                                        <option value="{{navbar}}" selected="selected" >{{navbar_styles[navbar]}}</option>
+                                    {% else %}
+                                        <option value="{{navbar}}" >{{navbar_styles[navbar]}}</option>
+                                    {% end %}
+                                {% end %}
+                            </select>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -60,4 +69,4 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
-{% endblock %}
+{% end %}

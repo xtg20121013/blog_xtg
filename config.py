@@ -74,4 +74,5 @@ config = dict(
     redis_session=redis_session_config,
     session_keys=session_keys,
     default_master=False,  # 是否为主从节点中的master节点,
+    navbar_styles={"inverse":"魅力黑", "default":"优雅白"},  # 导航栏样式
 )

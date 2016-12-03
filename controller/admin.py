@@ -24,7 +24,7 @@ class AdminAccountHandler(BaseHandler):
         user_info = {"username": self.get_argument("username"), "email": self.get_argument("email")}
         user = yield self.async_do(UserService.update_user_info, self.db, self.current_user.name,
                                    self.get_argument("password"), user_info)
-        if user :
+        if user:
             self.save_login_user(user)
             self.add_message('success', u'修改用户信息成功!')
 

@@ -149,14 +149,8 @@ function delArticleTypeNavCfm(url) {
 }
 
 //JS For editing blog info
-function get_blog_info(url) {
-    $.getJSON(url, function(data) {
-        console.log(data);
-        $('#title').val(data.title);
-        $('#signature').val(data.signature);
-        $('#navbar').val(data.navbar);
-        $('#editBlogInfoFormModal').modal();
-    });
+function get_blog_info() {
+    $('#editBlogInfoFormModal').modal();
 }
 
 //JS For confirm to delete a plugin
