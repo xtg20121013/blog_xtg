@@ -30,7 +30,7 @@
                         aria-hidden="true">×</span></button>
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
-            <form id="changePasswordForm" method="post"
+            <form id="changePasswordForm" method="post" onsubmit="return checkChangePasswordForm()"
                   action="{{ reverse_url('admin.account.update', 'change-password') }}">
                 <div class="modal-body">
                         <div class="form-group">
@@ -39,8 +39,11 @@
                             <input class="form-control" id="old_password" required name="old_password" type="password" >
                             <label for="password">新密码</label>
                             <input class="form-control" id="password" required name="password" type="password" >
+                        </div>
+                        <div id="group_password2" class="form-group">
                             <label for="password2">新密码确认</label>
                             <input class="form-control" id="password2" required name="password2" type="password" >
+                            <span id="password2_err" class="help-block" style="display: none">两次密码不一致</span>
                         </div>
                 </div>
                 <div class="modal-footer">
@@ -83,10 +86,3 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 {% end %}
-<!--{% block private_script %}-->
-
-<!--<script type="text/javascript">-->
-    <!---->
-<!--</script>-->
-
-<!--{% end %}-->
