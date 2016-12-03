@@ -44,3 +44,10 @@ class AdminAccountHandler(BaseHandler):
         else:
             self.add_message('danger', u'修改密码失败！')
         self.redirect(self.reverse_url("admin.account"))
+
+
+class AdminHelpHandler(BaseHandler):
+
+    @authenticated
+    def get(self):
+        self.render('admin/help_page.html')
