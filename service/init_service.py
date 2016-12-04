@@ -45,12 +45,7 @@ class SiteCacheService(object):
         SiteCollection.navbar = yield cache_manager.call("GET", site_cache_keys['navbar'])
         if SiteCollection.title is None or SiteCollection.signature is None or SiteCollection.navbar is None:
             blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
-            SiteCollection.title = blog_info.title
-            SiteCollection.signature = blog_info.signature
-            SiteCollection.navbar = blog_info.navbar
-            yield cache_manager.call("SET", site_cache_keys['title'], SiteCollection.title)
-            yield cache_manager.call("SET", site_cache_keys['signature'], SiteCollection.signature)
-            yield cache_manager.call("SET", site_cache_keys['navbar'], SiteCollection.navbar)
+            yield SiteCacheService.update_blog_info(cache_manager, blog_info)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -145,14 +140,15 @@ class SiteCacheService(object):
 
     @staticmethod
     @tornado.gen.coroutine
-    def update_blog_info(cache_manager, pubsub_manager, blog_info):
+    def update_blog_info(cache_manager, blog_info, is_pub_all=False, pubsub_manager=None):
         SiteCollection.title = blog_info.title
         SiteCollection.signature = blog_info.signature
         SiteCollection.navbar = blog_info.navbar
         yield cache_manager.call("SET", site_cache_keys['title'], blog_info.title)
         yield cache_manager.call("SET", site_cache_keys['signature'], blog_info.signature)
         yield cache_manager.call("SET", site_cache_keys['navbar'], blog_info.navbar)
-        yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_info_updated'])
+        if is_pub_all:
+            yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_info_updated'])
 
 
 def get_menus(db_session):
