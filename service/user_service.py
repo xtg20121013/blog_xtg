@@ -2,7 +2,7 @@
 from model.models import User
 
 
-class UserService:
+class UserService(object):
 
     @staticmethod
     def get_user(db_session, username):

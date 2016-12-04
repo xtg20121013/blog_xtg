@@ -13,6 +13,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.db_session = None
         self.session_save_tag = False
         self.thread_executor = self.application.thread_executor
+        self.cache_manager = self.application.cache_manager
         self.async_do = self.thread_executor.submit
 
     @gen.coroutine
@@ -36,6 +37,10 @@ class BaseHandler(tornado.web.RequestHandler):
         if not self.db_session:
             self.db_session = self.application.db_pool()
         return self.db_session
+
+    @property
+    def pubsub_manager(self):
+        return self.application.pubsub_manager
 
     def save_login_user(self, user):
         login_user = LoginUser(None)

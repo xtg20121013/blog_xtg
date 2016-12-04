@@ -16,6 +16,7 @@ class PubSubTornadis(object):
         self.loop = loop
         self.autoconnect = self.redis_pub_sub_config['autoconnect']
         self.client = self.get_client()
+        self.pub_client = None
         self.connect_times = 0
         self.max_connect_wait_time = 10
 
@@ -24,6 +25,24 @@ class PubSubTornadis(object):
                                        password=self.redis_pub_sub_config['password'],
                                        autoconnect=self.autoconnect)
         return client
+
+    def get_pub_client(self):
+        if not self.pub_client:
+            self.pub_client = tornadis.Client(host=self.redis_pub_sub_config['host'],
+                                              port=self.redis_pub_sub_config['port'],
+                                              password=self.redis_pub_sub_config['password'],
+                                              autoconnect=self.autoconnect)
+        return self.pub_client
+
+    @tornado.gen.coroutine
+    def pub_call(self, msg, *channels):
+        pub_client = self.get_pub_client()
+        if not pub_client.is_connected():
+            yield pub_client.connect()
+        if not channels:
+            channels = self.redis_pub_sub_config['channels']
+        for channel in channels:
+            yield pub_client.call("PUBLISH", channel, msg)
 
     def long_listen(self):
         self.loop.add_callback(self.connect_and_listen, self.redis_pub_sub_config['channels'])
@@ -37,10 +56,10 @@ class PubSubTornadis(object):
                 self.connect_times = 0
                 yield self.first_do_after_subscribed()
                 while True:
-                    msg = yield self.client.pubsub_pop_message()
+                    msgs = yield self.client.pubsub_pop_message()
                     try:
-                        yield self.do_msg(msg)
-                        if isinstance(msg, tornadis.TornadisException):
+                        yield self.do_msg(msgs)
+                        if isinstance(msgs, tornadis.TornadisException):
                             # closed connection by the server
                             break
                     except Exception, e:
@@ -61,5 +80,5 @@ class PubSubTornadis(object):
 
     # override
     @tornado.gen.coroutine
-    def do_msg(self, msg):
-        logger.info("收到订阅消息"+ msg)
+    def do_msg(self, msgs):
+        logger.info("收到订阅消息"+ str(msgs))

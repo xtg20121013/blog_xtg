@@ -46,6 +46,7 @@ class Application(tornado.web.Application):
         self.thread_executor = concurrent.futures.ThreadPoolExecutor(config['max_threads_num'])
         self.db_pool = db_poll_init()
         self.cache_manager = cache_manager_init()
+        self.pubsub_manager = None
 
 if __name__ == '__main__':
     options.define("port", default=config['default_server_port'], help="run server on a specific port", type=int)
@@ -64,5 +65,7 @@ if __name__ == '__main__':
     application.listen(options.port);
     loop = tornado.ioloop.IOLoop.current();
     # 加载redis消息监听客户端
-    PubSubService(redis_pub_sub_config, application, loop).long_listen()
+    pubsub_manager = PubSubService(redis_pub_sub_config, application, loop)
+    pubsub_manager.long_listen()
+    application.pubsub_manager = pubsub_manager
     loop.start()

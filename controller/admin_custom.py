@@ -3,7 +3,8 @@ from base import BaseHandler
 from tornado.gen import coroutine
 from tornado.web import authenticated
 from config import config
-from service.user_service import UserService
+from service.custom_service import BlogInfoService
+from service.init_service import SiteCacheService
 
 
 class AdminCustomBlogInfoHandler(BaseHandler):
@@ -12,43 +13,16 @@ class AdminCustomBlogInfoHandler(BaseHandler):
     def get(self):
         self.render("admin/custom_blog_info.html", navbar_styles=config['navbar_styles'])
 
-#     @coroutine
-#     def post(self, require):
-#         if require == "edit-user-info":
-#             yield self.edit_user_info()
-#         elif require == "change-password":
-#             yield self.change_password()
-#
-#     @authenticated
-#     @coroutine
-#     def edit_user_info(self):
-#         user_info = {"username": self.get_argument("username"), "email": self.get_argument("email")}
-#         user = yield self.async_do(UserService.update_user_info, self.db, self.current_user.name,
-#                                    self.get_argument("password"), user_info)
-#         if user:
-#             self.save_login_user(user)
-#             self.add_message('success', u'修改用户信息成功!')
-#
-#         else:
-#             self.add_message('danger', u'修改用户信息失败！密码不正确!')
-#         self.redirect(self.reverse_url("admin.account"))
-#
-#     @authenticated
-#     @coroutine
-#     def change_password(self):
-#         old_password = self.get_argument("old_password")
-#         new_password = self.get_argument("password")
-#         count = yield self.async_do(UserService.update_password, self.db, self.current_user.name,
-#                                     old_password, new_password)
-#         if count > 0:
-#             self.add_message('success', u'修改密码成功!')
-#         else:
-#             self.add_message('danger', u'修改密码失败！')
-#         self.redirect(self.reverse_url("admin.account"))
-#
-#
-# class AdminHelpHandler(BaseHandler):
-#
-#     @authenticated
-#     def get(self):
-#         self.render('admin/help_page.html')
+    @coroutine
+    @authenticated
+    def post(self):
+        info = dict(title=self.get_argument("title"), signature=self.get_argument("signature"),
+                    navbar=self.get_argument("navbar"),)
+        blog_info = yield self.async_do(BlogInfoService.update_blog_info, self.db, info)
+        if blog_info:
+            #  更新本地及redis缓存，并发布消息通知其他节点更新
+            yield SiteCacheService.update_blog_info(self.cache_manager, self.pubsub_manager, blog_info)
+            self.add_message('success', u'修改博客信息成功!')
+        else:
+            self.add_message('danger', u'修改失败！')
+        self.redirect(self.reverse_url("admin.custom.blog_info"))

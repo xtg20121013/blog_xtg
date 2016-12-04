@@ -2,7 +2,8 @@
 import logging
 import tornado.gen
 from extends.pub_sub_tornadis import PubSubTornadis
-from model.site_info import SiteCollection
+from init_service import SiteCacheService
+from config import redis_pub_sub_channels
 
 logger = logging.getLogger(__name__)
 
@@ -26,8 +27,13 @@ class PubSubService(PubSubTornadis):
 
     @tornado.gen.coroutine
     def first_do_after_subscribed(self):
-        yield SiteCollection.query_all(self.cache_manager, self.thread_do, self.db)
+        yield SiteCacheService.query_all(self.cache_manager, self.thread_do, self.db)
 
     @tornado.gen.coroutine
-    def do_msg(self, msg):
-        logger.info("收到redis消息: "+msg)
+    def do_msg(self, msgs):
+        logger.info("收到redis消息: " + str(msgs))
+        if len(msgs) >= 3:
+            channel = msgs[1]
+            msg = msgs[2]
+            if channel == redis_pub_sub_channels['cache_message_channel']:
+                yield SiteCacheService.update_by_sub_msg(msg, self.cache_manager, self.thread_do, self.db)
