@@ -6,6 +6,7 @@ from extends.utils import AlchemyEncoder, Dict
 from model.models import Menu, ArticleType, Plugin, BlogView, Article, Comment, Source
 from sqlalchemy.orm import joinedload
 from custom_service import BlogInfoService
+from plugin_service import PluginService
 from model.site_info import SiteCollection
 
 
@@ -23,6 +24,7 @@ class SiteCacheService(object):
     """
     PUB_SUB_MSGS = dict(
         blog_info_updated="blog_info_updated",  # blog_info更新消息
+        plugins_updated="plugins_updated",  # plugins更新消息
     )
 
     @staticmethod
@@ -81,10 +83,8 @@ class SiteCacheService(object):
             plugins = json.loads(plugins_json, object_hook=Dict);
             SiteCollection.plugins = plugins
         if SiteCollection.plugins is None:
-            SiteCollection.plugins = yield thread_do(get_plugins, db)
-            if SiteCollection.plugins is not None:
-                plugins_json = json.dumps(SiteCollection.plugins, cls=AlchemyEncoder)
-                yield cache_manager.call("SET", site_cache_keys['plugins'], plugins_json)
+            plugins = yield thread_do(PluginService.list_plugins, db)
+            yield SiteCacheService.update_plugins(cache_manager, plugins)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -132,11 +132,17 @@ class SiteCacheService(object):
                 article_sources_json = json.dumps(SiteCollection.article_sources, cls=AlchemyEncoder)
                 yield cache_manager.call("SET", site_cache_keys['article_sources'], article_sources_json)
 
+# 下面是缓存更新
+
     @staticmethod
     @tornado.gen.coroutine
     def update_by_sub_msg(msg, cache_manager, thread_do, db):
-        if msg and msg == SiteCacheService.PUB_SUB_MSGS['blog_info_updated']:
+        if not msg:
+            pass
+        elif msg == SiteCacheService.PUB_SUB_MSGS['blog_info_updated']:
             yield SiteCacheService.query_blog_info(cache_manager, thread_do, db)
+        elif msg == SiteCacheService.PUB_SUB_MSGS['plugins_updated']:
+            yield SiteCacheService.query_plugins(cache_manager, thread_do, db)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -150,6 +156,16 @@ class SiteCacheService(object):
         if is_pub_all:
             yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_info_updated'])
 
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_plugins(cache_manager, plugins, is_pub_all=False, pubsub_manager=None):
+        if plugins is not None:
+            SiteCollection.plugins = plugins
+            plugins_json = json.dumps(plugins, cls=AlchemyEncoder)
+            yield cache_manager.call("SET", site_cache_keys['plugins'], plugins_json)
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['plugins_updated'])
+
 
 def get_menus(db_session):
     menus = db_session.query(Menu).order_by(Menu.order.asc()).all()
@@ -162,11 +178,6 @@ def get_article_types_not_under_menu(db_session):
     article_types_not_under_menu = db_session.query(ArticleType).options(joinedload(ArticleType.setting))\
         .filter(ArticleType.menu_id.is_(None)).all()
     return article_types_not_under_menu
-
-
-def get_plugins(db_session):
-    plugins = db_session.query(Plugin).order_by(Plugin.order.asc()).all()
-    return plugins
 
 
 def get_blog_view_count(db_session):

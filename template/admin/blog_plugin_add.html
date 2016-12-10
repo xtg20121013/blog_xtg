@@ -1,8 +1,8 @@
-{% extends 'admin/admin_base.html' %}
+{% extends 'admin_base.html' %}
 
-{% block title %}
+{% block title2 %}
     Blog_mini -添加插件
-{% endblock %}
+{% end %}
 
 {% block admin_content %}
 <div class="entry-box submit-article">
@@ -10,14 +10,14 @@
     <hr/>
     <div>
     <form class="add-blog-plugin" method="post" action="">
-        {{ form.csrf_token }}
+        {% module xsrf_form_html() %}
         <div class="form-group">
-            {{ form.title.label }}
-            {{ form.title(class='form-control', required='') }}
-            {{ form.note.label }}（可选）
-            {{ form.note(class='form-control') }}
-            {{ form.content.label }}
-            {{ form.content(id='pluginContent') }}
+            <label for="title">插件名称</label>
+            <input class="form-control" id="title" name="title" required="" type="text" value="">
+            <label for="note">备注</label>（可选）
+            <textarea class="form-control" id="note" name="note"></textarea>
+            <label for="pluginContent">内容</label>
+            <textarea id="pluginContent" name="content"></textarea>
         </div>
         <div class="add-plugin-button">
             <button type="submit" class="btn btn-success">提交</button>
@@ -25,10 +25,9 @@
     </form>
     </div>
 </div>
-{% endblock %}
+{% end %}
 
-{% block script %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/tinymce_setup.js') }}"></script>
-{% endblock %}
+{% block private_script %}
+    <script type="text/javascript" src="{{ static_url('tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/tinymce_setup.js') }}"></script>
+{% end %}

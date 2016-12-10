@@ -110,7 +110,7 @@
                                 {% if plugin.content != Constants.SYSTEM_PLUGIN %}
                                     <div id="{{ plugin.title }}" class="entry-box">
                                         <h5><strong>{{ plugin.title }}</strong></h5>
-                                        {{ plugin.content }}
+                                        {% raw plugin.content %}
                                     </div>
                                 {% else %}
                                     <div class="entry-box">

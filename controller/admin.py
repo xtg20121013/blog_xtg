@@ -27,7 +27,6 @@ class AdminAccountHandler(BaseHandler):
         if user:
             self.save_login_user(user)
             self.add_message('success', u'修改用户信息成功!')
-
         else:
             self.add_message('danger', u'修改用户信息失败！密码不正确!')
         self.redirect(self.reverse_url("admin.account"))
