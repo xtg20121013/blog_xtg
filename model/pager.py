@@ -6,7 +6,7 @@ class Pager(Dict):
 
     def __init__(self, request):
         self.pageNo = int(request.get_argument("pageNo", 1))
-        self.pageSize = int(request.get_argument("pageSize", 1))
+        self.pageSize = int(request.get_argument("pageSize", 10))
         self.totalPage = 1
         self.totalCount = 0
         self.result = []
