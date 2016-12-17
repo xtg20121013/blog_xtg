@@ -1,31 +1,60 @@
-{% macro pagination_widget(pagination, endpoint, fragment='') %}
+<div class="pagination">
     <ul class="pagination">
-        <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
-            <a href="{% if pagination.has_prev %}{{ url_for(endpoint,
-                page = pagination.page - 1, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+        <li {% if not pager.has_prev() %} class="disabled" {% end %}>
+            <a href="{% if pager.has_prev() %}{{ pager.build_url(url, pager.pageNo-1, params) }}{% else %}#{% end %}">
                 &laquo;
             </a>
         </li>
-        {% for p in pagination.iter_pages() %}
-            {% if p %}
-                {% if p == pagination.page %}
-                <li class="active">
-                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
+
+        {% if pager.totalPage <= 8 %}
+            {% for p in range(1, pager.totalPage+1) %}
+                <li {% if p == pager.pageNo %} class="active" {% end %}>
+                    <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
                 </li>
-                {% else %}
-                <li>
-                    <a href="{{ url_for(endpoint, page = p, **kwargs) }}{{ fragment }}">{{ p }}</a>
-                </li>
-                {% endif %}
+            {% end %}
+        {% else %}
+            {% if pager.pageNo <= 5 %}
+                {% for p in range(1, 6) %}
+                    <li {% if p == pager.pageNo %} class="active" {% end %}>
+                        <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
+                    </li>
+                {% end %}
             {% else %}
-            <li class="disabled"><a href="#">&hellip;</a></li>
-            {% endif %}
-        {% endfor %}
-        <li{% if not pagination.has_next %} class="disabled"{% endif %}>
-            <a href="{% if pagination.has_next %}{{ url_for(endpoint,
-                page = pagination.page + 1, **kwargs) }}{{ fragment }}{% else %}#{% endif %}">
+                {% for p in range(1, 3) %}
+                    <li>
+                        <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
+                    </li>
+                {% end %}
+                    <li class="disabled"><a href="#">&hellip;</a></li>
+                {% for p in range(pager.pageNo-2, pager.pageNo+1) %}
+                    <li {% if p == pager.pageNo %} class="active" {% end %}>
+                        <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
+                    </li>
+                {% end %}
+            {% end %}
+
+            {% if pager.pageNo >= pager.totalPage-3 %}
+                {% for p in range(pager.pageNo+1, pager.totalPage+1) %}
+                    <li>
+                        <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
+                    </li>
+                {% end %}
+            {% else %}
+                {% for p in range(pager.pageNo+1 if pager.pageNo > 5 else 6, pager.pageNo+3) %}
+                    <li>
+                        <a href="{{ pager.build_url(url, p, params) }}">{{ p }}</a>
+                    </li>
+                {% end %}
+                <li class="disabled"><a href="#">&hellip;</a></li>
+                <li>
+                    <a href="{{ pager.build_url(url, pager.totalPage, params) }}">{{ pager.totalPage }}</a>
+                </li>
+            {% end %}
+        {% end %}
+        <li {% if not pager.has_next() %} class="disabled" {% end %}>
+            <a href="{% if pager.has_next() %}{{ pager.build_url(url, pager.pageNo+1, params) }}{% else %}#{% end %}">
                 &raquo;
             </a>
         </li>
     </ul>
-{% endmacro %}
+</div>

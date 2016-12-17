@@ -19,8 +19,11 @@ handlers = [
     url(r"/admin/account/(change-password|edit-user-info)",controller.admin.AdminAccountHandler, name="admin.account.update"),
     # admin.custom
     url(r"/admin/custom/blog-info", controller.admin_custom.AdminCustomBlogInfoHandler, name="admin.custom.blog_info"),
-    url(r"/", controller.home.HomeHandler, name="admin.custom.blog_plugin"),
-    url(r"/admin/custom/blog-plugin/(add)", controller.admin_custom.AdminCustomBlogPluginHandler, name="admin.custom.plugin.action"),
+    url(r"/admin/custom/blog-plugin", controller.admin_custom.AdminCustomBlogPluginHandler, name="admin.custom.blog_plugin"),
+    url(r"/admin/custom/blog-plugin/(add)",
+        controller.admin_custom.AdminCustomBlogPluginHandler, name="admin.custom.plugin.action"),
+    url(r"/admin/custom/blog-plugin/([0-9]+)/(sort-down|sort-up|disable|enable|edit|delete)",
+        controller.admin_custom.AdminCustomBlogPluginHandler, name="admin.custom.plugin.update"),
 
     url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
     url(r"/", controller.home.HomeHandler, name="admin.manage_articles"),

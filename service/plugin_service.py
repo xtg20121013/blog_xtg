@@ -2,7 +2,8 @@
 import logging
 from sqlalchemy import func
 from model.models import Plugin
-from extends.utils import Dict
+from model.search_params.plugin_params import PluginSearchParams
+from . import BaseService
 
 logger = logging.getLogger(__name__)
 
@@ -13,6 +14,15 @@ class PluginService(object):
     def list_plugins(db_session):
         plugins = db_session.query(Plugin).order_by(Plugin.order.asc()).all()
         return plugins
+
+    @staticmethod
+    def page_plugins(db_session, pager, search_params):
+        query = db_session.query(Plugin)
+        if not search_params:
+            if search_params.order_mode == PluginSearchParams.ORDER_MODE_ORDER_ASC:
+                query = query.order_by(Plugin.order.asc())
+        pager = BaseService.query_pager(query, pager)
+        return pager
 
     @staticmethod
     def save(db_session, plugin):

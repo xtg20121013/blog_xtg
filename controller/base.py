@@ -81,6 +81,10 @@ class BaseHandler(tornado.web.RequestHandler):
             return all_messages
         return None
 
+    def write_json(self, json):
+        self.set_header("Content-Type", "application/json; charset=UTF-8")
+        self.write(json)
+
     @gen.coroutine
     def on_finish(self):
         if self.db_session:

@@ -3,6 +3,8 @@ from base import BaseHandler
 from tornado.gen import coroutine
 from tornado.web import authenticated
 from config import config
+from model.pager import Pager
+from model.search_params.plugin_params import PluginSearchParams
 from service.custom_service import BlogInfoService
 from service.init_service import SiteCacheService
 from service.plugin_service import PluginService
@@ -37,14 +39,25 @@ class AdminCustomBlogInfoHandler(BaseHandler):
 
 class AdminCustomBlogPluginHandler(BaseHandler):
 
-    def get(self, require):
+    @coroutine
+    def get(self, require=None):
         if require == 'add':
             self.add_get()
+        else:
+            yield self.index_get()
 
     @coroutine
     def post(self, require):
         if require == 'add':
             yield self.add_post()
+
+    @coroutine
+    @authenticated
+    def index_get(self):
+        pager = Pager(self)
+        plugin_search_params = PluginSearchParams(self)
+        pager = yield self.async_do(PluginService.page_plugins, self.db, pager, plugin_search_params)
+        self.render("admin/custom_blog_plugin.html", pager=pager)
 
     @authenticated
     def add_get(self):

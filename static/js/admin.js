@@ -155,9 +155,7 @@ function get_blog_info() {
 
 //JS For confirm to delete a plugin
 function delPluginCfm(url) {
-    $('#delPluginCfmClick').click(function(){
-        window.location.href = url;
-    });
+    $('#delPluginCfmClick').attr('href', url);
     $('#delPluginCfmModal').modal();
 }
 

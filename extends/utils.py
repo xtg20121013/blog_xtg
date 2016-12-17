@@ -21,13 +21,14 @@ class AlchemyEncoder(json.JSONEncoder):
         if isinstance(o.__class__, DeclarativeMeta):
             data = {}
             fields = o.__json__() if hasattr(o, '__json__') else dir(o)
-            for field in [f for f in fields if not f.startswith('_') and f not in ['metadata', 'query', 'query_class']]:
+            fields = [f for f in fields if not f.startswith('_') and f not in ['metadata', 'query', 'query_class']]
+            for field in fields:
                 value = o.__getattribute__(field)
                 try:
                     json.dumps(value, cls=AlchemyEncoder)
                     data[field] = value
                 except TypeError:
-                    data[field] = None
+                    pass
             return data
         return json.JSONEncoder.default(self, o)
 
@@ -42,3 +43,6 @@ class Dict(dict):
         except KeyError:
             logger.warning(key+" not in "+str(self))
             return None;
+
+    def __setattr__(self, key, value):
+        self[key] = value
