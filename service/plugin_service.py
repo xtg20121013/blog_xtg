@@ -18,7 +18,7 @@ class PluginService(object):
     @staticmethod
     def page_plugins(db_session, pager, search_params):
         query = db_session.query(Plugin)
-        if not search_params:
+        if search_params:
             if search_params.order_mode == PluginSearchParams.ORDER_MODE_ORDER_ASC:
                 query = query.order_by(Plugin.order.asc())
         pager = BaseService.query_pager(query, pager)
@@ -42,3 +42,31 @@ class PluginService(object):
         if max_order is None:
             max_order = 0
         return max_order
+
+    @staticmethod
+    def sort_up(db_session, plugin_id):
+        plugin = db_session.query(Plugin).get(plugin_id)
+        if plugin:
+            plugin_up = db_session.query(Plugin).\
+                filter(Plugin.order < plugin.order).order_by(Plugin.order.desc()).first()
+            if plugin_up:
+                order_tmp = plugin.order
+                plugin.order = plugin_up.order
+                plugin_up.order = order_tmp
+                db_session.commit()
+                return True
+        return False
+
+    @staticmethod
+    def sort_down(db_session, plugin_id):
+        plugin = db_session.query(Plugin).get(plugin_id)
+        if plugin:
+            plugin_up = db_session.query(Plugin).\
+                filter(Plugin.order > plugin.order).order_by(Plugin.order.asc()).first()
+            if plugin_up:
+                order_tmp = plugin.order
+                plugin.order = plugin_up.order
+                plugin_up.order = order_tmp
+                db_session.commit()
+                return True
+        return False

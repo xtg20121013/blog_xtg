@@ -181,7 +181,7 @@ class Plugin(DbBase):
     title = Column(String(64), unique=True)
     note = Column(Text, default='')
     content = Column(Text, default='')
-    order = Column(Integer, default=0)
+    order = Column(Integer, index=True, default=0)
     disabled = Column(Boolean, default=False)
 
     def sort_delete(self, session):

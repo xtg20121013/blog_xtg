@@ -40,9 +40,18 @@ class AdminCustomBlogInfoHandler(BaseHandler):
 class AdminCustomBlogPluginHandler(BaseHandler):
 
     @coroutine
-    def get(self, require=None):
-        if require == 'add':
-            self.add_get()
+    def get(self, *require):
+        if require:
+            if len(require) == 1:
+                if require[0] == 'add':
+                    self.add_get()
+            elif len(require) == 2:
+                plugin_id = require[0]
+                action = require[1]
+                if action == 'sort-up':
+                    yield self.sort_up_get(plugin_id)
+                elif action == 'sort-down':
+                    yield self.sort_down_get(plugin_id)
         else:
             yield self.index_get()
 
@@ -62,6 +71,28 @@ class AdminCustomBlogPluginHandler(BaseHandler):
     @authenticated
     def add_get(self):
         self.render("admin/blog_plugin_add.html")
+
+    @coroutine
+    @authenticated
+    def sort_up_get(self, plugin_id):
+        updated = yield self.async_do(PluginService.sort_up, self.db, plugin_id)
+        if updated:
+            yield self.flush_plugins()
+            self.add_message('success', u'插件升序成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
+        self.redirect(self.reverse_url('admin.custom.blog_plugin')+"?"+self.request.query)
+
+    @coroutine
+    @authenticated
+    def sort_down_get(self, plugin_id):
+        updated = yield self.async_do(PluginService.sort_down, self.db, plugin_id)
+        if updated:
+            yield self.flush_plugins()
+            self.add_message('success', u'插件降序成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
+        self.redirect(self.reverse_url('admin.custom.blog_plugin')+"?"+self.request.query)
 
     @coroutine
     @authenticated
