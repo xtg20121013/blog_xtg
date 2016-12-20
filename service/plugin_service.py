@@ -70,3 +70,11 @@ class PluginService(object):
                 db_session.commit()
                 return True
         return False
+
+    @staticmethod
+    def update_disabled(db_session, plugin_id, disabled):
+        update_count = db_session.query(Plugin).filter(Plugin.id == plugin_id).update({Plugin.disabled:disabled})
+        if update_count:
+            db_session.commit()
+        return update_count
+

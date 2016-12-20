@@ -52,6 +52,10 @@ class AdminCustomBlogPluginHandler(BaseHandler):
                     yield self.sort_up_get(plugin_id)
                 elif action == 'sort-down':
                     yield self.sort_down_get(plugin_id)
+                elif action == 'disable':
+                    yield self.set_disabled_get(plugin_id, True)
+                elif action == 'enable':
+                    yield self.set_disabled_get(plugin_id, False)
         else:
             yield self.index_get()
 
@@ -90,6 +94,17 @@ class AdminCustomBlogPluginHandler(BaseHandler):
         if updated:
             yield self.flush_plugins()
             self.add_message('success', u'插件降序成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
+        self.redirect(self.reverse_url('admin.custom.blog_plugin')+"?"+self.request.query)
+
+    @coroutine
+    @authenticated
+    def set_disabled_get(self, plugin_id, disabled):
+        updated_count = yield self.async_do(PluginService.update_disabled, self.db, plugin_id, disabled)
+        if updated_count:
+            yield self.flush_plugins()
+            self.add_message('success', u'插件禁用成功!')
         else:
             self.add_message('danger', u'操作失败！')
         self.redirect(self.reverse_url('admin.custom.blog_plugin')+"?"+self.request.query)
