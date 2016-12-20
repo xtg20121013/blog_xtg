@@ -78,3 +78,10 @@ class PluginService(object):
             db_session.commit()
         return update_count
 
+    @staticmethod
+    def delete(db_session, plugin_id):
+        update_count = db_session.query(Plugin).filter(Plugin.id == plugin_id).delete()
+        if update_count:
+            db_session.commit()
+        return update_count
+
