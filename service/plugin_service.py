@@ -11,6 +11,18 @@ logger = logging.getLogger(__name__)
 class PluginService(object):
 
     @staticmethod
+    def get(db_session, plugin_id):
+        plugin = db_session.query(Plugin).get(plugin_id)
+        return plugin
+
+    @staticmethod
+    def get_editable(db_session, plugin_id):
+        plugin = db_session.query(Plugin).get(plugin_id)
+        if plugin:
+            plugin = plugin if plugin.content != 'system_plugin' else None
+        return plugin
+
+    @staticmethod
     def list_plugins(db_session):
         plugins = db_session.query(Plugin).order_by(Plugin.order.asc()).all()
         return plugins
@@ -80,8 +92,21 @@ class PluginService(object):
 
     @staticmethod
     def delete(db_session, plugin_id):
-        update_count = db_session.query(Plugin).filter(Plugin.id == plugin_id).delete()
-        if update_count:
+        plugin = PluginService.get_editable(db_session, plugin_id)
+        if plugin:
+            db_session.delete(plugin)
             db_session.commit()
-        return update_count
+            return True
+        return False
+
+    @staticmethod
+    def update(db_session, plugin_id, plugin_to_update):
+        plugin = PluginService.get_editable(db_session, plugin_id)
+        if plugin:
+            plugin.title = plugin_to_update['title']
+            plugin.note = plugin_to_update['note']
+            plugin.content = plugin_to_update['content']
+            db_session.commit()
+            return True
+        return False
 

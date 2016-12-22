@@ -1,0 +1,33 @@
+{% extends 'admin_base.html' %}
+
+{% block title2 %}
+    修改插件
+{% end %}
+
+{% block admin_content %}
+<div class="entry-box submit-article">
+    <h4><strong>添加插件</strong></h4>
+    <hr/>
+    <div>
+    <form class="add-blog-plugin" method="post" action="">
+        {% module xsrf_form_html() %}
+        <div class="form-group">
+            <label for="title">插件名称</label>
+            <input class="form-control" id="title" name="title" required="" type="text" value="{{ plugin.title }}">
+            <label for="note">备注</label>（可选）
+            <textarea class="form-control" id="note" name="note">{{ plugin.note }}</textarea>
+            <label for="pluginContent">内容</label>
+            <textarea id="pluginContent" name="content">{{ plugin.content }}</textarea>
+        </div>
+        <div class="add-plugin-button">
+            <button type="submit" class="btn btn-success">提交</button>
+        </div>
+    </form>
+    </div>
+</div>
+{% end %}
+
+{% block private_script %}
+    <script type="text/javascript" src="{{ static_url('tinymce/js/tinymce/tinymce.min.js') }}"></script>
+    <script type="text/javascript" src="{{ static_url('js/tinymce_setup.js') }}"></script>
+{% end %}

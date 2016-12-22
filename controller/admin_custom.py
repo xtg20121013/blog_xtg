@@ -58,13 +58,22 @@ class AdminCustomBlogPluginHandler(BaseHandler):
                     yield self.set_disabled_get(plugin_id, False)
                 elif action == 'delete':
                     yield self.delete_get(plugin_id)
+                elif action == 'edit':
+                    yield self.edit_get(plugin_id)
         else:
             yield self.index_get()
 
     @coroutine
-    def post(self, require):
-        if require == 'add':
-            yield self.add_post()
+    def post(self, *require):
+        if require:
+            if len(require) == 1:
+                if require[0] == 'add':
+                    yield self.add_post()
+            elif len(require) == 2:
+                plugin_id = require[0]
+                action = require[1]
+                if action == 'edit':
+                    yield self.edit_post(plugin_id)
 
     @coroutine
     @authenticated
@@ -77,6 +86,12 @@ class AdminCustomBlogPluginHandler(BaseHandler):
     @authenticated
     def add_get(self):
         self.render("admin/blog_plugin_add.html")
+
+    @coroutine
+    @authenticated
+    def edit_get(self, plugin_id):
+        plugin = yield self.async_do(PluginService.get, self.db, plugin_id)
+        self.render("admin/blog_plugin_edit.html", plugin=plugin)
 
     @coroutine
     @authenticated
@@ -134,6 +149,24 @@ class AdminCustomBlogPluginHandler(BaseHandler):
         else:
             self.add_message('danger', u'保存失败！')
         self.redirect(self.reverse_url('admin.custom.plugin.action', 'add'))
+
+    @coroutine
+    @authenticated
+    def edit_post(self, plugin_id):
+        plugin = dict(
+            id=plugin_id,
+            title=self.get_argument("title", None),
+            note=self.get_argument("note", None),
+            content=self.get_argument("content", None),
+        )
+        updated = yield self.async_do(PluginService.update, self.db, plugin_id, plugin)
+        if updated:
+            yield self.flush_plugins()
+            self.add_message('success', u'插件修改成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
+        self.redirect(self.reverse_url('admin.custom.blog_plugin')+"?"+self.request.query)
+
 
     @coroutine
     def flush_plugins(self, plugins=None):
