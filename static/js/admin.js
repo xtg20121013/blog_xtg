@@ -131,13 +131,11 @@ $(document).ready(function() {
 });
 
 //JS For edit articleTypeNav to get its info
-function get_articleTypeNav_info(url) {
-    $.getJSON(url, function(data) {
-        $('#editNavName').val(data.name);
-        $('#nav_id').val(data.nav_id);
-        $('#NavModalTitle').text('修改分类导航：' + data.name);
-        $('#editArticleTypeNavFormModel').modal();
-    });
+function get_articleTypeNav_info(id, name) {
+    $('#editNavName').val(name);
+    $('#nav_id').val(id);
+    $('#NavModalTitle').text('修改分类导航：' + name);
+    $('#editArticleTypeNavFormModel').modal();
 }
 
 //JS For confirm to delete an articleType nav

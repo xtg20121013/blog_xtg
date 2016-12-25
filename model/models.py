@@ -6,7 +6,7 @@ from sqlalchemy.orm import relationship, backref
 DbBase = declarative_base()
 
 
-class DbInit():
+class DbInit(object):
     created_at = Column(DateTime, default=datetime.now)
 
 
@@ -29,17 +29,8 @@ class Menu(DbBase):
     types = relationship('ArticleType', backref='menu', lazy='dynamic')
     order = Column(Integer, default=0, nullable=False)
 
-    def sort_delete(self, session):
-        for menu in Menu.query.order_by(Menu.order).offset(self.order).all():
-            menu.order -= 1
-            session.add(menu)
-        session.commit()
-
-    @staticmethod
-    def return_menus():
-        menus = [(m.id, m.name) for m in Menu.query.all()]
-        menus.append((-1, u'不选择导航（该分类将单独成一导航）'))
-        return menus
+    def fetch_all_types(self):
+        self.all_types = self.types.all()
 
     def __repr__(self):
         return '<Menu %r>' % self.name
@@ -183,12 +174,6 @@ class Plugin(DbBase):
     content = Column(Text, default='')
     order = Column(Integer, index=True, default=0)
     disabled = Column(Boolean, default=False)
-
-    def sort_delete(self, session):
-        for plugin in Plugin.query.order_by(Plugin.order.asc()).offset(self.order).all():
-            plugin.order -= 1
-            session.add(plugin)
-        session.commit()
 
     def __repr__(self):
         return '<Plugin %r>' % self.title
