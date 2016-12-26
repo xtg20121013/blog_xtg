@@ -54,7 +54,7 @@
                         </td>
                         <td>
                             <a class="btn" title="修改导航信息"
-                               onclick="get_articleTypeNav_info('{{ menu.id }}', '{{ menu.name}}')">
+                               onclick="get_articleTypeNav_info('{{ reverse_url('admin.articleTypeNav.update', menu.id, 'update') }}?pageNo={{pager.pageNo}}','{{ menu.id }}', '{{ menu.name}}')">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </a>
                         </td>
@@ -116,7 +116,7 @@
                 <h4 class="modal-title" id="NavModalTitle"></h4>
             </div>
             <form id="editArticleTypeNavForm" method="post"
-                  action="{{ reverse_url('admin.articleTypeNav.update', menu.id, 'update') }}?pageNo={{pager.pageNo}}">
+                  action="">
                 <div class="modal-body">
                         <div class="form-group">
                             {% module xsrf_form_html() %}

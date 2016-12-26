@@ -32,9 +32,9 @@ class AdminArticleTypeNavHandler(BaseHandler):
                 menu_id = require[0]
                 action = require[1]
                 if action == 'sort-up':
-                    pass
+                    yield self.sort_up_get(menu_id)
                 elif action == 'sort-down':
-                    pass
+                    yield self.sort_down_get(menu_id)
         else:
             yield self.page_get()
 
@@ -44,12 +44,26 @@ class AdminArticleTypeNavHandler(BaseHandler):
             if len(require) == 1:
                 if require[0] == 'add':
                     yield self.add_post()
-            # elif len(require) == 2:
-            #     plugin_id = require[0]
-            #     action = require[1]
-            #     if action == 'edit':
-            #         yield self.edit_post(plugin_id)
+            elif len(require) == 2:
+                menu_id = require[0]
+                action = require[1]
+                if action == 'update':
+                    yield self.update_post(menu_id)
 
+    @coroutine
+    @authenticated
+    def update_post(self, menu_id):
+        menu = dict(name=self.get_argument('name'),)
+        update_count = yield self.async_do(MenuService.update, self.db, menu_id, menu)
+        if update_count:
+            yield self.flush_menus()
+            self.add_message('success', u'修改成功!')
+        else:
+            self.add_message('danger', u'保存失败！')
+        redirect_url = self.reverse_url('admin.articleTypeNavs')
+        if self.request.query:
+            redirect_url += "?"+self.request.query
+        self.redirect(redirect_url)
 
     @coroutine
     @authenticated
@@ -61,14 +75,41 @@ class AdminArticleTypeNavHandler(BaseHandler):
 
     @coroutine
     @authenticated
-    def add_post(self):
-        menu = dict(name=self.get_argument('name'),)
-        menu_saved = yield self.async_do(MenuService.add_menu, self.db, menu)
-        if menu_saved and menu_saved.id:
+    def sort_up_get(self, menu_id):
+        updated = yield self.async_do(MenuService.sort_up, self.db, menu_id)
+        if updated:
             yield self.flush_menus()
-            self.add_message('success', u'保存成功!')
+            self.add_message('success', u'导航升序成功!')
         else:
-            self.add_message('danger', u'保存失败！')
+            self.add_message('danger', u'操作失败！')
+        redirect_url = self.reverse_url('admin.articleTypeNavs')
+        if self.request.query:
+            redirect_url += "?"+self.request.query
+        self.redirect(redirect_url)
+
+    @coroutine
+    @authenticated
+    def sort_down_get(self, menu_id):
+        updated = yield self.async_do(MenuService.sort_down, self.db, menu_id)
+        if updated:
+            yield self.flush_menus()
+            self.add_message('success', u'导航降序成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
+        redirect_url = self.reverse_url('admin.articleTypeNavs')
+        if self.request.query:
+            redirect_url += "?"+self.request.query
+        self.redirect(redirect_url)
+
+    @coroutine
+    @authenticated
+    def sort_up_get(self, menu_id):
+        updated = yield self.async_do(MenuService.sort_up, self.db, menu_id)
+        if updated:
+            yield self.flush_menus()
+            self.add_message('success', u'导航升序成功!')
+        else:
+            self.add_message('danger', u'操作失败！')
         redirect_url = self.reverse_url('admin.articleTypeNavs')
         if self.request.query:
             redirect_url += "?"+self.request.query

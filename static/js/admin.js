@@ -131,9 +131,10 @@ $(document).ready(function() {
 });
 
 //JS For edit articleTypeNav to get its info
-function get_articleTypeNav_info(id, name) {
+function get_articleTypeNav_info(url, id, name) {
     $('#editNavName').val(name);
     $('#nav_id').val(id);
+    $('#editArticleTypeNavForm').attr('action', url)
     $('#NavModalTitle').text('修改分类导航：' + name);
     $('#editArticleTypeNavFormModel').modal();
 }

@@ -50,3 +50,42 @@ class MenuService(object):
                 for menu in menus:
                     menu.fetch_all_types()
         return menus
+
+    @staticmethod
+    def sort_up(db_session, menu_id):
+        menu = db_session.query(Menu).get(menu_id)
+        if menu:
+            menu_up = db_session.query(Menu). \
+                filter(Menu.order < menu.order).order_by(Menu.order.desc()).first()
+            if menu_up:
+                order_tmp = menu.order
+                menu.order = menu_up.order
+                menu_up.order = order_tmp
+                db_session.commit()
+                return True
+        return False
+
+    @staticmethod
+    def sort_down(db_session, menu_id):
+        menu = db_session.query(Menu).get(menu_id)
+        if menu:
+            menu_up = db_session.query(Menu). \
+                filter(Menu.order > menu.order).order_by(Menu.order.asc()).first()
+            if menu_up:
+                order_tmp = menu.order
+                menu.order = menu_up.order
+                menu_up.order = order_tmp
+                db_session.commit()
+                return True
+        return False
+
+    @staticmethod
+    def update(db_session, menu_id, menu_to_update):
+        count = 0
+        if menu_to_update:
+            if "id" in menu_to_update:
+                menu_to_update.remove("id")
+            count = db_session.query(Menu).filter(Menu.id == menu_id).update(menu_to_update)
+            if count:
+                db_session.commit()
+        return count
