@@ -89,3 +89,10 @@ class MenuService(object):
             if count:
                 db_session.commit()
         return count
+
+    @staticmethod
+    def delete(db_session, menu_id):
+        count = db_session.query(Menu).filter(Menu.id == menu_id).delete()
+        if count:
+            db_session.commit()
+        return count

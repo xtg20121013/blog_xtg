@@ -35,6 +35,8 @@ class AdminArticleTypeNavHandler(BaseHandler):
                     yield self.sort_up_get(menu_id)
                 elif action == 'sort-down':
                     yield self.sort_down_get(menu_id)
+                elif action == 'delete':
+                    yield self.delete_get(menu_id)
         else:
             yield self.page_get()
 
@@ -110,6 +112,20 @@ class AdminArticleTypeNavHandler(BaseHandler):
             self.add_message('success', u'导航升序成功!')
         else:
             self.add_message('danger', u'操作失败！')
+        redirect_url = self.reverse_url('admin.articleTypeNavs')
+        if self.request.query:
+            redirect_url += "?"+self.request.query
+        self.redirect(redirect_url)
+
+    @coroutine
+    @authenticated
+    def delete_get(self, menu_id):
+        update_count = yield self.async_do(MenuService.delete, self.db, menu_id)
+        if update_count:
+            yield self.flush_menus()
+            self.add_message('success', u'删除成功!')
+        else:
+            self.add_message('danger', u'保存失败！')
         redirect_url = self.reverse_url('admin.articleTypeNavs')
         if self.request.query:
             redirect_url += "?"+self.request.query
