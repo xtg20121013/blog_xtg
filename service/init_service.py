@@ -7,6 +7,7 @@ from model.models import Menu, ArticleType, Plugin, BlogView, Article, Comment, 
 from sqlalchemy.orm import joinedload
 from custom_service import BlogInfoService
 from plugin_service import PluginService
+from menu_service import MenuService
 from model.site_info import SiteCollection
 
 
@@ -25,6 +26,7 @@ class SiteCacheService(object):
     PUB_SUB_MSGS = dict(
         blog_info_updated="blog_info_updated",  # blog_info更新消息
         plugins_updated="plugins_updated",  # plugins更新消息
+        menus_updated="menus_updated",  # menus更新消息
     )
 
     @staticmethod
@@ -57,10 +59,9 @@ class SiteCacheService(object):
             menus = json.loads(menus_json, object_hook=Dict);
             SiteCollection.menus = menus
         if SiteCollection.menus is None:
-            SiteCollection.menus = yield thread_do(get_menus, db)
-            if SiteCollection.menus is not None:
-                menus_json = json.dumps(SiteCollection.menus, cls=AlchemyEncoder)
-                yield cache_manager.call("SET", site_cache_keys['menus'], menus_json)
+            menus = yield thread_do(MenuService.list_menus, db, show_types=True)
+            yield SiteCacheService.update_menus(cache_manager, menus)
+
 
     @staticmethod
     @tornado.gen.coroutine
@@ -143,6 +144,8 @@ class SiteCacheService(object):
             yield SiteCacheService.query_blog_info(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['plugins_updated']:
             yield SiteCacheService.query_plugins(cache_manager, thread_do, db)
+        elif msg == SiteCacheService.PUB_SUB_MSGS['menus_updated']:
+            yield SiteCacheService.query_menus(cache_manager, thread_do, db)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -166,12 +169,15 @@ class SiteCacheService(object):
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['plugins_updated'])
 
-
-def get_menus(db_session):
-    menus = db_session.query(Menu).order_by(Menu.order.asc()).all()
-    if not menus:
-        menus = []
-    return menus
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_menus(cache_manager, menus, is_pub_all=False, pubsub_manager=None):
+        if menus is not None:
+            SiteCollection.menus = menus
+            menus_json = json.dumps(menus, cls=AlchemyEncoder)
+            yield cache_manager.call("SET", site_cache_keys['menus'], menus_json)
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['menus_updated'])
 
 
 def get_article_types_not_under_menu(db_session):
