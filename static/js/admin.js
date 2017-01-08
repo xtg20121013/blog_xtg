@@ -106,9 +106,9 @@ function delArticleTypeCfm(url) {
 //JS For edit articleType to get its info
 function get_articleType_info(url, id, name, is_hide, introduction, menu_id) {
     $('#editName').val(name);
-    $('#editSetting_hide').val(is_hide);
+    $('#editSetting_hide').val(is_hide?'true':'false');
     $('#editIntroduction').val(introduction);
-    $('#editMenus').val(menu_id);
+    $('#editMenus').val(menu_id?menu_id:-1);
     $('#articleType_id').val(id);
     $('#editArticleTypeForm').attr('action', url)
     $('#ModalTitle').text('修改博文分类：' + name);

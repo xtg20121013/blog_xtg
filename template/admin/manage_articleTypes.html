@@ -60,7 +60,7 @@
                         <td>
                             <a class="btn" title="修改分类信息"
                                onclick="get_articleType_info('{{ reverse_url('admin.articleType.update', articleType.id, 'update') }}?pageNo={{pager.pageNo}}', {{articleType.id}},
-                               '{{articleType.name}}', {{articleType.is_hide}}, '{{articleType.introduction}}', {{articleType.menu_id}})">
+                               '{{articleType.name}}', {{'true' if articleType.is_hide else 'false'}}, '{{articleType.introduction}}', {{articleType.menu_id if articleType.menu_id else 'null'}})">
                                 <span class="glyphicon glyphicon-edit"></span>
                             </a>
                         </td>
@@ -101,7 +101,7 @@
                             <label for="name">分类名称</label>
                             <input class="form-control" id="name" name="name" required="" type="text" value="">
                             <label for="setting_hide">属性</label>
-                            <select class="form-control" id="setting_hide" name="setting_hide" required=""><option value=false>公开</option><option value=true>隐藏</option></select>
+                            <select class="form-control" id="setting_hide" name="setting_hide" required=""><option value='false'>公开</option><option value='true'>隐藏</option></select>
                             <label for="introduction">分类介绍</label>（可选）
                             <textarea class="form-control" id="introduction" name="introduction"></textarea>
                             <label for="menus">所属导航</label>
@@ -122,7 +122,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- 信息删除确认: For edit articleType form-->
+<!--  For edit articleType form-->
 <div class="modal fade" id="editArticleTypeFormModel">
     <div class="modal-dialog">
         <div class="modal-content message_align">
@@ -143,10 +143,10 @@
                             <textarea class="form-control" id="editIntroduction" name="introduction"></textarea>
                             <label for="menus">所属导航</label>
                             <select class="form-control" id="editMenus" name="menu_id" required="">
-                                <% for menu in menus %>
+                                {% for menu in menus %}
                                 <option value="{{ menu.id }}">{{ menu.name }}</option>
-                                <% end %>
-                                <option value="-1">不选择导航（该分类将单独成一导航）</option>
+                                {% end %}
+                                <option value="-1" selected>不选择导航（该分类将单独成一导航）</option>
                             </select>
                         </div>
                 </div>
@@ -159,7 +159,7 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<!-- 信息删除确认: For delete an articletype confirm -->
+<!--  For delete an articletype confirm -->
 <div class="modal fade" id="delArticleTypeCfmModel">
     <div class="modal-dialog">
         <div class="modal-content message_align">

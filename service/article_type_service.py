@@ -46,8 +46,38 @@ class ArticleTypeService(object):
         return None
 
     @staticmethod
+    def update_article_type(db_session, article_type_id, article_type):
+        try:
+            article_type_to_update=db_session.query(ArticleType).get(article_type_id)
+            if article_type_to_update and not article_type_to_update.is_protected:
+                article_type_to_update.name=article_type['name']
+                article_type_to_update.introduction = article_type['introduction']
+                article_type_to_update.menu_id = article_type['menu_id']
+                if not article_type_to_update.setting:
+                    article_type_to_update.setting = ArticleTypeSetting(name=article_type["name"],
+                                                                        hide=article_type["setting_hide"],)
+                else:
+                    article_type_to_update.setting.hide = article_type['setting_hide']
+                db_session.commit()
+                return True
+        except Exception, e:
+            logger.exception(e)
+        return False
+
+    @staticmethod
+    def delete(db_session, article_type_id):
+        article_type_to_delete = db_session.query(ArticleType).get(article_type_id)
+        if article_type_to_delete and not article_type_to_delete.is_protected:
+            # 未将文章分类移除到未分类
+            db_session.delete(article_type_to_delete.setting)
+            db_session.delete(article_type_to_delete)
+            db_session.commit()
+            return 1
+        return 0
+
+    @staticmethod
     def set_article_type_menu_id_none(db_session, menu_id, auto_commit=True):
-        db_session.query(ArticleType).filter(ArticleType.menu_id == menu_id).update({"menu_id":None})
+        db_session.query(ArticleType).filter(ArticleType.menu_id == menu_id).update({"menu_id": None})
         if auto_commit:
             db_session.commit()
 

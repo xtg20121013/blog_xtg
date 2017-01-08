@@ -27,7 +27,11 @@ class AdminArticleTypeHandler(AdminArticleTypeBaseHandler):
     @coroutine
     def get(self, *require):
         if require:
-            pass
+            if len(require) == 2:
+                article_type_id = require[0]
+                action = require[1]
+                if action == 'delete':
+                    yield self.delete_get(article_type_id)
         else:
             yield self.page_get()
 
@@ -37,11 +41,11 @@ class AdminArticleTypeHandler(AdminArticleTypeBaseHandler):
             if len(require) == 1:
                 if require[0] == 'add':
                     yield self.add_post()
-            # elif len(require) == 2:
-            #     menu_id = require[0]
-            #     action = require[1]
-            #     if action == 'update':
-            #         yield self.update_post(menu_id)
+            elif len(require) == 2:
+                article_type_id = require[0]
+                action = require[1]
+                if action == 'update':
+                    yield self.update_post(article_type_id)
 
     @coroutine
     @authenticated
@@ -53,6 +57,20 @@ class AdminArticleTypeHandler(AdminArticleTypeBaseHandler):
         pager = yield self.async_do(ArticleTypeService.page_article_types, self.db, pager, search_param)
         menus = yield self.async_do(MenuService.list_menus, self.db)
         self.render("admin/manage_articleTypes.html", pager=pager, menus=menus)
+
+    @coroutine
+    @authenticated
+    def delete_get(self, article_type_id):
+        update_count = yield self.async_do(ArticleTypeService.delete, self.db, article_type_id)
+        if update_count:
+            yield self.flush_menus()
+            self.add_message('success', u'删除成功!')
+        else:
+            self.add_message('danger', u'删除失败！')
+        redirect_url = self.reverse_url('admin.articleTypes')
+        if self.request.query:
+            redirect_url += "?" + self.request.query
+        self.redirect(redirect_url)
 
     @coroutine
     @authenticated
@@ -71,6 +89,29 @@ class AdminArticleTypeHandler(AdminArticleTypeBaseHandler):
             self.add_message('success', u'保存成功!')
         else:
             self.add_message('danger', u'保存失败！')
+        redirect_url = self.reverse_url('admin.articleTypes')
+        if self.request.query:
+            redirect_url += "?" + self.request.query
+        self.redirect(redirect_url)
+
+    @coroutine
+    @authenticated
+    def update_post(self, article_type_id):
+        menu_id = int(self.get_argument("menu_id")) \
+            if self.get_argument("menu_id") and self.get_argument("menu_id").isdigit() else None
+        article_type = dict(
+            id=article_type_id,
+            name=self.get_argument("name"),
+            setting_hide=self.get_argument("setting_hide") == 'true',
+            introduction=self.get_argument("introduction"),
+            menu_id=menu_id if menu_id > 0 else None,
+        )
+        updated = yield self.async_do(ArticleTypeService.update_article_type, self.db, article_type_id, article_type)
+        if updated:
+            yield self.flush_menus()
+            self.add_message('success', u'修改成功!')
+        else:
+            self.add_message('danger', u'修改失败！')
         redirect_url = self.reverse_url('admin.articleTypes')
         if self.request.query:
             redirect_url += "?" + self.request.query
