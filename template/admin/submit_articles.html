@@ -1,47 +1,54 @@
-{% extends 'admin/admin_base.html' %}
+{% extends 'admin_base.html' %}
 
-{% block title %}
-    Blog_mini -提交博文
-{% endblock %}
+{% block title2 %}
+    发表博文
+{% end %}
 
-{% block stylesheet %}
-    {{ super() }}
-    <link rel="stylesheet" type="text/css"
-          href="{{ url_for('static', filename='tinymce/js/tinymce/plugins/codesample/css/prism.css') }}">
-{% endblock %}
-
-{% block script %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='tinymce/js/tinymce/tinymce.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='tinymce/js/tinymce/plugins/codesample/plugin.min.js') }}"></script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/tinymce_setup.js') }}"></script>
-{% endblock %}
+{% block private_stylesheet %}
+    <link rel="stylesheet" type="text/css" media="screen" href="{{ static_url('css/bootstrap-markdown.min.css')}}">
+{% end %}
 
 {% block admin_content %}
 <div class="entry-box submit-article">
     <h4><strong>发表博文</strong></h4>
     <hr/>
     <form class="submit-article" method="post" action="">
-        {{ form.csrf_token }}
+        {% module xsrf_form_html() %}
         <div class="form-group">
-            {{ form.title.label(class='control-label') }}：
-            {{ form.source(class='', required='') }}
-            {{ form.title(class='submit-article-title', required='') }}（1-50字）
+            <label class="control-label" for="title">标题</label>：
+            <select class="" id="source" name="source" required="">
+                {% for source in SiteCollection.article_sources %}
+                <option value="{{source.id}}">{{source.name}}</option>
+                {% end %}
+            </select>
+            <input class="submit-article-title" id="title" name="title" required="" type="text" value="">（1-50字）
         </div>
         <div class="form-group">
-            {{ form.content() }}
+            <textarea id="content" class="markdown-edit" name="content"></textarea>
         </div>
         <div class="form-group">
-            {{ form.types.label(class='control-label') }}：
-            {{ form.types() }}
+            <label class="control-label" for="types">博文分类</label>：
+            <select id="types" name="types">
+                {% for at in article_types %}
+                <option value="{{at.id}}">{{at.name}}</option>
+                {% end %}
+            </select>
         </div>
         <div class="form-group">
-            {{ form.summary.label(class='control-label') }}（显示在博客首页）<br>
-            {{ form.summary(class='submit-article-summary form-control', required='') }}
+            <label class="control-label" for="summary">博文摘要</label>（显示在博客首页,不填的话,默认取文章前100个字）<br>
+            <textarea class="submit-article-summary form-control" id="summary" name="summary" ></textarea>
         </div>
         <div class="submit-article-button">
             <button type="submit" class="btn btn-success">提交</button>
         </div>
     </form>
 </div>
-{% endblock %}
+{% end %}
+
+{% block private_script %}
+    <script src="{{ static_url('js/markdown/markdown.js')}}"></script>
+    <script src="{{ static_url('js/markdown/to-markdown.js')}}"></script>
+    <script src="{{ static_url('js/markdown/bootstrap-markdown.js')}}"></script>
+    <script src="{{ static_url('js/markdown/locale/bootstrap-markdown.zh.js')}}"></script>
+    <script src="{{ static_url('js/markdownEdit.js')}}"></script>
+{% end %}

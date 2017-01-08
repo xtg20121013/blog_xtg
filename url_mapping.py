@@ -3,6 +3,7 @@ import controller.home
 import controller.admin
 import controller.admin_custom
 import controller.admin_article_type
+import controller.admin_article
 from tornado.web import url
 
 
@@ -41,8 +42,10 @@ handlers = [
         controller.admin_article_type.AdminArticleTypeNavHandler, name="admin.articleTypeNav.action"),
     url(r"/admin/articleType/nav/([0-9]+)/(sort-down|sort-up|delete|update)",
         controller.admin_article_type.AdminArticleTypeNavHandler, name="admin.articleTypeNav.update"),
+    # admin.article
+    url(r"/admin/article/(submit)", controller.admin_article.AdminArticleHandler, name="admin.article.action"),
 
-    url(r"/", controller.home.HomeHandler, name="admin.submitArticles"),
+
     url(r"/", controller.home.HomeHandler, name="admin.manage_articles"),
     url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),
 

@@ -13,6 +13,8 @@
     {% block stylesheet %}
         <link href="{{ static_url('css/bootstrap.css') }}" rel="stylesheet">
         <link href="{{ static_url('css/common.css') }}" rel="stylesheet">
+        {% block private_stylesheet %}
+        {% end %}
     {% end %}
 </head>
 <body>
@@ -76,7 +78,7 @@
                                 {{ current_user['name'] }} <b class="caret"></b>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a href="{{ reverse_url('admin.submitArticles') }}">发表博文</a></li>
+                                <li><a href="{{ reverse_url('admin.article.action', 'submit') }}">发表博文</a></li>
                                 <li><a href="{{ reverse_url('admin.account') }}">管理博客</a></li>
                                 <li><a href="{{ reverse_url('logout') }}">退出登陆</a></li>
                             </ul>

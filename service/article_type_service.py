@@ -81,6 +81,11 @@ class ArticleTypeService(object):
         if auto_commit:
             db_session.commit()
 
+    @staticmethod
+    def list_simple(db_session):
+        article_types = db_session.query(ArticleType.id, ArticleType.name).all()
+        return article_types
+
     # @staticmethod
     # def add_menu(db_session, menu):
     #     try:
