@@ -1,6 +1,7 @@
 # coding=utf-8
 import logging
 from sqlalchemy import func
+from sqlalchemy.orm import joinedload
 from model.models import Menu
 from model.search_params.menu_params import MenuSearchParams
 from . import BaseService
@@ -49,7 +50,7 @@ class MenuService(object):
         else:
             if show_types:
                 for menu in menus:
-                    menu.fetch_all_types()
+                    menu.fetch_all_types(only_show_not_hide=True)
         return menus
 
     @staticmethod

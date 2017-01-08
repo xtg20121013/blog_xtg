@@ -1,5 +1,6 @@
 # coding: utf-8
 from datetime import datetime
+from sqlalchemy.orm import contains_eager
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, DateTime, Integer, String, Boolean, Text, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship, backref
@@ -29,8 +30,13 @@ class Menu(DbBase):
     types = relationship('ArticleType', backref='menu', lazy='dynamic')
     order = Column(Integer, default=0, nullable=False)
 
-    def fetch_all_types(self):
-        self.all_types = self.types.all()
+    def fetch_all_types(self, only_show_not_hide=False):
+        query = self.types
+        if only_show_not_hide:
+            query = query.join(ArticleType.setting). \
+                filter(ArticleTypeSetting.hide.isnot(True)). \
+                options(contains_eager(ArticleType.setting))
+        self.all_types = query.all()
 
     def __repr__(self):
         return '<Menu %r>' % self.name

@@ -1,7 +1,6 @@
 # coding=utf-8
 import logging
-from sqlalchemy import func
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import contains_eager, joinedload
 from model.models import ArticleType, ArticleTypeSetting
 from model.search_params.article_type_params import ArticleTypeSearchParams
 from . import BaseService
@@ -27,8 +26,9 @@ class ArticleTypeService(object):
 
     @staticmethod
     def list_article_types_not_under_menu(db_session):
-        article_types_not_under_menu = db_session.query(ArticleType).options(joinedload(ArticleType.setting)) \
-            .filter(ArticleType.menu_id.is_(None)).all()
+        article_types_not_under_menu = db_session.query(ArticleType).join(ArticleType.setting).\
+            filter(ArticleType.menu_id.is_(None), ArticleTypeSetting.hide.isnot(True)).\
+            options(contains_eager(ArticleType.setting)).all()
         return article_types_not_under_menu
 
     @staticmethod
