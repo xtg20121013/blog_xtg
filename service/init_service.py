@@ -4,7 +4,6 @@ import tornado.gen
 from config import site_cache_keys
 from extends.utils import AlchemyEncoder, Dict
 from model.models import Menu, ArticleType, Plugin, BlogView, Article, Comment, Source
-from sqlalchemy.orm import joinedload
 from custom_service import BlogInfoService
 from plugin_service import PluginService
 from menu_service import MenuService
