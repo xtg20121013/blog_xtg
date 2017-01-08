@@ -36,7 +36,8 @@ class ArticleTypeService(object):
         try:
             article_type_to_add = ArticleType(name=article_type["name"], introduction=article_type["introduction"],
                                               menu_id=article_type["menu_id"],
-                                              setting=ArticleTypeSetting(name=article_type["name"]))
+                                              setting=ArticleTypeSetting(name=article_type["name"],
+                                                                         hide=article_type["setting_hide"],),)
             db_session.add(article_type_to_add)
             db_session.commit()
             return article_type_to_add

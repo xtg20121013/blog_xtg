@@ -61,7 +61,7 @@ class AdminArticleTypeHandler(AdminArticleTypeBaseHandler):
             if self.get_argument("menu_id") and self.get_argument("menu_id").isdigit() else None
         article_type = dict(
             name=self.get_argument("name"),
-            setting_hide=self.get_argument("setting_hide"),
+            setting_hide=self.get_argument("setting_hide") == 'true',
             introduction=self.get_argument("introduction"),
             menu_id=menu_id if menu_id > 0 else None,
         )
