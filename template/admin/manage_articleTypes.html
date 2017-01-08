@@ -57,6 +57,7 @@
                             {% end %}
                         </td>
                         <td>{{ articleType.articles_count }}</td>
+                        {% if not articleType.is_protected %}
                         <td>
                             <a class="btn" title="修改分类信息"
                                onclick="get_articleType_info('{{ reverse_url('admin.articleType.update', articleType.id, 'update') }}?pageNo={{pager.pageNo}}', {{articleType.id}},
@@ -70,6 +71,10 @@
                                 <span class="glyphicon glyphicon-trash"></span>
                             </a>
                         </td>
+                        {% else %}
+                        <td/>
+                        <td/>
+                        {% end %}
                     </tr>
                 {% end %}
                 </tbody>
