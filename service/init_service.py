@@ -8,6 +8,7 @@ from sqlalchemy.orm import joinedload
 from custom_service import BlogInfoService
 from plugin_service import PluginService
 from menu_service import MenuService
+from article_type_service import ArticleTypeService
 from model.site_info import SiteCollection
 
 
@@ -26,7 +27,7 @@ class SiteCacheService(object):
     PUB_SUB_MSGS = dict(
         blog_info_updated="blog_info_updated",  # blog_info更新消息
         plugins_updated="plugins_updated",  # plugins更新消息
-        menus_updated="menus_updated",  # menus更新消息
+        menus_updated="menus_updated",  # menus更新消息(包括query_article_types_not_under_menu)
     )
 
     @staticmethod
@@ -34,7 +35,6 @@ class SiteCacheService(object):
     def query_all(cache_manager, thread_do, db):
         yield SiteCacheService.query_blog_info(cache_manager, thread_do, db)
         yield SiteCacheService.query_menus(cache_manager, thread_do, db)
-        yield SiteCacheService.query_article_types_not_under_menu(cache_manager, thread_do, db)
         yield SiteCacheService.query_plugins(cache_manager, thread_do, db)
         yield SiteCacheService.query_blog_view_count(cache_manager, thread_do, db)
         yield SiteCacheService.query_article_count(cache_manager, thread_do, db)
@@ -58,23 +58,14 @@ class SiteCacheService(object):
         if menus_json:
             menus = json.loads(menus_json, object_hook=Dict);
             SiteCollection.menus = menus
-        if SiteCollection.menus is None:
-            menus = yield thread_do(MenuService.list_menus, db, show_types=True)
-            yield SiteCacheService.update_menus(cache_manager, menus)
-
-
-    @staticmethod
-    @tornado.gen.coroutine
-    def query_article_types_not_under_menu(cache_manager, thread_do, db):
         ats_json = yield cache_manager.call("GET", site_cache_keys['article_types_not_under_menu'])
         if ats_json:
             ats = json.loads(ats_json, object_hook=Dict);
             SiteCollection.article_types_not_under_menu = ats
-        if SiteCollection.article_types_not_under_menu is None:
-            SiteCollection.article_types_not_under_menu = yield thread_do(get_article_types_not_under_menu, db)
-            if SiteCollection.article_types_not_under_menu is not None:
-                ats_json = json.dumps(SiteCollection.article_types_not_under_menu, cls=AlchemyEncoder)
-                yield cache_manager.call("SET", site_cache_keys['article_types_not_under_menu'], ats_json)
+        if SiteCollection.menus is None or SiteCollection.article_types_not_under_menu is None:
+            menus = yield thread_do(MenuService.list_menus, db, show_types=True)
+            article_types_not_under_menu = yield thread_do(ArticleTypeService.list_article_types_not_under_menu, db)
+            yield SiteCacheService.update_menus(cache_manager, menus, article_types_not_under_menu)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -171,19 +162,17 @@ class SiteCacheService(object):
 
     @staticmethod
     @tornado.gen.coroutine
-    def update_menus(cache_manager, menus, is_pub_all=False, pubsub_manager=None):
+    def update_menus(cache_manager, menus, article_types_not_under_menu, is_pub_all=False, pubsub_manager=None):
         if menus is not None:
             SiteCollection.menus = menus
             menus_json = json.dumps(menus, cls=AlchemyEncoder)
             yield cache_manager.call("SET", site_cache_keys['menus'], menus_json)
-            if is_pub_all:
-                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['menus_updated'])
-
-
-def get_article_types_not_under_menu(db_session):
-    article_types_not_under_menu = db_session.query(ArticleType).options(joinedload(ArticleType.setting))\
-        .filter(ArticleType.menu_id.is_(None)).all()
-    return article_types_not_under_menu
+        if article_types_not_under_menu is not None:
+            SiteCollection.article_types_not_under_menu = article_types_not_under_menu
+            ats_json = json.dumps(article_types_not_under_menu, cls=AlchemyEncoder)
+            yield cache_manager.call("SET", site_cache_keys['article_types_not_under_menu'], ats_json)
+        if is_pub_all:
+            yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['menus_updated'])
 
 
 def get_blog_view_count(db_session):

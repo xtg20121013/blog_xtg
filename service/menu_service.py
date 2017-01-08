@@ -4,6 +4,7 @@ from sqlalchemy import func
 from model.models import Menu
 from model.search_params.menu_params import MenuSearchParams
 from . import BaseService
+from article_type_service import ArticleTypeService
 
 logger = logging.getLogger(__name__)
 
@@ -92,6 +93,7 @@ class MenuService(object):
 
     @staticmethod
     def delete(db_session, menu_id):
+        ArticleTypeService.set_article_type_menu_id_none(db_session, menu_id, auto_commit=False)
         count = db_session.query(Menu).filter(Menu.id == menu_id).delete()
         if count:
             db_session.commit()

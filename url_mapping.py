@@ -30,6 +30,11 @@ handlers = [
         controller.admin_custom.AdminCustomBlogPluginHandler, name="admin.custom.plugin.update"),
     # admin.article_type
     url(r"/admin/articleType", controller.admin_article_type.AdminArticleTypeHandler, name="admin.articleTypes"),
+    url(r"/admin/articleType/(add)",
+        controller.admin_article_type.AdminArticleTypeHandler, name="admin.articleType.action"),
+    url(r"/admin/articleType/([0-9]+)/(delete|update)",
+        controller.admin_article_type.AdminArticleTypeHandler, name="admin.articleType.update"),
+    # admin.article_type_nav (menu)
     url(r"/admin/articleType/nav",
         controller.admin_article_type.AdminArticleTypeNavHandler, name="admin.articleTypeNavs"),
     url(r"/admin/articleType/nav/(add)",

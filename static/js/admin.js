@@ -104,23 +104,22 @@ function delArticleTypeCfm(url) {
 }
 
 //JS For edit articleType to get its info
-function get_articleType_info(url, id) {
-    $.getJSON(url, function(data) {
-        $('#editName').val(data.name);
-        $('#editSetting_hide').val(data.setting_hide);
-        $('#editIntroduction').val(data.introduction);
-        $('#editMenus').val(data.menu);
-        $('#articleType_id').val(id);
-        $('#ModalTitle').text('修改博文分类：' + data.name);
-        if (data.name == '未分类') {
-            $('#editName').prop('readonly', true);
-            $('#editIntroduction').prop('readonly', true);
-        } else {
-            $('#editName').prop('readonly', false);
-            $('#editIntroduction').prop('readonly', false);
-        }
-        $('#editArticleTypeFormModel').modal();
-    });
+function get_articleType_info(url, id, name, is_hide, introduction, menu_id) {
+    $('#editName').val(name);
+    $('#editSetting_hide').val(is_hide);
+    $('#editIntroduction').val(introduction);
+    $('#editMenus').val(menu_id);
+    $('#articleType_id').val(id);
+    $('#editArticleTypeForm').attr('action', url)
+    $('#ModalTitle').text('修改博文分类：' + name);
+    if (name == '未分类') {
+        $('#editName').prop('readonly', true);
+        $('#editIntroduction').prop('readonly', true);
+    } else {
+        $('#editName').prop('readonly', false);
+        $('#editIntroduction').prop('readonly', false);
+    }
+    $('#editArticleTypeFormModel').modal();
 }
 
 //JS For add articleType

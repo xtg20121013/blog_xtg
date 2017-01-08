@@ -74,6 +74,9 @@ class ArticleType(DbBase):
             return self.setting.hide
         else:
             return False
+
+    def fetch_articles_count(self):
+        self.articles_count = self.articles.count()
     # if the articleType does not have setting,
     # its is_hie and is_protected property will be False.
 
