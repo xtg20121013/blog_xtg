@@ -2,7 +2,7 @@
 import logging
 import re
 
-from model.models import Article
+from model.models import Article, Source
 
 logger = logging.getLogger(__name__)
 
@@ -33,3 +33,17 @@ class ArticleService(object):
         if limit > 0:
             return core_content[:limit]
         return core_content
+
+    @staticmethod
+    def get_count(db_session):
+        article_count = db_session.query(Article).count()
+        return article_count
+
+    # article_sources
+    @staticmethod
+    def get_article_sources(db_session):
+        article_sources = db_session.query(Source).all()
+        if article_sources:
+            for source in article_sources:
+                source.fetch_articles_count()
+        return article_sources

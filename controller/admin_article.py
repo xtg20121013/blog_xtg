@@ -7,6 +7,7 @@ from config import session_keys
 from model.models import Article
 from service.article_service import ArticleService
 from service.article_type_service import ArticleTypeService
+from service.init_service import SiteCacheService
 
 
 class AdminArticleHandler(BaseHandler):
@@ -66,10 +67,15 @@ class AdminArticleHandler(BaseHandler):
         )
         article_saved = yield self.async_do(ArticleService.add_article, self.db, article)
         if article_saved and article_saved.id:
-            # yield self.flush_plugins()
+            yield self.flush_article_count("add", article_saved)
             self.add_message('success', u'保存成功!')
             self.redirect(self.reverse_url('article', article_saved.id))
         else:
             self.add_message('danger', u'保存失败！')
             self.session[session_keys['article_draft']] = article
             self.redirect(self.reverse_url('admin.article.action', 'submit'))
+
+    @coroutine
+    def flush_article_count(self, action, article):
+        yield SiteCacheService.update_article_action(self.cache_manager, action, article,
+                                                     is_pub_all=True, pubsub_manager=self.pubsub_manager)

@@ -42,3 +42,28 @@ class CacheManager(object):
                 logger.error(reply.message)
             else:
                 raise tornado.gen.Return(reply)
+
+    @tornado.gen.coroutine
+    def call(self, *args, **kwargs):
+        yield self.fetch_client()
+        if self.client:
+            reply = yield self.client.call(*args, **kwargs)
+            if isinstance(reply, tornadis.TornadisException):
+                logger.error(reply.message)
+            else:
+                raise tornado.gen.Return(reply)
+
+    @tornado.gen.coroutine
+    def call_watch_transaction(self, watch_key, *args, **kwargs):
+        yield self.fetch_client()
+        if self.client:
+            while True:
+                yield self.client.call("WATCH", watch_key)
+                yield self.client.call("MULTI")
+                yield self.client.call(*args, **kwargs)
+                result = yield self.client.call("EXEC")
+                if isinstance(result, tornadis.TornadisException):
+                    logger.error(result.message)
+                else:
+                    raise tornado.gen.Return(result)
+
