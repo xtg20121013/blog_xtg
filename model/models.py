@@ -147,11 +147,11 @@ class Comment(DbBase):
 class Article(DbBase):
     __tablename__ = 'articles'
     id = Column(Integer, primary_key=True)
-    title = Column(String(64), unique=True)
+    title = Column(String(64))
     content = Column(Text)
     summary = Column(Text)
     create_time = Column(DateTime, index=True, default=datetime.now)
-    update_time = Column(DateTime, index=True, default=datetime.now)
+    update_time = Column(DateTime, index=True, default=datetime.now, onupdate=datetime.now)
     num_of_view = Column(Integer, default=0)
     articleType_id = Column(Integer, ForeignKey('articleTypes.id'))
     source_id = Column(Integer, ForeignKey('sources.id'))

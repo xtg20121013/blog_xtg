@@ -1,7 +1,7 @@
 /**
  * Created by mhq on 17/1/8.
  */
-var markdown_reg = /[\\\`\*\_\[\]\#\+\-\!\>]/g;
+var markdown_reg = /[\\\`\*\_\[\]\#\+\-\!\>\s]/g;
 $(function () {
     $('.markdown-edit').markdown({
         height:'500',

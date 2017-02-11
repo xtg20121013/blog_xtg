@@ -46,6 +46,7 @@ database_config = dict(
 session_keys = dict(
     login_user="login_user",
     messages="messages",
+    article_draft="article_draft",
 )
 
 # 关联model.site_info中的字段

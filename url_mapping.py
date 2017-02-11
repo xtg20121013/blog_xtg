@@ -15,6 +15,10 @@ handlers = [
     url(r"/([0-9]+)", controller.home.HomeHandler, name="articleTypes"),
     url(r"/auth/logout", controller.home.LogoutHandler, name="logout"),
     url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSources"),
+
+    # article
+    url(r"/article/([0-9]+)", controller.home.HomeHandler, name="article"),
+
     # admin
     url(r"/admin/account", controller.admin.AdminAccountHandler, name="admin.account"),
     url(r"/admin/help", controller.admin.AdminHelpHandler, name="admin.help"),

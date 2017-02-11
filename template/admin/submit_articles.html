@@ -16,27 +16,28 @@
         {% module xsrf_form_html() %}
         <div class="form-group">
             <label class="control-label" for="title">标题</label>：
-            <select class="" id="source" name="source" required="">
+            <select class="" id="source" name="source_id" required="">
                 {% for source in SiteCollection.article_sources %}
-                <option value="{{source.id}}">{{source.name}}</option>
+                <option value="{{source.id}}" {% if article and article.source_id==source.id %} selected {%end%}  >{{source.name}}</option>
                 {% end %}
             </select>
-            <input class="submit-article-title" id="title" name="title" required="" type="text" value="">（1-50字）
-        </div>
-        <div class="form-group">
-            <textarea id="content" class="markdown-edit" name="content"></textarea>
+            <input class="submit-article-title" id="title" name="title" required="" type="text"
+                   value="{% if article %} {{article.title}} {%end%}">（1-50字）
         </div>
         <div class="form-group">
             <label class="control-label" for="types">博文分类</label>：
-            <select id="types" name="types">
+            <select id="types" name="articleType_id">
                 {% for at in article_types %}
-                <option value="{{at.id}}">{{at.name}}</option>
+                <option value="{{at.id}}" {% if article and article.articleType_id==at.id %} selected {%end%} >{{at.name}}</option>
                 {% end %}
             </select>
         </div>
         <div class="form-group">
+            <textarea id="content" class="markdown-edit" name="content">{% if article %} {{article.content}} {%end%}</textarea>
+        </div>
+        <div class="form-group">
             <label class="control-label" for="summary">博文摘要</label>（显示在博客首页,不填的话,默认取文章前100个字）<br>
-            <textarea class="submit-article-summary form-control" id="summary" name="summary" ></textarea>
+            <textarea class="submit-article-summary form-control" id="summary" name="summary" >{% if article %} {{article.summary}} {%end%}</textarea>
         </div>
         <div class="submit-article-button">
             <button type="submit" class="btn btn-success">提交</button>

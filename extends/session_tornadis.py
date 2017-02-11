@@ -5,7 +5,7 @@ import tornadis
 import tornado.gen
 import logging
 
-logger = logging.getLogger('extends.session_tornadis')
+logger = logging.getLogger(__name__)
 
 
 class Session(dict):
