@@ -23,6 +23,7 @@ class ArticleAndCommentsFlush(object):
         #  增删评论后的刷新缓存，还未实现
         pass
 
+
 class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
 
     @coroutine
