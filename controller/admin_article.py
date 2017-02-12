@@ -8,6 +8,8 @@ from model.models import Article
 from service.article_service import ArticleService
 from service.article_type_service import ArticleTypeService
 from service.init_service import SiteCacheService
+from model.search_params.article_params import ArticleSearchParams
+from model.pager import Pager
 
 
 class AdminArticleHandler(BaseHandler):
@@ -24,8 +26,8 @@ class AdminArticleHandler(BaseHandler):
         #         action = require[1]
         #         if action == 'delete':
         #             yield self.delete_get(article_type_id)
-        # else:
-        #     yield self.page_get()
+        else:
+            yield self.page_get()
 
     @coroutine
     def post(self, *require):
@@ -38,6 +40,16 @@ class AdminArticleHandler(BaseHandler):
             #     action = require[1]
             #     if action == 'update':
             #         yield self.update_post(article_type_id)
+
+    @coroutine
+    @authenticated
+    def page_get(self):
+        pager = Pager(self)
+        article_search_params = ArticleSearchParams(self)
+        article_types = yield self.async_do(ArticleTypeService.list_simple, self.db)
+        pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+        self.render("admin/manage_articles.html", article_types=article_types, pager=pager,
+                    article_search_params=article_search_params)
 
     @coroutine
     @authenticated

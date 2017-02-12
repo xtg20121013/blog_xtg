@@ -4,6 +4,7 @@ import json
 import redis
 
 
+# 同步的redis客户端实现，不适用tornado，暂时弃用.
 class Session(dict):
     def __init__(self, request_handler):
         super(Session, self).__init__()

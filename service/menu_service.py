@@ -1,11 +1,12 @@
 # coding=utf-8
 import logging
+
 from sqlalchemy import func
-from sqlalchemy.orm import joinedload
+
+from article_type_service import ArticleTypeService
 from model.models import Menu
 from model.search_params.menu_params import MenuSearchParams
 from . import BaseService
-from article_type_service import ArticleTypeService
 
 logger = logging.getLogger(__name__)
 

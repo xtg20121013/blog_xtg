@@ -12,13 +12,13 @@ handlers = [
     url(r"/", controller.home.HomeHandler, name="index"),
     url(r"/auth/login", controller.home.LoginHandler, name="login"),
     url(r"/auth/login/(\d+)", controller.home.LoginHandler),
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleTypes"),
     url(r"/auth/logout", controller.home.LogoutHandler, name="logout"),
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSources"),
-
+    # articleSource
+    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSource"),
+    # articleType
+    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleType"),
     # article
     url(r"/article/([0-9]+)", controller.home.HomeHandler, name="article"),
-
     # admin
     url(r"/admin/account", controller.admin.AdminAccountHandler, name="admin.account"),
     url(r"/admin/help", controller.admin.AdminHelpHandler, name="admin.help"),
@@ -48,7 +48,8 @@ handlers = [
         controller.admin_article_type.AdminArticleTypeNavHandler, name="admin.articleTypeNav.update"),
     # admin.article
     url(r"/admin/article/(submit)", controller.admin_article.AdminArticleHandler, name="admin.article.action"),
-
+    url(r"/admin/article", controller.admin_article.AdminArticleHandler, name="admin.articles"),
+    url(r"/admin/article/([0-9]+)", controller.admin_article.AdminArticleHandler, name="admin.article"),
 
     url(r"/", controller.home.HomeHandler, name="admin.manage_articles"),
     url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),

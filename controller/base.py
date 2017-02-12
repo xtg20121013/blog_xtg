@@ -12,6 +12,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.session = None
         self.db_session = None
         self.session_save_tag = False
+        self.session_expire_time = 604800  # 7*24*60*60秒
         self.thread_executor = self.application.thread_executor
         self.cache_manager = self.application.cache_manager
         self.async_do = self.thread_executor.submit
@@ -91,5 +92,5 @@ class BaseHandler(tornado.web.RequestHandler):
             self.db_session.close()
             # print "db_info:", self.application.db_pool.kw['bind'].pool.status()
         if self.session is not None and self.session_save_tag:
-            yield self.session.save()
+            yield self.session.save(self.session_expire_time)
 

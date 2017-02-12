@@ -41,10 +41,12 @@ class Session(dict):
                 self.update(json.loads(data))
 
     @tornado.gen.coroutine
-    def save(self):
+    def save(self, expire_time=None):
         session_id = self.generate_session_id()
         data_json = json.dumps(self)
         yield self.call_client("SET", session_id, data_json)
+        if expire_time:
+            yield self.call_client("EXPIRE", session_id, expire_time)
 
     @tornado.gen.coroutine
     def call_client(self, *args, **kwargs):

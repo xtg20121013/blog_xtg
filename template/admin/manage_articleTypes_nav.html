@@ -34,7 +34,7 @@
                         <td>
                             {% if menu.all_types %}
                                 {% for articleType in menu.all_types %}
-                                    <a href="{{ reverse_url('articleTypes', articleType.id) }}" target="_blank">
+                                    <a href="{{ reverse_url('articleType', articleType.id) }}" target="_blank">
                                         {{ articleType.name }}
                                     </a>
                                 {% end %}

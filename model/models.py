@@ -1,6 +1,6 @@
 # coding: utf-8
 from datetime import datetime
-from sqlalchemy.orm import contains_eager
+from sqlalchemy.orm import contains_eager, deferred
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, DateTime, Integer, String, Boolean, Text, ForeignKey, BigInteger
 from sqlalchemy.orm import relationship, backref
@@ -148,20 +148,17 @@ class Article(DbBase):
     __tablename__ = 'articles'
     id = Column(Integer, primary_key=True)
     title = Column(String(64))
-    content = Column(Text)
-    summary = Column(Text)
+    content = deferred(Column(Text))  # 延迟加载,避免在列表查询时查询该字段
+    summary = deferred(Column(Text))  # 延迟加载,避免在列表查询时查询该字段
     create_time = Column(DateTime, index=True, default=datetime.now)
-    update_time = Column(DateTime, index=True, default=datetime.now, onupdate=datetime.now)
+    update_time = deferred(Column(DateTime, index=True, default=datetime.now, onupdate=datetime.now))
     num_of_view = Column(Integer, default=0)
     articleType_id = Column(Integer, ForeignKey('articleTypes.id'))
     source_id = Column(Integer, ForeignKey('sources.id'))
     comments = relationship('Comment', backref='article', lazy='dynamic')
 
-    @staticmethod
-    def add_view(session, article):
-        article.num_of_view += 1
-        session.add(article)
-        session.commit()
+    def fetch_comments_count(self):
+        self.comments_count = self.comments.count()
 
     def __repr__(self):
         return '<Article %r>' % self.title

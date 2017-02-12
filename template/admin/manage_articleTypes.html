@@ -31,7 +31,7 @@
                 {% for articleType in pager.result %}
                     <tr>
                         <td>
-                            <a href="{{ reverse_url('articleTypes', articleType.id) }}" target="_blank">
+                            <a href="{{ reverse_url('articleType', articleType.id) }}" target="_blank">
                                 {{ articleType.name }}
                             </a>
                         </td>

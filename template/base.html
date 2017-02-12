@@ -49,7 +49,7 @@
                                     {% for article_type in menu.all_types %}
                                         {% if not article_type.is_hide %}
                                             <li>
-                                                <a href="{{ reverse_url('articleTypes', article_type.id) }}">
+                                                <a href="{{ reverse_url('articleType', article_type.id) }}">
                                                     {{ article_type.name }}
                                                 </a>
                                             </li>
@@ -63,7 +63,7 @@
                     {% for article_type in SiteCollection.article_types_not_under_menu %}
                         {% if not article_type.is_hide %}
                             <li>
-                                <a href="{{ reverse_url('articleTypes', article_type.id) }}">
+                                <a href="{{ reverse_url('articleType', article_type.id) }}">
                                         {{ article_type.name }}
                                 </a>
                             </li>
@@ -124,7 +124,7 @@
                                         </p>
                                         <p>
                                             {% for source in SiteCollection.article_sources %}
-                                                <a href="{{ reverse_url('articleSources', source.id) }}">{{ source.name }}</a>：
+                                                <a href="{{ reverse_url('articleSource', source.id) }}">{{ source.name }}</a>：
                                                 <span class="badge">{{ source.articles_count }}</span>
                                             {% end %}
                                         </p>

@@ -4,9 +4,11 @@ from extends.utils import Dict
 
 class Pager(Dict):
 
+    DEFAULT_PAGE_SIZE = 10
+
     def __init__(self, request):
         self.pageNo = int(request.get_argument("pageNo", 1))
-        self.pageSize = int(request.get_argument("pageSize", 10))
+        self.pageSize = int(request.get_argument("pageSize", Pager.DEFAULT_PAGE_SIZE))
         self.totalPage = 1
         self.totalCount = 0
         self.result = []
@@ -41,8 +43,9 @@ class Pager(Dict):
             page_no = 0
         if page_no > self.totalPage:
             page_no = self.totalPage
+        url = "{0}?pageNo={1}".format(url, page_no)
+        if self.pageSize != Pager.DEFAULT_PAGE_SIZE:
+            url += "&pageSize={0}".format(self.pageSize)
         if params:
-            url = "{0}?pageNo={1}&{2}".format(url, page_no, params)
-        else:
-            url = "{0}?pageNo={1}".format(url, page_no)
+            url += "&{0}".format(params)
         return url
