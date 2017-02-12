@@ -9,15 +9,20 @@ $(document).ready(function () {
     });
 });
 
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
 //JS For submit article id to delete article
-function delCfm(articleId) {
+function delCfm(delLink) {
     $('#cfmClick').click(function () {
-        formSubmit(articleId);
+        var _xsrf = getCookie("_xsrf");
+        $.post(delLink, {_xsrf:_xsrf}, function () {
+            location.reload();
+        });
     });
     $('#delCfmModel').modal();
-}
-function formSubmit(articleId) {
-    $('#delForm' + articleId).submit();
 }
 
 //JS For select articles to delete

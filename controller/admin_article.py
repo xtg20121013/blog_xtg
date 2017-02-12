@@ -12,7 +12,18 @@ from model.search_params.article_params import ArticleSearchParams
 from model.pager import Pager
 
 
-class AdminArticleHandler(BaseHandler):
+class ArticleAndCommentsFlush(object):
+    @coroutine
+    def flush_article_cache(self, action, article):
+        yield SiteCacheService.update_article_action(self.cache_manager, action, article,
+                                                     is_pub_all=True, pubsub_manager=self.pubsub_manager)
+
+    @coroutine
+    def flush_comments_cache(self, action, comments):
+        #  增删评论后的刷新缓存，还未实现
+        pass
+
+class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
 
     @coroutine
     def get(self, *require):
@@ -35,11 +46,11 @@ class AdminArticleHandler(BaseHandler):
             if len(require) == 1:
                 if require[0] == 'submit':
                     yield self.submit_post()
-            # elif len(require) == 2:
-            #     article_type_id = require[0]
-            #     action = require[1]
-            #     if action == 'update':
-            #         yield self.update_post(article_type_id)
+            elif len(require) == 2:
+                article_id = require[0]
+                action = require[1]
+                if action == 'delete':
+                    yield self.delete_post(article_id)
 
     @coroutine
     @authenticated
@@ -79,7 +90,7 @@ class AdminArticleHandler(BaseHandler):
         )
         article_saved = yield self.async_do(ArticleService.add_article, self.db, article)
         if article_saved and article_saved.id:
-            yield self.flush_article_count("add", article_saved)
+            yield self.flush_article_cache("add", article_saved)
             self.add_message('success', u'保存成功!')
             self.redirect(self.reverse_url('article', article_saved.id))
         else:
@@ -88,6 +99,14 @@ class AdminArticleHandler(BaseHandler):
             self.redirect(self.reverse_url('admin.article.action', 'submit'))
 
     @coroutine
-    def flush_article_count(self, action, article):
-        yield SiteCacheService.update_article_action(self.cache_manager, action, article,
-                                                     is_pub_all=True, pubsub_manager=self.pubsub_manager)
+    @authenticated
+    def delete_post(self, article_id):
+        article_deleted, comments_deleted = yield self.async_do(ArticleService.delete_article, self.db, article_id)
+        if article_deleted:
+            yield self.flush_article_cache("remove", article_deleted)
+            yield self.flush_comments_cache("remove", comments_deleted)
+            self.add_message('success', u'删除成功,并删除{}条评论!'.format(len(comments_deleted)))
+            self.write("success")
+        else:
+            self.add_message('danger', u'删除失败！')
+            self.write("error")

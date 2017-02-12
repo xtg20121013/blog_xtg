@@ -50,6 +50,7 @@ handlers = [
     url(r"/admin/article/(submit)", controller.admin_article.AdminArticleHandler, name="admin.article.action"),
     url(r"/admin/article", controller.admin_article.AdminArticleHandler, name="admin.articles"),
     url(r"/admin/article/([0-9]+)", controller.admin_article.AdminArticleHandler, name="admin.article"),
+    url(r"/admin/article/([0-9]+)/(delete)", controller.admin_article.AdminArticleHandler, name="admin.article.update"),
 
     url(r"/", controller.home.HomeHandler, name="admin.manage_articles"),
     url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),

@@ -40,11 +40,6 @@
                             <span class="glyphicon glyphicon-search"></span> 筛选
                         </button>
                     </div>
-                    <div class="col-sm-2 col-sm-offset-4">
-                        <a class="btn btn-danger" id="delArticles">
-                            <span class="glyphicon glyphicon-trash"></span>批量删除
-                        </a>
-                    </div>
                 </div>
             </form>
         </div>
@@ -83,7 +78,9 @@
                             </a>
                         </td>
                         <td>
-                            <a class="btn btn-sm btn-default" onclick="delCfm({{ article.id }})"  title="删除博文">
+                            <a class="btn btn-sm btn-default"
+                               onclick="delCfm('{{reverse_url('admin.article.update', article.id, 'delete')}}')"
+                               title="删除博文">
                                 <span class="glyphicon glyphicon-trash delete-article"></span>
                             </a>
                         </td>
@@ -109,47 +106,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <a onclick="" id="cfmClick" class="btn btn-success" data-dismiss="modal">确定</a>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- 信息删除确认: For select articles confirm -->
-<div class="modal fade" id="selArtsCfmModel">
-    <div class="modal-dialog">
-        <div class="modal-content message_align">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-                <h4 class="modal-title">未选择博文</h4>
-            </div>
-            <div class="modal-body">
-                <p>请选择您要删除的博文！</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <a class="btn btn-success" data-dismiss="modal">确定</a>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
-
-<!-- 信息删除确认: For delete articles confirm -->
-<div class="modal fade" id="delArtsCfmModel">
-    <div class="modal-dialog">
-        <div class="modal-content message_align">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                        aria-hidden="true">×</span></button>
-                <h4 class="modal-title">确认删除所选博文？</h4>
-            </div>
-            <div class="modal-body">
-                <p>将连同博文评论一起删除，并且删除后不可恢复，您确认要删除所选博文吗？</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                <a id="delArtsCfm" class="btn btn-success" data-dismiss="modal">确定</a>
+                <button id="cfmClick" class="btn btn-success" data-dismiss="modal">确定</button>
             </div>
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

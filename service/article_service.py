@@ -6,6 +6,7 @@ from sqlalchemy.orm import joinedload, undefer
 from model.models import Article, Source
 from model.search_params.article_params import ArticleSearchParams
 from . import BaseService
+from comment_service import CommentService
 
 logger = logging.getLogger(__name__)
 
@@ -52,6 +53,19 @@ class ArticleService(object):
             db_session.add(article_to_add)
             db_session.commit()
             return article_to_add
+        except Exception, e:
+            logger.exception(e)
+        return None
+
+    @staticmethod
+    def delete_article(db_session, article_id):
+        try:
+            article = db_session.query(Article).get(article_id)
+            if article:
+                comments_deleted = CommentService.remove_by_article_id(db_session, article_id, False)
+                db_session.delete(article)
+                db_session.commit()
+            return article, comments_deleted;
         except Exception, e:
             logger.exception(e)
         return None
