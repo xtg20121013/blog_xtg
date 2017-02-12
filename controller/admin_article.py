@@ -33,11 +33,9 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
                 action = require[0]
                 if action == 'submit':
                     yield self.submit_get()
-        #     if len(require) == 2:
-        #         article_type_id = require[0]
-        #         action = require[1]
-        #         if action == 'delete':
-        #             yield self.delete_get(article_type_id)
+                elif action.isdigit():
+                    article_id = int(action)
+                    yield self.article_get(article_id)
         else:
             yield self.page_get()
 
@@ -62,6 +60,13 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
         self.render("admin/manage_articles.html", article_types=article_types, pager=pager,
                     article_search_params=article_search_params)
+
+    @coroutine
+    @authenticated
+    def article_get(self, article_id):
+        article_types = yield self.async_do(ArticleTypeService.list_simple, self.db)
+        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id)
+        self.render("admin/submit_articles.html", article_types=article_types, article=article)
 
     @coroutine
     @authenticated
