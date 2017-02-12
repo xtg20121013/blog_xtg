@@ -62,6 +62,27 @@ class ArticleService(object):
         return None
 
     @staticmethod
+    def update_article(db_session, article):
+        try:
+            summary = article["summary"].strip() if article["summary"] else None
+            if not summary:
+                summary = ArticleService.get_core_content(article["content"], ArticleService.SUMMARY_LIMIT)
+            article_to_update = ArticleService.get_article_all(db_session, article["id"])
+            article_old = Article(title=article_to_update.title, content=article_to_update.content,
+                                  summary=article_to_update.summary, articleType_id=article_to_update.articleType_id,
+                                  source_id=article_to_update.source_id)
+            article_to_update.title = article["title"]
+            article_to_update.content = article["content"]
+            article_to_update.summary = summary
+            article_to_update.articleType_id = int(article["articleType_id"]) if article["articleType_id"] else None
+            article_to_update.source_id = int(article["source_id"]) if article["source_id"] else None
+            db_session.commit()
+            return article_to_update, article_old
+        except Exception, e:
+            logger.exception(e)
+        return None
+
+    @staticmethod
     def delete_article(db_session, article_id):
         try:
             article = db_session.query(Article).get(article_id)

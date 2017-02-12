@@ -45,6 +45,9 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
             if len(require) == 1:
                 if require[0] == 'submit':
                     yield self.submit_post()
+                elif require[0].isdigit():
+                    article_id = int(require[0])
+                    yield self.update_post(article_id)
             elif len(require) == 2:
                 article_id = require[0]
                 action = require[1]
@@ -103,6 +106,27 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
             self.add_message('danger', u'保存失败！')
             self.session[session_keys['article_draft']] = article
             self.redirect(self.reverse_url('admin.article.action', 'submit'))
+
+    @coroutine
+    @authenticated
+    def update_post(self, article_id):
+        article = dict(
+            id=article_id,
+            source_id=self.get_argument("source_id"),
+            title=self.get_argument("title"),
+            articleType_id=self.get_argument("articleType_id"),
+            content=self.get_argument("content"),
+            summary=self.get_argument("summary"),
+        )
+        article_updateds = yield self.async_do(ArticleService.update_article, self.db, article)
+        if article_updateds:
+            yield self.flush_article_cache("update", article=article_updateds)
+            article_updated = article_updateds[0]
+            self.add_message('success', u'修改成功!')
+            self.redirect(self.reverse_url('article', article_updated.id))
+        else:
+            self.add_message('danger', u'修改失败！')
+            self.redirect(self.reverse_url('admin.article', article_id))
 
     @coroutine
     @authenticated

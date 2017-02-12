@@ -256,6 +256,23 @@ class SiteCacheService(object):
                         break
                 if is_pub_all:
                     yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
+        if action == "update":
+            article_new = article[0]
+            article_old = article[1]
+            source_id_old = int(article_old.source_id)
+            source_id_new = int(article_new.source_id)
+            if source_id_old != source_id_new:
+                source_old_article_count = \
+                    yield cache_manager.call("DECR",site_cache_keys['source_articles_count'].format(source_id_old))
+                source_new_article_count = \
+                    yield cache_manager.call("INCR",site_cache_keys['source_articles_count'].format(source_id_new))
+                for article_source in SiteCollection.article_sources:
+                    if int(article_source.id) == source_id_old:
+                        article_source.articles_count = source_old_article_count
+                    if int(article_source.id) == source_id_new:
+                        article_source.articles_count = source_new_article_count
+                if is_pub_all:
+                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
 
 
 def get_blog_view_count(db_session):
