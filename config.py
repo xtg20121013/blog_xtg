@@ -52,15 +52,16 @@ session_keys = dict(
 # 关联model.site_info中的字段
 site_cache_keys = dict(
     title="title",
-    signature = "signature",
-    navbar = "navbar",
-    menus = "menus",
-    article_types_not_under_menu = "article_types_not_under_menu",
-    plugins = "plugins",
-    blog_view_count = "blog_view_count",
-    article_count = "article_count",
-    comment_count = "comment_count",
-    article_sources = "article_sources",
+    signature="signature",
+    navbar="navbar",
+    menus="menus",
+    article_types_not_under_menu="article_types_not_under_menu",
+    plugins="plugins",
+    blog_view_count="blog_view_count",
+    article_count="article_count",
+    comment_count="comment_count",
+    article_sources="article_sources",
+    source_articles_count="source_{}_articles_count",
 )
 
 config = dict(

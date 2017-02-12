@@ -1,16 +1,17 @@
 # coding=utf-8
 import json
-import tornado.gen
-from config import site_cache_keys
-from extends.utils import AlchemyEncoder, Dict
-from model.models import Menu, ArticleType, Plugin, BlogView, Article, Comment, Source
-from custom_service import BlogInfoService
-from plugin_service import PluginService
-from menu_service import MenuService
-from article_type_service import ArticleTypeService
-from article_service import ArticleService
-from model.site_info import SiteCollection
 
+import tornado.gen
+
+from article_service import ArticleService
+from article_type_service import ArticleTypeService
+from config import site_cache_keys
+from custom_service import BlogInfoService
+from extends.utils import AlchemyEncoder, Dict
+from menu_service import MenuService
+from model.models import BlogView, Comment
+from model.site_info import SiteCollection
+from plugin_service import PluginService
 
 """
 初始化相关，包括缓存管理
@@ -30,6 +31,7 @@ class SiteCacheService(object):
         menus_updated="menus_updated",  # menus更新消息(包括query_article_types_not_under_menu)
         article_count_updated="article_count_updated",  # article_count更新消息
         article_sources_updated="article_sources_updated",  # article_sources更新消息
+        source_articles_count_updated="source_articles_count_updated",  # 某source下的source_articles_count更新消息
     )
 
     @staticmethod
@@ -98,10 +100,20 @@ class SiteCacheService(object):
         if article_sources_json:
             article_sources = json.loads(article_sources_json, object_hook=Dict);
             SiteCollection.article_sources = article_sources
+            yield SiteCacheService.query_source_articles_count(cache_manager)
         if SiteCollection.article_sources is None:
             article_sources = yield thread_do(ArticleService.get_article_sources, db)
             if article_sources is not None:
                 yield SiteCacheService.update_article_sources(cache_manager, article_sources)
+
+    # 仅从cache中查询source下的source_articles_count
+    @staticmethod
+    @tornado.gen.coroutine
+    def query_source_articles_count(cache_manager):
+        if SiteCollection.article_sources:
+            for source in SiteCollection.article_sources:
+                count = yield cache_manager.call("GET", site_cache_keys['source_articles_count'].format(source.id))
+                source.articles_count = count
 
     @staticmethod
     @tornado.gen.coroutine
@@ -129,10 +141,11 @@ class SiteCacheService(object):
 
     @staticmethod
     @tornado.gen.coroutine
-    def update_by_sub_msg(msg, cache_manager, thread_do, db):
-        if not msg:
+    def update_by_sub_msg(msgs, cache_manager, thread_do, db):
+        if not msgs:
             pass
-        elif msg == SiteCacheService.PUB_SUB_MSGS['blog_info_updated']:
+        msg = msgs[0]
+        if msg == SiteCacheService.PUB_SUB_MSGS['blog_info_updated']:
             yield SiteCacheService.query_blog_info(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['plugins_updated']:
             yield SiteCacheService.query_plugins(cache_manager, thread_do, db)
@@ -142,6 +155,8 @@ class SiteCacheService(object):
             yield SiteCacheService.query_article_count(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['article_sources_updated']:
             yield SiteCacheService.query_article_sources(cache_manager, thread_do, db)
+        elif msg == SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated']:
+            yield SiteCacheService.query_source_articles_count(cache_manager)
 
     @staticmethod
     @tornado.gen.coroutine
@@ -195,6 +210,10 @@ class SiteCacheService(object):
             SiteCollection.article_sources = article_sources
             article_sources_json = json.dumps(article_sources, cls=AlchemyEncoder)
             yield cache_manager.call("SET", site_cache_keys['article_sources'], article_sources_json)
+            #  记录对应source下的article_count
+            for source in SiteCollection.article_sources:
+                yield cache_manager.call("SET", site_cache_keys['source_articles_count'].format(source.id),
+                                         source.articles_count)
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_sources_updated'])
 
@@ -209,31 +228,34 @@ class SiteCacheService(object):
                 if is_pub_all:
                     yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_count_updated'])
             #  注意: 上面的article_count在并发环境下是可以保证安全的，
-            #  但是下面的article_sources不能保证，因为用set命令，实现会比较麻烦，而且意义不大。
-            #  具体该并发问题可以参考：http://www.cnblogs.com/iforever/p/5796902.html
+            #  如果用GET SET会比较难实现。具体该并发问题可以参考：http://www.cnblogs.com/iforever/p/5796902.html
             article_source_id = int(article.source_id)
+            source_article_count = \
+                yield cache_manager.call("INCR", site_cache_keys['source_articles_count'].format(article_source_id))
             for article_source in SiteCollection.article_sources:
                 if int(article_source.id) == article_source_id:
-                    article_source.articles_count += 1
-                    yield SiteCacheService.update_article_sources(cache_manager, SiteCollection.article_sources,
-                                                                  is_pub_all, pubsub_manager)
+                    article_source.articles_count = source_article_count
                     break
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
         if action == "remove":
             article_count = yield cache_manager.call("DECR", site_cache_keys['article_count'])
             if article_count:
                 SiteCollection.article_count = article_count
                 if is_pub_all:
                     yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_count_updated'])
-            #  注意: 上面的article_count在并发环境下是可以保证安全的，
-            #  但是下面的article_sources不能保证，因为用set命令，实现会比较麻烦，而且意义不大。
-            #  具体该并发问题可以参考：http://www.cnblogs.com/iforever/p/5796902.html
-            article_source_id = int(article.source_id)
-            for article_source in SiteCollection.article_sources:
-                if int(article_source.id) == article_source_id:
-                    article_source.articles_count -= 1
-                    yield SiteCacheService.update_article_sources(cache_manager, SiteCollection.article_sources,
-                                                                  is_pub_all, pubsub_manager)
-                    break
+                #  注意: 上面的article_count在并发环境下是可以保证安全的，
+                #  如果用GET SET会比较难实现。具体该并发问题可以参考：http://www.cnblogs.com/iforever/p/5796902.html
+                article_source_id = int(article.source_id)
+                source_article_count = \
+                    yield cache_manager.call("DECR",
+                                             site_cache_keys['source_articles_count'].format(article_source_id))
+                for article_source in SiteCollection.article_sources:
+                    if int(article_source.id) == article_source_id:
+                        article_source.articles_count = source_article_count
+                        break
+                if is_pub_all:
+                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
 
 
 def get_blog_view_count(db_session):

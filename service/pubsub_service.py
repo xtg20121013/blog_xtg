@@ -34,6 +34,6 @@ class PubSubService(PubSubTornadis):
         logger.info("收到redis消息: " + str(msgs))
         if len(msgs) >= 3:
             channel = msgs[1]
-            msg = msgs[2]
+            core_msgs = msgs[2:]
             if channel == redis_pub_sub_channels['cache_message_channel']:
-                yield SiteCacheService.update_by_sub_msg(msg, self.cache_manager, self.thread_do, self.db)
+                yield SiteCacheService.update_by_sub_msg(core_msgs, self.cache_manager, self.thread_do, self.db)
