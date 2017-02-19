@@ -16,6 +16,8 @@ function go_to_reply(id, author_name) {
 //Reset the follow value when refresh page
 window.onload = function(){
     $('#follow').val(-1);
+    var content = $('.article-content').text();
+    $('.article-content').html(markdown.toHTML(content));
 }
 
 

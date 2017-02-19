@@ -6,6 +6,7 @@ from model.pager import Pager
 from model.search_params.article_params import ArticleSearchParams
 from service.user_service import UserService
 from service.article_service import ArticleService
+from service.comment_service import CommentService
 
 
 class HomeHandler(BaseHandler):
@@ -20,6 +21,16 @@ class HomeHandler(BaseHandler):
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
         self.render("index.html", base_url=self.reverse_url('index'),
                     pager=pager, article_search_params=article_search_params)
+
+
+class ArticleHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, article_id):
+        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id)
+        comments_pager = Pager(self)
+        comments_pager.pageSize = 6
+        comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, article_id)
+        self.render("article_detials.html", article=article, comments_pager=comments_pager)
 
 
 class ArticleTypeHandler(BaseHandler):

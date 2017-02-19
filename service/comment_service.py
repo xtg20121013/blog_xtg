@@ -3,11 +3,19 @@ import logging
 
 from model.models import Comment
 from sqlalchemy.sql import func
+from . import BaseService
 
 logger = logging.getLogger(__name__)
 
 
 class CommentService(object):
+
+    @staticmethod
+    def page_comments(db_session, pager, article_id):
+        query = db_session.query(Comment).filter(Comment.article_id == article_id)
+        query = query.order_by(Comment.create_time.desc())
+        pager = BaseService.query_pager(query, pager)
+        return pager
 
     @staticmethod
     def remove_by_article_id(db_session, article_id, commit=True):

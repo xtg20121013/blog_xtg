@@ -1,17 +1,40 @@
 {% extends 'base.html' %}
-{% import '_macros.html' as macros %}
 
 {% block title %}
-    Blog_mini -{{ article.title }}
-{% endblock %}
+    {{ article.title }}
+{% end %}
 
 {% block content %}
 <div id='article-detials' class="entry-box">
-    {% include '_article_info.html' %}
+    <div class="article-entry-header">
+        <h3 class="article-entry-title">
+            <a href="{{ reverse_url('article', article.id) }}">{{ article.title }}</a>
+        </h3>
+    </div>
+    <div class="article-entry-info">
+        <div class="base-info">
+            <span class="label label-default"> {{ article.create_time.strftime("%Y年%m月%d日") }} </span>&nbsp;
+            <span class="label label-warning">
+            <a href="{{ reverse_url('articleSource', article.source.id) }}" target="_blank" style="color: white">
+                {{ article.source.name }}
+            </a>
+        </span>&nbsp;
+            <span class="label label-info">
+            <a href="{{ reverse_url('articleType', article.articleType.id) }}" target="_blank" style="color: white">
+                {{ article.articleType.name }}
+            </a>
+        </span>&nbsp;
+        </div>
+        <div class="main-info">
+            <span class="label label-primary">浏览 {{ article.num_of_view }}</span>
+            <span class="label label-success">评论 {{ comments_pager.totalCount }}</span>
+        </div>
+    </div>
+
     <hr>
     <div>
-        <p>
-            {{ article.content | safe }}
+        <p class="article-content">
+            {% raw article.content %}
         </p>
     </div>
     <div class="article-add-info">
@@ -19,20 +42,21 @@
             <span class="glyphicon glyphicon-time">
                 博文最后更新时间：
             </span>
-            {{ moment(article.update_time.replace(microsecond=0)).format('LLL') }}
+            {{ article.create_time.strftime("%Y年%m月%d日 %H:%M:%S") }}
         </p>
     </div>
-    {% if current_user.is_authenticated %}
+    {% if current_user %}
     <div class="article-edit">
-        <a href="{{ url_for('admin.editArticles', id=article.id) }}">
+        <a href="{{ reverse_url('admin.article', article.id) }}">
             <button type="button" class="btn btn-default btn-sm">
                 <span class="glyphicon glyphicon-pencil"></span>
                 编辑
             </button>
         </a>
     </div>
-    {% endif %}
+    {% end %}
     <hr>
+{#
     <h4 id="comments"><span class="glyphicon glyphicon-comment">评论</span></h4>
     {% include "_article_comments.html" %}
     <div class="pagination">
@@ -40,18 +64,12 @@
     </div>
     <h4  id="submit-comment"><span class="glyphicon glyphicon-comment">发表评论</span></h4>
     {% include "_submit_comment.html" %}
+#}
 </div>
-{% endblock %}
-
-{% block stylesheet %}
-    {{ super() }}
-    <link href="{{ url_for('static', filename='css/prism.css') }}" rel="stylesheet">
-{% endblock %}
+{% end %}
 
 {% block script %}
-    {{ super() }}
-    <script src="{{ url_for('static', filename='tinymce/js/tinymce/extentsion_self/codesimple_extentsion/prism.js') }}">
-    </script>
-    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/commentReply.js') }}"></script>
-{% endblock %}
+    <!--<script src="//cdn.bootcss.com/markdown.js/0.6.0-beta1/markdown.min.js"></script>-->
+    <script src="//cdn.bootcss.com/markdown.js/0.5.0/markdown.min.js"></script>
+    <script src="{{ static_url('js/articleDetail.js') }}"></script>
+{% end %}

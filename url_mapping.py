@@ -18,7 +18,7 @@ handlers = [
     # articleType
     url(r"/type/([0-9]+)/articles", controller.home.ArticleTypeHandler, name="articleType"),
     # article
-    url(r"/article/([0-9]+)", controller.home.HomeHandler, name="article"),
+    url(r"/article/([0-9]+)", controller.home.ArticleHandler, name="article"),
     # admin
     url(r"/admin/account", controller.admin.AdminAccountHandler, name="admin.account"),
     url(r"/admin/help", controller.admin.AdminHelpHandler, name="admin.help"),

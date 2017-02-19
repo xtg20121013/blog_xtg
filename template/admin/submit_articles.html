@@ -33,11 +33,11 @@
             </select>
         </div>
         <div class="form-group">
-            <textarea id="content" class="markdown-edit" name="content">{% if article %} {{article.content}} {%end%}</textarea>
+            <textarea id="content" class="markdown-edit" name="content">{% if article %}{% raw article.content %}{%end%}</textarea>
         </div>
         <div class="form-group">
             <label class="control-label" for="summary">博文摘要</label>（显示在博客首页,不填的话,默认取文章前120个字）<br>
-            <textarea class="submit-article-summary form-control" id="summary" name="summary" >{% if article %} {{article.summary}} {%end%}</textarea>
+            <textarea class="submit-article-summary form-control" id="summary" name="summary" >{% if article %}{{article.summary}}{%end%}</textarea>
         </div>
         <div class="submit-article-button">
             <button type="submit" class="btn btn-success">提交</button>
@@ -47,7 +47,7 @@
 {% end %}
 
 {% block private_script %}
-    <script src="{{ static_url('js/markdown/markdown.js')}}"></script>
+    <script src="//cdn.bootcss.com/markdown.js/0.5.0/markdown.min.js"></script>
     <script src="{{ static_url('js/markdown/to-markdown.js')}}"></script>
     <script src="{{ static_url('js/markdown/bootstrap-markdown.js')}}"></script>
     <script src="{{ static_url('js/markdown/locale/bootstrap-markdown.zh.js')}}"></script>

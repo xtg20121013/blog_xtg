@@ -115,7 +115,7 @@ class Comment(DbBase):
     __tablename__ = 'comments'
     id = Column(Integer, primary_key=True)
     content = Column(Text)
-    timestamp = Column(DateTime, default=datetime.now)
+    create_time = Column(DateTime, default=datetime.now)
     author_name = Column(String(64))
     author_email = Column(String(64))
     article_id = Column(Integer, ForeignKey('articles.id'))
@@ -143,6 +143,7 @@ class Comment(DbBase):
     def followed_name(self):
         if self.is_reply():
             return self.followed.first().followed.author_name
+
 
 class Article(DbBase):
     __tablename__ = 'articles'
