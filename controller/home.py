@@ -2,13 +2,26 @@
 from tornado import gen
 
 from base import BaseHandler
+from model.pager import Pager
+from model.search_params.article_params import ArticleSearchParams
 from service.user_service import UserService
+from service.article_service import ArticleService
 
 
 class HomeHandler(BaseHandler):
-
+    @gen.coroutine
     def get(self):
-        self.render("index.html")
+        if self.request.query_arguments:
+            # 取缓存
+            pass
+        pager = Pager(self)
+        article_search_params = ArticleSearchParams(self)
+        article_search_params.show_article_type=True
+        article_search_params.show_source=True
+        article_search_params.show_summary=True
+        article_search_params.show_comments_count = True
+        pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+        self.render("index.html", pager=pager, article_search_params=article_search_params)
 
 
 class LoginHandler(BaseHandler):

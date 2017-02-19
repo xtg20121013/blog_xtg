@@ -15,6 +15,10 @@ body {
 .article-entry-sum {
     margin-top: 5px;
 }
+.article-entry-sum p{
+    font-size: 15px;
+    color: #666;
+}
 .entry-box {
     background: #fff;
     padding: 15px;

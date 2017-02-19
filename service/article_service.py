@@ -2,6 +2,7 @@
 import logging
 import re
 
+from model.site_info import SiteCollection
 from sqlalchemy.orm import joinedload, undefer
 from model.models import Article, Source
 from model.search_params.article_params import ArticleSearchParams
@@ -13,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 class ArticleService(object):
     MARKDOWN_REG = "[\\\`\*\_\[\]\#\+\-\!\>\s]";
-    SUMMARY_LIMIT = 100;
+    SUMMARY_LIMIT = 120;
 
     @staticmethod
     def get_article_all(db_session, article_id):
@@ -37,7 +38,7 @@ class ArticleService(object):
                 query = query.filter(Article.source_id==search_params.source_id)
             if search_params.articleType_id:
                 query = query.filter(Article.articleType_id==search_params.articleType_id)
-        pager = BaseService.query_pager(query, pager)
+        pager = BaseService.query_pager(query, pager, SiteCollection.article_count)
         if pager.result:
             if search_params.show_comments_count:
                 for article in pager.result:

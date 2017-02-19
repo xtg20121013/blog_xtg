@@ -36,7 +36,7 @@
             <textarea id="content" class="markdown-edit" name="content">{% if article %} {{article.content}} {%end%}</textarea>
         </div>
         <div class="form-group">
-            <label class="control-label" for="summary">博文摘要</label>（显示在博客首页,不填的话,默认取文章前100个字）<br>
+            <label class="control-label" for="summary">博文摘要</label>（显示在博客首页,不填的话,默认取文章前120个字）<br>
             <textarea class="submit-article-summary form-control" id="summary" name="summary" >{% if article %} {{article.summary}} {%end%}</textarea>
         </div>
         <div class="submit-article-button">
