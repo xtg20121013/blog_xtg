@@ -1,5 +1,6 @@
 # coding=utf-8
 import json
+import logging
 
 import tornado.gen
 
@@ -12,6 +13,8 @@ from menu_service import MenuService
 from model.models import BlogView, Comment
 from model.site_info import SiteCollection
 from plugin_service import PluginService
+
+logger = logging.getLogger(__name__)
 
 """
 初始化相关，包括缓存管理
@@ -109,11 +112,14 @@ class SiteCacheService(object):
     # 仅从cache中查询source下的source_articles_count
     @staticmethod
     @tornado.gen.coroutine
-    def query_source_articles_count(cache_manager):
+    def query_source_articles_count(cache_manager, source_id=None):
+        flush_all = False if source_id else True
         if SiteCollection.article_sources:
             for source in SiteCollection.article_sources:
+                if not flush_all and source.id != int(source_id):
+                    continue
                 count = yield cache_manager.call("GET", site_cache_keys['source_articles_count'].format(source.id))
-                source.articles_count = count
+                source.articles_count = int(count) if count else None
 
     @staticmethod
     @tornado.gen.coroutine
@@ -155,8 +161,14 @@ class SiteCacheService(object):
             yield SiteCacheService.query_article_count(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['article_sources_updated']:
             yield SiteCacheService.query_article_sources(cache_manager, thread_do, db)
-        elif msg == SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated']:
-            yield SiteCacheService.query_source_articles_count(cache_manager)
+        else:
+            try:
+                ms = json.loads(msg)
+                if ms[0] == SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated']:
+                    yield SiteCacheService.query_source_articles_count(cache_manager, ms[1])
+            except Exception, e:
+                logger.exception(e)
+
 
     @staticmethod
     @tornado.gen.coroutine
@@ -217,7 +229,7 @@ class SiteCacheService(object):
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_sources_updated'])
 
-    # article增删后的操作article_count以及对应的source_count
+    # article增删改后的操作article_count以及对应的source_count
     @staticmethod
     @tornado.gen.coroutine
     def update_article_action(cache_manager, action, article, is_pub_all=False, pubsub_manager=None):
@@ -237,7 +249,8 @@ class SiteCacheService(object):
                     article_source.articles_count = source_article_count
                     break
             if is_pub_all:
-                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
+                yield pubsub_manager.pub_call(json.dumps(
+                        [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], article_source_id]))
         if action == "remove":
             article_count = yield cache_manager.call("DECR", site_cache_keys['article_count'])
             if article_count:
@@ -255,7 +268,8 @@ class SiteCacheService(object):
                         article_source.articles_count = source_article_count
                         break
                 if is_pub_all:
-                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
+                    yield pubsub_manager.pub_call(json.dumps(
+                        [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], article_source_id]))
         if action == "update":
             article_new = article[0]
             article_old = article[1]
@@ -272,7 +286,10 @@ class SiteCacheService(object):
                     if int(article_source.id) == source_id_new:
                         article_source.articles_count = source_new_article_count
                 if is_pub_all:
-                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'])
+                    yield pubsub_manager.pub_call(json.dumps(
+                        [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], source_id_old]))
+                    yield pubsub_manager.pub_call(json.dumps(
+                        [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], source_id_new]))
 
 
 def get_blog_view_count(db_session):

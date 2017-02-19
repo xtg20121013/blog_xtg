@@ -3,3 +3,4 @@ sqlalchemy
 redis
 tornadis>=0.8.0
 futures
+alembic
