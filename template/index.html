@@ -34,8 +34,7 @@
     </div>
 </div>
 {% end %}
-{% module Template("_macros.html", pager=pager, url=reverse_url('index'), params=article_search_params.to_url_params()) %}
 {% end %}
-
+{% module Template("_macros.html", pager=pager, url=base_url, params=article_search_params.to_url_params()) %}
 
 {% end %}

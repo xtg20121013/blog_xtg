@@ -157,8 +157,8 @@ class Article(DbBase):
     source_id = Column(Integer, ForeignKey('sources.id'))
     comments = relationship('Comment', backref='article', lazy='dynamic')
 
-    def fetch_comments_count(self):
-        self.comments_count = self.comments.count()
+    def fetch_comments_count(self, count=None):
+        self.comments_count = count if count is not None else self.comments.count()
 
     def __repr__(self):
         return '<Article %r>' % self.title

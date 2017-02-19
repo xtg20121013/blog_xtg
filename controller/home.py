@@ -11,9 +11,6 @@ from service.article_service import ArticleService
 class HomeHandler(BaseHandler):
     @gen.coroutine
     def get(self):
-        if self.request.query_arguments:
-            # 取缓存
-            pass
         pager = Pager(self)
         article_search_params = ArticleSearchParams(self)
         article_search_params.show_article_type=True
@@ -21,7 +18,38 @@ class HomeHandler(BaseHandler):
         article_search_params.show_summary=True
         article_search_params.show_comments_count = True
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
-        self.render("index.html", pager=pager, article_search_params=article_search_params)
+        self.render("index.html", base_url=self.reverse_url('index'),
+                    pager=pager, article_search_params=article_search_params)
+
+
+class ArticleTypeHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, type_id):
+        pager = Pager(self)
+        article_search_params = ArticleSearchParams(self)
+        article_search_params.show_article_type=True
+        article_search_params.show_source=True
+        article_search_params.show_summary=True
+        article_search_params.show_comments_count = True
+        article_search_params.articleType_id = type_id
+        pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+        self.render("index.html", base_url=self.reverse_url('articleType', type_id),
+                    pager=pager, article_search_params=article_search_params)
+
+
+class articleSourceHandler(BaseHandler):
+    @gen.coroutine
+    def get(self, source_id):
+        pager = Pager(self)
+        article_search_params = ArticleSearchParams(self)
+        article_search_params.show_article_type=True
+        article_search_params.show_source=True
+        article_search_params.show_summary=True
+        article_search_params.show_comments_count = True
+        article_search_params.source_id = source_id
+        pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+        self.render("index.html", base_url=self.reverse_url('articleSource', source_id),
+                    pager=pager, article_search_params=article_search_params)
 
 
 class LoginHandler(BaseHandler):

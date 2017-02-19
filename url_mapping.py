@@ -14,9 +14,9 @@ handlers = [
     url(r"/auth/login/(\d+)", controller.home.LoginHandler),
     url(r"/auth/logout", controller.home.LogoutHandler, name="logout"),
     # articleSource
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleSource"),
+    url(r"/source/([0-9]+)/articles", controller.home.articleSourceHandler, name="articleSource"),
     # articleType
-    url(r"/([0-9]+)", controller.home.HomeHandler, name="articleType"),
+    url(r"/type/([0-9]+)/articles", controller.home.ArticleTypeHandler, name="articleType"),
     # article
     url(r"/article/([0-9]+)", controller.home.HomeHandler, name="article"),
     # admin
@@ -52,7 +52,6 @@ handlers = [
     url(r"/admin/article/([0-9]+)", controller.admin_article.AdminArticleHandler, name="admin.article"),
     url(r"/admin/article/([0-9]+)/(delete)", controller.admin_article.AdminArticleHandler, name="admin.article.update"),
 
-    url(r"/", controller.home.HomeHandler, name="admin.manage_articles"),
     url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),
 
 

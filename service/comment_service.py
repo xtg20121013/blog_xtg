@@ -2,6 +2,7 @@
 import logging
 
 from model.models import Comment
+from sqlalchemy.sql import func
 
 logger = logging.getLogger(__name__)
 
@@ -19,3 +20,9 @@ class CommentService(object):
         except Exception, e:
             logger.exception(e)
         return None
+
+    @staticmethod
+    def get_comments_count_subquery(db_session):
+        stmt = db_session.query(Comment.article_id, func.count('*').label('comments_count')). \
+            group_by(Comment.article_id).subquery()
+        return stmt

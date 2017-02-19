@@ -23,7 +23,12 @@ class ArticleService(object):
     @staticmethod
     def page_articles(db_session, pager, search_params):
         query = db_session.query(Article)
+        count = SiteCollection.article_count
         if search_params:
+            if search_params.show_comments_count:
+                stmt = CommentService.get_comments_count_subquery(db_session)
+                query = db_session.query(Article, stmt.c.comments_count).\
+                    outerjoin(stmt, Article.id == stmt.c.article_id)
             if search_params.show_summary:
                 query = query.options(undefer(Article.summary))
             if search_params.show_content:
@@ -35,15 +40,19 @@ class ArticleService(object):
             if search_params.order_mode == ArticleSearchParams.ORDER_MODE_CREATE_TIME_DESC:
                 query = query.order_by(Article.create_time.desc())
             if search_params.source_id:
-                query = query.filter(Article.source_id==search_params.source_id)
+                count = None
+                query = query.filter(Article.source_id == search_params.source_id)
             if search_params.articleType_id:
-                query = query.filter(Article.articleType_id==search_params.articleType_id)
-        pager = BaseService.query_pager(query, pager, SiteCollection.article_count)
+                count = None
+                query = query.filter(Article.articleType_id == search_params.articleType_id)
+        pager = BaseService.query_pager(query, pager, count)
         if pager.result:
             if search_params.show_comments_count:
-                for article in pager.result:
-                    article
-                    article.fetch_comments_count()
+                result = []
+                for article, comments_count in pager.result:
+                    article.fetch_comments_count(comments_count if comments_count else 0)
+                    result.append(article)
+                pager.result = result
         return pager
 
     @staticmethod
