@@ -1,6 +1,7 @@
 # coding=utf-8
 import tornado.web
 from tornado import gen
+from tornado.escape import url_escape
 from extends.session_tornadis import Session
 from config import session_keys
 from model.logined_user import LoginUser
@@ -16,6 +17,9 @@ class BaseHandler(tornado.web.RequestHandler):
         self.thread_executor = self.application.thread_executor
         self.cache_manager = self.application.cache_manager
         self.async_do = self.thread_executor.submit
+
+    def login_url(self):
+        return self.get_login_url()+"?next="+url_escape(self.request.uri)
 
     @gen.coroutine
     def prepare(self):
