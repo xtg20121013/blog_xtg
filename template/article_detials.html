@@ -33,10 +33,12 @@
 
     <hr>
     <div>
-        <p class="article-content">
+        <img class="article-loading" src="{{ static_url('images/loading154.gif') }}">
+        <p class="article-content" style="display: none">
             {% raw article.content %}
         </p>
     </div>
+    <br><br>
     <div class="article-add-info">
         <p>
             <span class="glyphicon glyphicon-time">
@@ -56,8 +58,9 @@
     </div>
     {% end %}
     <hr>
-{#
+
     <h4 id="comments"><span class="glyphicon glyphicon-comment">评论</span></h4>
+{#
     {% include "_article_comments.html" %}
     <div class="pagination">
         {{ macros.pagination_widget(pagination, endpoint, id=id, fragment='#comments') }}
@@ -69,7 +72,6 @@
 {% end %}
 
 {% block script %}
-    <!--<script src="//cdn.bootcss.com/markdown.js/0.6.0-beta1/markdown.min.js"></script>-->
     <script src="//cdn.bootcss.com/markdown.js/0.5.0/markdown.min.js"></script>
     <script src="{{ static_url('js/articleDetail.js') }}"></script>
 {% end %}

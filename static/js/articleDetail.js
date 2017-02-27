@@ -18,6 +18,8 @@ window.onload = function(){
     $('#follow').val(-1);
     var content = $('.article-content').text();
     $('.article-content').html(markdown.toHTML(content));
+    $('.article-loading').hide();
+    $('.article-content').show();
 }
 
 

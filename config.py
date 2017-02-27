@@ -25,6 +25,7 @@ redis_pub_sub_channels = dict(
     cache_message_channel="site_cache_message_channel",
 )
 
+# 消息订阅(基于redis)配置
 redis_pub_sub_config = dict(
     host="127.0.0.1",
     port=6379,
@@ -33,6 +34,7 @@ redis_pub_sub_config = dict(
     channels=[redis_pub_sub_channels['cache_message_channel'],],
 )
 
+# 数据库配置
 database_config = dict(
     engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
     engine_setting=dict(
@@ -64,6 +66,7 @@ site_cache_keys = dict(
     source_articles_count="source_{}_articles_count",
 )
 
+# 站点相关配置以及tornado的相关参数
 config = dict(
     debug=True,
     compress_response=True,
