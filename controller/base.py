@@ -1,9 +1,13 @@
 # coding=utf-8
+import hashlib
+import urllib
+
 import tornado.web
 from tornado import gen
 from tornado.escape import url_escape
-from extends.session_tornadis import Session
+
 from config import session_keys
+from extends.session_tornadis import Session
 from model.logined_user import LoginUser
 
 
@@ -89,6 +93,14 @@ class BaseHandler(tornado.web.RequestHandler):
     def write_json(self, json):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json)
+
+    def get_gravatar_url(self, email, default=None, size=40):
+        body = {'s': str(size)}
+        if default:
+            body["d"] = default;
+        gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode(body)
+        return gravatar_url
 
     @gen.coroutine
     def on_finish(self):
