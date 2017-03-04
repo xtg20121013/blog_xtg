@@ -17,9 +17,13 @@ class ArticleService(object):
     SUMMARY_LIMIT = 120;
 
     @staticmethod
-    def get_article_all(db_session, article_id):
-        return db_session.query(Article).\
-            options(undefer(Article.summary), undefer(Article.content), undefer(Article.update_time)).get(article_id)
+    def get_article_all(db_session, article_id, show_source_type=False):
+        query = db_session.query(Article);
+        if show_source_type:
+            query = query.options(joinedload(Article.source)).\
+                options(joinedload(Article.articleType).load_only("id", "name"))
+        return query.options(undefer(Article.summary), undefer(Article.content), undefer(Article.update_time)).\
+            get(article_id)
 
     @staticmethod
     def page_articles(db_session, pager, search_params):

@@ -15,6 +15,8 @@ class Pager(Dict):
 
     def build_query(self, query):
         limit = self.pageSize
+        if self.pageNo < 0:
+            self.pageNo = self.pageNo + self.totalPage + 1
         offset = (self.pageNo-1)*self.pageSize if self.pageNo > 0 else 0
         query = query.limit(limit).offset(offset)
         return query

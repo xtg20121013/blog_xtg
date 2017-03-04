@@ -2,7 +2,9 @@
 from tornado import gen
 
 from base import BaseHandler
+from admin_article import ArticleAndCommentsFlush
 from model.pager import Pager
+from model.constants import Constants
 from model.search_params.article_params import ArticleSearchParams
 from service.user_service import UserService
 from service.article_service import ArticleService
@@ -26,11 +28,32 @@ class HomeHandler(BaseHandler):
 class ArticleHandler(BaseHandler):
     @gen.coroutine
     def get(self, article_id):
-        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id)
+        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
         comments_pager = Pager(self)
-        comments_pager.pageSize = 6
         comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, article_id)
         self.render("article_detials.html", article=article, comments_pager=comments_pager)
+
+
+class ArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
+    @gen.coroutine
+    def post(self, article_id):
+        comment = dict(
+            content=self.get_argument('content'),
+            author_name=self.get_argument('author_name'),
+            author_email=self.get_argument('author_email'),
+            article_id=article_id,
+            comment_type=self.get_argument('comment_type', None),
+            rank=Constants.COMMENT_RANK_ADMIN if self.current_user else Constants.COMMENT_RANK_NORMAL,
+            reply_to_id=self.get_argument('reply_to_id', None),
+            reply_to_floor=self.get_argument('reply_to_floor', None),
+        )
+        comment_saved = yield self.async_do(CommentService.add_comment, self.db, article_id, comment)
+        if comment_saved:
+            yield self.flush_comments_cache(Constants.FLUSH_COMMENT_ACTION_ADD, comment_saved)
+            self.add_message('success', u'评论成功')
+        else:
+            self.add_message('danger', u'评论失败')
+        self.redirect(self.reverse_url('article', article_id)+"?pageNo=-1#comments")
 
 
 class ArticleTypeHandler(BaseHandler):

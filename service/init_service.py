@@ -12,6 +12,7 @@ from extends.utils import AlchemyEncoder, Dict
 from menu_service import MenuService
 from model.models import BlogView, Comment
 from model.site_info import SiteCollection
+from model.constants import Constants
 from plugin_service import PluginService
 
 logger = logging.getLogger(__name__)
@@ -233,7 +234,7 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def update_article_action(cache_manager, action, article, is_pub_all=False, pubsub_manager=None):
-        if action == "add":
+        if action == Constants.FLUSH_ARTICLE_ACTION_ADD:
             article_count = yield cache_manager.call("INCR", site_cache_keys['article_count'])
             if article_count:
                 SiteCollection.article_count = article_count
@@ -251,7 +252,7 @@ class SiteCacheService(object):
             if is_pub_all:
                 yield pubsub_manager.pub_call(json.dumps(
                         [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], article_source_id]))
-        if action == "remove":
+        if action == Constants.FLUSH_ARTICLE_ACTION_REMOVE:
             article_count = yield cache_manager.call("DECR", site_cache_keys['article_count'])
             if article_count:
                 SiteCollection.article_count = article_count
@@ -270,7 +271,7 @@ class SiteCacheService(object):
                 if is_pub_all:
                     yield pubsub_manager.pub_call(json.dumps(
                         [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], article_source_id]))
-        if action == "update":
+        if action == Constants.FLUSH_ARTICLE_ACTION_UPDATE:
             article_new = article[0]
             article_old = article[1]
             source_id_old = int(article_old.source_id)

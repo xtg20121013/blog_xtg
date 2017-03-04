@@ -5,6 +5,7 @@ from tornado.web import authenticated
 from base import BaseHandler
 from config import session_keys
 from model.models import Article
+from model.constants import Constants
 from service.article_service import ArticleService
 from service.article_type_service import ArticleTypeService
 from service.init_service import SiteCacheService
@@ -68,7 +69,7 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
     @authenticated
     def article_get(self, article_id):
         article_types = yield self.async_do(ArticleTypeService.list_simple, self.db)
-        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id)
+        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
         self.render("admin/submit_articles.html", article_types=article_types, article=article)
 
     @coroutine
@@ -99,7 +100,7 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
         )
         article_saved = yield self.async_do(ArticleService.add_article, self.db, article)
         if article_saved and article_saved.id:
-            yield self.flush_article_cache("add", article_saved)
+            yield self.flush_article_cache(Constants.FLUSH_ARTICLE_ACTION_ADD, article_saved)
             self.add_message('success', u'保存成功!')
             self.redirect(self.reverse_url('article', article_saved.id))
         else:
@@ -120,7 +121,7 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
         )
         article_updateds = yield self.async_do(ArticleService.update_article, self.db, article)
         if article_updateds:
-            yield self.flush_article_cache("update", article=article_updateds)
+            yield self.flush_article_cache(Constants.FLUSH_ARTICLE_ACTION_UPDATE, article=article_updateds)
             article_updated = article_updateds[0]
             self.add_message('success', u'修改成功!')
             self.redirect(self.reverse_url('article', article_updated.id))
@@ -133,8 +134,8 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
     def delete_post(self, article_id):
         article_deleted, comments_deleted = yield self.async_do(ArticleService.delete_article, self.db, article_id)
         if article_deleted:
-            yield self.flush_article_cache("remove", article_deleted)
-            yield self.flush_comments_cache("remove", comments_deleted)
+            yield self.flush_article_cache(Constants.FLUSH_ARTICLE_ACTION_REMOVE, article_deleted)
+            yield self.flush_comments_cache(Constants.FLUSH_COMMENT_ACTION_REMOVE, comments_deleted)
             self.add_message('success', u'删除成功,并删除{}条评论!'.format(len(comments_deleted)))
             self.write("success")
         else:

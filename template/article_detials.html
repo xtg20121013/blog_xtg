@@ -58,9 +58,9 @@
     </div>
     {% end %}
     <hr>
-{#
-    <h4 id="comments"><span class="glyphicon glyphicon-comment">评论</span></h4>
 
+    <h4 id="comments" name="comments"><span class="glyphicon glyphicon-comment">评论</span></h4>
+{#
     {% include "_article_comments.html" %}
     <div class="pagination">
         {{ macros.pagination_widget(pagination, endpoint, id=id, fragment='#comments') }}
@@ -69,14 +69,13 @@
     <h4  id="submit-comment"><span class="glyphicon glyphicon-comment">发表评论</span></h4>
     <div class="row">
     <div class="col-md-8" id="submit-comment-container">
-        <form class="submit-comment-form" id="submit-comment-form" method="post" action="">
+        <form class="submit-comment-form" id="submit-comment-form" method="post" action="{{ reverse_url('articleCommentSave', article.id)}}">
             {% module xsrf_form_html() %}
-            <input id="follow" name="follow" type="hidden" value="-1">
             <label for="name">昵称</label>
-            <input class="form-control" id="name" name="name" required="" type="text"
+            <input class="form-control" id="name" name="author_name" required="" type="text"
                    value="{{ current_user['name'] if current_user else '' }}">
             <label for="email">邮箱</label>
-            <input class="form-control" id="email" name="email" required="" type="text"
+            <input class="form-control" id="email" name="author_email" required="" type="text"
                    value="{{ current_user['email'] if current_user else '' }}">
             <label for="content">内容</label>
             <textarea class="form-control" id="content" name="content" required=""></textarea>

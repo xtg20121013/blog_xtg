@@ -20,6 +20,8 @@ window.onload = function(){
     $('.article-content').html(markdown.toHTML(content));
     $('.article-loading').hide();
     $('.article-content').show();
+    var scrollName = location.hash;
+    $("body,html").animate({scrollTop:$(scrollName).offset().top}, "fast");
 }
 
 

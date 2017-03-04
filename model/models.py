@@ -1,5 +1,6 @@
 # coding: utf-8
 from datetime import datetime
+from model.constants import Constants
 from sqlalchemy.orm import contains_eager, deferred
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, DateTime, Integer, String, Boolean, Text, ForeignKey, BigInteger
@@ -103,14 +104,6 @@ class Source(DbBase):
         return '<Source %r>' % self.name
 
 
-class Follow(DbBase):
-    __tablename__ = 'follows'
-    follower_id = Column(Integer, ForeignKey('comments.id'),
-                           primary_key=True)
-    followed_id = Column(Integer, ForeignKey('comments.id'),
-                         primary_key=True)
-
-
 class Comment(DbBase):
     __tablename__ = 'comments'
     id = Column(Integer, primary_key=True)
@@ -120,29 +113,11 @@ class Comment(DbBase):
     author_email = Column(String(64))
     article_id = Column(Integer, ForeignKey('articles.id'))
     disabled = Column(Boolean, default=False)
-    comment_type = Column(String(64), default='comment')
-    reply_to = Column(String(128), default='notReply')
-    followed = relationship('Follow',
-                               foreign_keys=[Follow.follower_id],
-                               backref=backref('follower', lazy='joined'),
-                               lazy='dynamic',
-                               cascade='all, delete-orphan')
-    followers = relationship('Follow',
-                               foreign_keys=[Follow.followed_id],
-                               backref=backref('followed', lazy='joined'),
-                               lazy='dynamic',
-                               cascade='all, delete-orphan')
-
-    def is_reply(self):
-        if self.followed.count() == 0:
-            return False
-        else:
-            return True
-    # to confirm whether the comment is a reply or not
-
-    def followed_name(self):
-        if self.is_reply():
-            return self.followed.first().followed.author_name
+    comment_type = Column(String(64), default=Constants.COMMENT_TYPE_COMMENT)
+    rank = Column(String(64), default=Constants.COMMENT_RANK_NORMAL)
+    floor = Column(Integer, nullable=False)
+    reply_to_id = Column(Integer)
+    reply_to_floor = Column(String(64))
 
 
 class Article(DbBase):

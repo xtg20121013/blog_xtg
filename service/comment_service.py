@@ -9,11 +9,31 @@ logger = logging.getLogger(__name__)
 
 
 class CommentService(object):
+    @staticmethod
+    def get_comment(db_session, comment_id):
+        return db_session.query(Comment).get(comment_id)
+
+    @staticmethod
+    def get_max_floor(db_session, article_id):
+        max_floor = db_session.query(func.max(Comment.floor)).filter(Comment.article_id==article_id).scalar()
+        return max_floor if max_floor else 0;
+
+    @staticmethod
+    def add_comment(db_session, article_id, comment):
+        max_floor = CommentService.get_max_floor(db_session, article_id)
+        floor = max_floor + 1
+        comment_to_add = Comment(content=comment['content'], author_name=comment['author_name'],
+                                 author_email=comment['author_email'], article_id=article_id,
+                                 comment_type=comment['comment_type'], rank=comment['rank'], floor=floor,
+                                 reply_to_id=comment['reply_to_id'], reply_to_floor=comment['reply_to_floor'])
+        db_session.add(comment_to_add)
+        db_session.commit()
+        return comment_to_add
 
     @staticmethod
     def page_comments(db_session, pager, article_id):
         query = db_session.query(Comment).filter(Comment.article_id == article_id)
-        query = query.order_by(Comment.create_time.desc())
+        query = query.order_by(Comment.create_time.asc())
         pager = BaseService.query_pager(query, pager)
         return pager
 
