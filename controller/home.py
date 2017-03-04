@@ -16,9 +16,9 @@ class HomeHandler(BaseHandler):
     def get(self):
         pager = Pager(self)
         article_search_params = ArticleSearchParams(self)
-        article_search_params.show_article_type=True
-        article_search_params.show_source=True
-        article_search_params.show_summary=True
+        article_search_params.show_article_type = True
+        article_search_params.show_source = True
+        article_search_params.show_summary = True
         article_search_params.show_comments_count = True
         pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
         self.render("index.html", base_url=self.reverse_url('index'),
