@@ -15,7 +15,7 @@ class CommentService(object):
 
     @staticmethod
     def get_max_floor(db_session, article_id):
-        max_floor = db_session.query(func.max(Comment.floor)).filter(Comment.article_id==article_id).scalar()
+        max_floor = db_session.query(func.max(Comment.floor)).filter(Comment.article_id == article_id).scalar()
         return max_floor if max_floor else 0;
 
     @staticmethod
@@ -29,6 +29,13 @@ class CommentService(object):
         db_session.add(comment_to_add)
         db_session.commit()
         return comment_to_add
+
+    @staticmethod
+    def update_comment_disabled(db_session, article_id, comment_id, disabled):
+        updated = db_session.query(Comment).filter(Comment.article_id == article_id, Comment.id == comment_id).\
+            update({Comment.disabled: disabled})
+        db_session.commit()
+        return updated
 
     @staticmethod
     def page_comments(db_session, pager, article_id):

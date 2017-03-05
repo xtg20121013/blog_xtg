@@ -9,6 +9,7 @@ from model.constants import Constants
 from service.article_service import ArticleService
 from service.article_type_service import ArticleTypeService
 from service.init_service import SiteCacheService
+from service.comment_service import CommentService
 from model.search_params.article_params import ArticleSearchParams
 from model.pager import Pager
 
@@ -140,4 +141,29 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
             self.write("success")
         else:
             self.add_message('danger', u'删除失败！')
+            self.write("error")
+
+
+class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
+    @coroutine
+    def post(self, *require):
+        if require:
+            if len(require) == 3:
+                article_id = require[0]
+                comment_id = require[1]
+                action = require[2]
+                if action == 'disable':
+                    yield self.disable_post(article_id, comment_id, True)
+                elif action == 'enable':
+                    yield self.disable_post(article_id, comment_id, False)
+
+    @coroutine
+    @authenticated
+    def disable_post(self, article_id, comment_id, disabled):
+        updated = yield self.async_do(CommentService.update_comment_disabled, self.db, article_id, comment_id, disabled)
+        if updated:
+            self.add_message('success', u'修改成功')
+            self.write("success")
+        else:
+            self.add_message('danger', u'修改失败！')
             self.write("error")

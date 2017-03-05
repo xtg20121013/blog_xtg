@@ -3,6 +3,12 @@ body {
     /*background: #F0F0F0;*/
     background: url('../images/background.jpg');
 }
+#fix-alert{
+    position: fixed;
+    left: 50%;
+    top:30%;
+    z-index: 1;
+}
 .blog-title a:link {
     text-decoration: none;
 }

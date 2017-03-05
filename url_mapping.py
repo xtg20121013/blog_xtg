@@ -11,7 +11,6 @@ from tornado.web import url
 handlers = [
     url(r"/", controller.home.HomeHandler, name="index"),
     url(r"/auth/login", controller.home.LoginHandler, name="login"),
-    url(r"/auth/login/(\d+)", controller.home.LoginHandler),
     url(r"/auth/logout", controller.home.LogoutHandler, name="logout"),
     # articleSource
     url(r"/source/([0-9]+)/articles", controller.home.articleSourceHandler, name="articleSource"),
@@ -54,6 +53,7 @@ handlers = [
     url(r"/admin/article/([0-9]+)/(delete)", controller.admin_article.AdminArticleHandler, name="admin.article.update"),
 
     url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),
-
+    url(r"/admin/article/([0-9]+)/comment/([0-9]+)/(disable|enable|delete)",
+        controller.admin_article.AdminArticleCommentHandler, name="admin.comment.update"),
 
 ]

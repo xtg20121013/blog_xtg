@@ -1,4 +1,11 @@
 
+function update_disable(url) {
+    var _xsrf = getCookie("_xsrf");
+    $.post(url, {_xsrf:_xsrf}, function (data) {
+        location.reload();
+    });
+}
+
 function go_to_reply(comment_type, reply_to_id, reply_to_floor) {
     $('#reply-dialog-box').remove();
     $('#submit-comment-form').prepend('<div class="alert alert-info alert-dismissable" id="reply-dialog-box">' +
@@ -17,7 +24,9 @@ window.onload = function(){
     $('.article-loading').hide();
     $('.article-content').show();
     var scrollName = location.hash;
-    $("body,html").animate({scrollTop:$(scrollName).offset().top}, "fast");
+    if(scrollName) {
+        $("body,html").animate({scrollTop: $(scrollName).offset().top}, "fast");
+    }
 }
 
 
