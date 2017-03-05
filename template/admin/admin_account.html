@@ -5,7 +5,7 @@
     <h4><strong><i>{{ current_user.name }}</i>，欢迎来到blog_xtg管理平台！</strong></h4>
     <hr/>
     <div class="user-info">
-        <img class="img-rounded profile-thumbnail" src="{{ current_user.avatar }}">
+        <img class="img-rounded profile-thumbnail" src="{{ handler.get_gravatar_url(current_user.email, size=120) }}">
         <div class="profile-header">
             <h5>昵称：</h5>
             <h4 class="username">{{ current_user.name }}</h4>
