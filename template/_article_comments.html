@@ -58,7 +58,7 @@
                 {% end %}
                 {% if not comment.disabled or current_user %}
                 <div class="col-sm-1 {% if not current_user %}col-sm-offset-10{% end %}">
-                    <button class="btn btn-sm btn-info">
+                    <button class="btn btn-sm btn-info" onclick="go_to_reply('{{Constants.COMMENT_TYPE_REPLY}}', {{comment.id}}, '{{comment.floor}}楼')">
                         <span class="glyphicon glyphicon-comment"></span> 回复
                     </button>
                 </div>
