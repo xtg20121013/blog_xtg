@@ -3,6 +3,8 @@ import logging
 
 from model.models import Comment
 from sqlalchemy.sql import func
+from sqlalchemy.orm import joinedload
+from model.search_params.comment_params import CommentSearchParams
 from . import BaseService
 
 logger = logging.getLogger(__name__)
@@ -47,9 +49,17 @@ class CommentService(object):
         return None
 
     @staticmethod
-    def page_comments(db_session, pager, article_id):
-        query = db_session.query(Comment).filter(Comment.article_id == article_id)
-        query = query.order_by(Comment.create_time.asc())
+    def page_comments(db_session, pager, params):
+        query = db_session.query(Comment)
+        if params:
+            if params.article_id:
+                query = query.filter(Comment.article_id == params.article_id)
+            if params.show_article_id_title:
+                query = query.options(joinedload(Comment.article).load_only("id", "title"))
+            if params.order_mode == CommentSearchParams.ORDER_MODE_CREATE_TIME_ASC:
+                query = query.order_by(Comment.create_time.asc())
+            elif params.order_mode == CommentSearchParams.ORDER_MODE_CREATE_TIME_DESC:
+                query = query.order_by(Comment.create_time.desc())
         pager = BaseService.query_pager(query, pager)
         return pager
 

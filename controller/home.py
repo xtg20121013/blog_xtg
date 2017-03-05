@@ -6,6 +6,7 @@ from admin_article import ArticleAndCommentsFlush
 from model.pager import Pager
 from model.constants import Constants
 from model.search_params.article_params import ArticleSearchParams
+from model.search_params.comment_params import CommentSearchParams
 from service.user_service import UserService
 from service.article_service import ArticleService
 from service.comment_service import CommentService
@@ -30,7 +31,9 @@ class ArticleHandler(BaseHandler):
     def get(self, article_id):
         article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
         comments_pager = Pager(self)
-        comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, article_id)
+        comment_search_params = CommentSearchParams(self)
+        comment_search_params.article_id = article_id
+        comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, comment_search_params)
         self.render("article_detials.html", article=article, comments_pager=comments_pager)
 
 
