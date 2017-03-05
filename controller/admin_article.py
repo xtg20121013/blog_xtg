@@ -11,6 +11,7 @@ from service.article_type_service import ArticleTypeService
 from service.init_service import SiteCacheService
 from service.comment_service import CommentService
 from model.search_params.article_params import ArticleSearchParams
+from model.search_params.comment_params import CommentSearchParams
 from model.pager import Pager
 
 
@@ -146,6 +147,10 @@ class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
 
 class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
     @coroutine
+    def get(self, *require):
+        yield self.page_get()
+
+    @coroutine
     def post(self, *require):
         if require:
             if len(require) == 3:
@@ -158,6 +163,15 @@ class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
                     yield self.disable_post(article_id, comment_id, False)
                 elif action == 'delete':
                     yield self.delete_post(article_id, comment_id)
+
+    @coroutine
+    @authenticated
+    def page_get(self):
+        pager = Pager(self)
+        comment_search_params = CommentSearchParams(self)
+        comment_search_params.show_article_id_title = True
+        comments_pager = yield self.async_do(CommentService.page_comments, self.db, pager, comment_search_params)
+        self.render("admin/manage_comments.html", pager=comments_pager)
 
     @coroutine
     @authenticated

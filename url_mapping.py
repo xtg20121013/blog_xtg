@@ -52,7 +52,7 @@ handlers = [
     url(r"/admin/article/([0-9]+)", controller.admin_article.AdminArticleHandler, name="admin.article"),
     url(r"/admin/article/([0-9]+)/(delete)", controller.admin_article.AdminArticleHandler, name="admin.article.update"),
 
-    url(r"/", controller.home.HomeHandler, name="admin.manage_comments"),
+    url(r"/admin/comment", controller.admin_article.AdminArticleCommentHandler, name="admin.comments"),
     url(r"/admin/article/([0-9]+)/comment/([0-9]+)/(disable|enable|delete)",
         controller.admin_article.AdminArticleCommentHandler, name="admin.comment.update"),
 

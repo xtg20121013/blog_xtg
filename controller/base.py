@@ -6,7 +6,7 @@ import tornado.web
 from tornado import gen
 from tornado.escape import url_escape
 
-from config import session_keys
+from config import session_keys, config
 from extends.session_tornadis import Session
 from model.logined_user import LoginUser
 
@@ -98,6 +98,8 @@ class BaseHandler(tornado.web.RequestHandler):
         body = {'s': str(size)}
         if default:
             body["d"] = default;
+        else:
+            body["d"] = config['default_avatar_url']
         gravatar_url = "https://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode(body)
         return gravatar_url
