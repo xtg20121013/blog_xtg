@@ -49,5 +49,8 @@ class Pager(Dict):
         if self.pageSize != Pager.DEFAULT_PAGE_SIZE:
             url += "&pageSize={0}".format(self.pageSize)
         if params:
-            url += "&{0}".format(params)
+            if params.startswith("#"):
+                url += params
+            else:
+                url += "&{0}".format(params)
         return url

@@ -89,6 +89,12 @@ ul.comments li.comment {
 div.comment-thumbnail {
     position: absolute;
 }
+.comment-floor {
+    position: absolute;
+    margin-top: 44px;
+    width: 40px;
+    text-align: center;
+}
 .profile-thumbnail {
     position: absolute;
 }
