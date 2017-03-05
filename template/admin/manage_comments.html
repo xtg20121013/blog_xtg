@@ -29,20 +29,22 @@
                     在《<a href="{{ reverse_url('article', comment.article.id) }}" target="_blank">{{ comment.article.title }}</a>》
                     的 <span class="comment-author"><i>{{comment.floor}}楼</i></span> 发表评论：
                 </span>
-                <a class="btn btn-sm btn-info comment-handle-admin" title="回复评论"
-                   onclick="">
+                <button class="btn btn-sm btn-info comment-handle-admin" title="回复评论"
+                   onclick="replyComment('{{ reverse_url('articleComment', comment.article.id)}}', {{comment.id}}, '{{comment.floor}}楼')">
                     <span class="glyphicon glyphicon-comment"></span>
-                </a>
+                </button>
                 <button class="btn btn-sm btn-danger comment-handle-admin delete-comment-admin-btn"  title="删除评论"
-                   onclick="">
+                   onclick="delCommentCfm('{{ reverse_url("admin.comment.update", comment.article.id, comment.id, "delete")}}')">
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
                 {% if comment.disabled %}
-                    <button class="btn btn-sm btn-success comment-handle-admin enabled-comment-admin-btn" title="恢复评论">
+                    <button class="btn btn-sm btn-success comment-handle-admin enabled-comment-admin-btn" title="恢复评论"
+                     onclick="update_comment('{{ reverse_url("admin.comment.update", comment.article.id, comment.id, "enable")}}')">
                         <span class="glyphicon glyphicon-ok-sign"></span>
                     </button>
                 {% else %}
-                    <a class="btn btn-sm btn-warning comment-handle-admin disabled-comment-admin-btn" title="屏蔽评论">
+                    <a class="btn btn-sm btn-warning comment-handle-admin disabled-comment-admin-btn" title="屏蔽评论"
+                     onclick="update_comment('{{ reverse_url("admin.comment.update", comment.article.id, comment.id, "disable")}}')">
                         <span class="glyphicon glyphicon-remove-sign"></span>
                     </a>
                 {% end %}
@@ -73,4 +75,63 @@
     </ul>
     {% module Template("_macros.html", pager=pager, url=reverse_url('admin.comments'), params=None) %}
 </div>
+
+
+<!-- 信息删除确认: For delete a comment confirm -->
+<div class="modal fade" id="delCommentCfmModel">
+    <div class="modal-dialog">
+        <div class="modal-content message_align">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">确认删除评论？</h4>
+            </div>
+            <div class="modal-body">
+                <p>
+                    将该评论删除后不可恢复，您确认要删除吗？
+                </p>
+                <p>
+                    （提示：如果您只是不想显示该评论内容，可以选择将其屏蔽，而不必删除。）
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button id="delCommentCfmClick" class="btn btn-success" data-dismiss="modal">确定</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- 信息提交确认: For comment form-->
+<div class="modal fade" id="commentFormModel">
+    <div class="modal-dialog">
+        <div class="modal-content message_align">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span></button>
+                <h4 class="modal-title">提交评论（管理员）</h4>
+            </div>
+            <form id="commentForm" method="post" action="">
+                <div class="modal-body">
+                    <div class="form-group">
+                        {% module xsrf_form_html() %}
+                        <input type="hidden" name="next" value="{{ reverse_url('admin.comments') }}">
+                        <input type="hidden" name="comment_type" value="{{Constants.COMMENT_TYPE_REPLY}}">
+                        <input type="hidden" name="reply_to_id" value="">
+                        <input type="hidden" name="reply_to_floor" value="">
+                        <label for="name">昵称</label>
+                        <input class="form-control" id="name" name="author_name" readonly="true" required="" type="text" value="{{ current_user['name'] }}">
+                        <label for="email">邮箱</label>
+                        <input class="form-control" id="email" name="author_email" readonly="true" required="" type="text" value="{{ current_user['email'] }}">
+                        <label for="content">内容</label><textarea class="form-control" id="content" name="content" required=""></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="submit" id="subCommentCfmClick" class="btn btn-success">确定</button>
+                </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 {% end %}

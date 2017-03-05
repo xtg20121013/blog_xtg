@@ -49,19 +49,6 @@ function delCommentCfm(url) {
     $('#delCommentCfmModel').modal();
 }
 
-//JS For select comments to delete
-
-//function sub_JSON_data(commentIds) {
-//    console.log(commentIds);
-//    console.log(typeof commentIds);
-//    $.ajax({
-//        type:'post',
-//        url:'manage-comments/delete-comments',
-//        data: commentIds
-//    });
-//}
-//注意，可以使用Ajax技术，但是批量删除评论的情况直接使用表单会简单，因为还需要考虑整个页面的处理
-
 $(document).ready(function(){
     $('#delComments').click(function(){
         if($('.op_check_com').filter(':checked').size() > 0) {
@@ -181,4 +168,25 @@ function checkChangePasswordForm() {
         $('#changePasswordForm').submit();
         return true;
     }
+}
+
+function update_comment(url) {
+    var _xsrf = getCookie("_xsrf");
+    $.post(url, {_xsrf:_xsrf}, function (data) {
+        location.reload();
+    });
+}
+
+function delCommentCfm(url) {
+    $('#delCommentCfmClick').click(function(){
+        update_comment(url);
+    });
+    $('#delCommentCfmModel').modal();
+}
+
+function replyComment(action, reply_to_id, reply_to_floor) {
+    $('#commentForm').attr('action', action);
+    $('#commentForm input[name=reply_to_id]').val(reply_to_id);
+    $('#commentForm input[name=reply_to_floor]').val(reply_to_floor);
+    $('#commentFormModel').modal();
 }

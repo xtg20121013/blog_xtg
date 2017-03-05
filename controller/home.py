@@ -56,7 +56,11 @@ class ArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
             self.add_message('success', u'评论成功')
         else:
             self.add_message('danger', u'评论失败')
-        self.redirect(self.reverse_url('article', article_id)+"?pageNo=-1#comments")
+        next_url = self.get_argument('next', None)
+        if next_url:
+            self.redirect(next_url)
+        else:
+            self.redirect(self.reverse_url('article', article_id)+"?pageNo=-1#comments")
 
 
 class ArticleTypeHandler(BaseHandler):

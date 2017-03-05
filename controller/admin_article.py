@@ -170,6 +170,7 @@ class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
         pager = Pager(self)
         comment_search_params = CommentSearchParams(self)
         comment_search_params.show_article_id_title = True
+        comment_search_params.order_mode = CommentSearchParams.ORDER_MODE_CREATE_TIME_DESC
         comments_pager = yield self.async_do(CommentService.page_comments, self.db, pager, comment_search_params)
         self.render("admin/manage_comments.html", pager=comments_pager)
 
