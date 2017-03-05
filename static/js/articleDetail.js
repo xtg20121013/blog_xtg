@@ -1,9 +1,22 @@
-
 function update_disable(url) {
     var _xsrf = getCookie("_xsrf");
     $.post(url, {_xsrf:_xsrf}, function (data) {
         location.reload();
     });
+}
+
+function delete_comment(url) {
+    var _xsrf = getCookie("_xsrf");
+    $.post(url, {_xsrf:_xsrf}, function (data) {
+        location.reload();
+    });
+}
+
+function delCommentCfm(url) {
+    $('#delCommentCfmClick').click(function(){
+        delete_comment(url);
+    });
+    $('#delCommentCfmModel').modal();
 }
 
 function go_to_reply(comment_type, reply_to_id, reply_to_floor) {

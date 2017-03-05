@@ -156,6 +156,8 @@ class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
                     yield self.disable_post(article_id, comment_id, True)
                 elif action == 'enable':
                     yield self.disable_post(article_id, comment_id, False)
+                elif action == 'delete':
+                    yield self.delete_post(article_id, comment_id)
 
     @coroutine
     @authenticated
@@ -166,4 +168,16 @@ class AdminArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
             self.write("success")
         else:
             self.add_message('danger', u'修改失败！')
+            self.write("error")
+
+    @coroutine
+    @authenticated
+    def delete_post(self, article_id, comment_id):
+        comment_deleted = yield self.async_do(CommentService.delete_comment, self.db, article_id, comment_id)
+        if comment_deleted:
+            yield self.flush_comments_cache(Constants.FLUSH_COMMENT_ACTION_REMOVE, comment_deleted)
+            self.add_message('success', u'删除成功')
+            self.write("success")
+        else:
+            self.add_message('danger', u'删除失败！')
             self.write("error")

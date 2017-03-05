@@ -38,6 +38,15 @@ class CommentService(object):
         return updated
 
     @staticmethod
+    def delete_comment(db_session, article_id, comment_id):
+        comment = CommentService.get_comment(db_session, comment_id);
+        if comment and comment.article_id == int(article_id):
+            db_session.delete(comment)
+            db_session.commit()
+            return comment
+        return None
+
+    @staticmethod
     def page_comments(db_session, pager, article_id):
         query = db_session.query(Comment).filter(Comment.article_id == article_id)
         query = query.order_by(Comment.create_time.asc())
