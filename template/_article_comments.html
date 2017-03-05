@@ -1,5 +1,5 @@
 <ul class="comments">
-    {% if comments_pager %}
+    {% if comments_pager and comments_pager.result %}
         {% for comment in comments_pager.result %}
         <li class="comment">
             {% if comment.comment_type == Constants.COMMENT_TYPE_REPLY %}
