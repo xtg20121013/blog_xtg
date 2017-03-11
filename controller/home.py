@@ -29,7 +29,7 @@ class HomeHandler(BaseHandler):
 class ArticleHandler(BaseHandler):
     @gen.coroutine
     def get(self, article_id):
-        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
+        article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True, add_view_count=1)
         if article:
             comments_pager = Pager(self)
             comment_search_params = CommentSearchParams(self)

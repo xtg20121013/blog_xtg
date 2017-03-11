@@ -17,13 +17,17 @@ class ArticleService(object):
     SUMMARY_LIMIT = 120;
 
     @staticmethod
-    def get_article_all(db_session, article_id, show_source_type=False):
+    def get_article_all(db_session, article_id, show_source_type=False, add_view_count=None):
         query = db_session.query(Article);
         if show_source_type:
             query = query.options(joinedload(Article.source)).\
                 options(joinedload(Article.articleType).load_only("id", "name"))
-        return query.options(undefer(Article.summary), undefer(Article.content), undefer(Article.update_time)).\
+        article = query.options(undefer(Article.summary), undefer(Article.content), undefer(Article.update_time)).\
             get(article_id)
+        if article and add_view_count:
+            article.num_of_view = Article.num_of_view + add_view_count
+            db_session.commit()
+        return article
 
     @staticmethod
     def page_articles(db_session, pager, search_params):
