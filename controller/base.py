@@ -33,10 +33,11 @@ class BaseHandler(tornado.web.RequestHandler):
         yield self.init_session()
         if session_keys['login_user'] in self.session:
             self.current_user = LoginUser(self.session[session_keys['login_user']])
-        yield self.add_pv_uv()
+        self.add_pv_uv() # 与主代码异步执行，所以不用yield阻塞
 
-    #  增加pv，uv,
+    #  增加pv，uv, 调用该方法可以不用yield阻塞以达到与主代码异步执行
     #  每次调用pv+1, uv根据cookie每24小时只+1
+    #  因为要与主代码异步执行，所以要使用独立的db连接
     @gen.coroutine
     def add_pv_uv(self):
         add_pv = 1
@@ -48,7 +49,7 @@ class BaseHandler(tornado.web.RequestHandler):
             self.set_secure_cookie(cookie_keys['uv_key_name'], str(date.day), 1)
         yield SiteCacheService.add_pv_uv(self.cache_manager, add_pv, add_uv,
                                          is_pub_all=True, pubsub_manager=self.pubsub_manager)
-        yield self.async_do(BlogViewService.add_blog_view, self.db, add_pv, add_uv, date)
+        yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
 
     @gen.coroutine
     def init_session(self):

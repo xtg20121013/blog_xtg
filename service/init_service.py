@@ -350,7 +350,7 @@ class SiteCacheService(object):
                 SiteCollection.pv = yield cache_manager.\
                     call("INCRBY", site_cache_keys['pv'], add_pv)
             if add_uv:
-                SiteCollection.pv = yield cache_manager. \
+                SiteCollection.uv = yield cache_manager. \
                     call("INCRBY", site_cache_keys['uv'], add_uv)
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_view_count_updated'])
