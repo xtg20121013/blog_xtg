@@ -3,8 +3,7 @@ import logging
 import logging.handlers
 import tornado.log
 
-FILE=dict(
-    level="WARNING",
+FILE = dict(
     log_path="logs/log", # 末尾自动添加 @端口号.txt_日期
     when="D", # 以什么单位分割文件
     interval=1, # 以上面的时间单位，隔几个单位分割文件
@@ -33,5 +32,4 @@ def init(port, console_handler=False, file_handler=True, log_path=FILE['log_path
             interval=FILE['interval'],
             backupCount=FILE['backupCount'])
         channel_file.setFormatter(formatter)
-        channel_file.setLevel(FILE['level'])
         logger.addHandler(channel_file)
