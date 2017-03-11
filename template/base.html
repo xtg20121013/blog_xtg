@@ -117,7 +117,10 @@
                                 {% else %}
                                     <div class="entry-box">
                                         <h5><strong>博客统计</strong></h5>
-                                        <p>访问量：<span class="badge">{{ SiteCollection.blog_view_count }}</span></p>
+                                        <p>
+                                            今日PV：<span class="badge">{{ SiteCollection.pv }}</span>
+                                            今日UV：<span class="badge">{{ SiteCollection.uv }}</span>
+                                        </p>
                                         <p>
                                             博文总数：<span class="badge">{{ SiteCollection.article_count }}</span>
                                             评论总数：<span class="badge">{{ SiteCollection.comment_count }}</span>

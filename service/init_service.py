@@ -15,6 +15,7 @@ from model.site_info import SiteCollection
 from model.constants import Constants
 from plugin_service import PluginService
 from comment_service import CommentService
+from blog_view_service import BlogViewService
 
 logger = logging.getLogger(__name__)
 
@@ -38,6 +39,7 @@ class SiteCacheService(object):
         article_sources_updated="article_sources_updated",  # article_sources更新消息
         source_articles_count_updated="source_articles_count_updated",  # 某source下的source_articles_count更新消息
         comment_count_updated='comment_count_updated',  # comment_count更新消息
+        blog_view_count_updated='blog_view_count_updated',  # blog_view_count更新消息
     )
 
     @staticmethod
@@ -138,13 +140,17 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def query_blog_view_count(cache_manager, thread_do, db):
-        blog_view_count = yield cache_manager.call("GET", site_cache_keys['blog_view_count'])
-        if blog_view_count is not None:
-            SiteCollection.blog_view_count = int(blog_view_count)
-        if SiteCollection.blog_view_count is None:
-            SiteCollection.blog_view_count = yield thread_do(get_blog_view_count, db)
-            if SiteCollection.blog_view_count is not None:
-                yield cache_manager.call("SET", site_cache_keys['blog_view_count'], SiteCollection.blog_view_count)
+        pv = yield cache_manager.call("GET", site_cache_keys['pv'])
+        uv = yield cache_manager.call("GET", site_cache_keys['uv'])
+        if pv and uv:
+            SiteCollection.pv = pv
+            SiteCollection.uv = uv
+        if not SiteCollection.pv or not SiteCollection.uv:
+            blog_view = yield thread_do(BlogViewService.get_blog_view, db)
+            if blog_view:
+                pv = blog_view.pv
+                uv = blog_view.uv
+                yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv)
 
 # 下面是缓存更新
 
@@ -166,6 +172,8 @@ class SiteCacheService(object):
             yield SiteCacheService.query_article_sources(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['comment_count_updated']:
             yield SiteCacheService.query_comment_count(cache_manager, thread_do, db)
+        elif msg == SiteCacheService.PUB_SUB_MSGS['blog_view_count_updated']:
+            yield SiteCacheService.query_blog_view_count(cache_manager, thread_do, db)
         else:
             try:
                 ms = json.loads(msg)
@@ -228,6 +236,17 @@ class SiteCacheService(object):
             yield cache_manager.call("SET", site_cache_keys['comment_count'], comment_count)
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['comment_count_updated'])
+
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_blog_view_count(cache_manager, pv, uv, is_pub_all=False, pubsub_manager=None):
+        if pv and uv:
+            SiteCollection.pv = pv
+            SiteCollection.uv = uv
+            yield cache_manager.call("SET", site_cache_keys['pv'], pv)
+            yield cache_manager.call("SET", site_cache_keys['uv'], uv)
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_view_count_updated'])
 
     @staticmethod
     @tornado.gen.coroutine
@@ -326,10 +345,16 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def add_pv_uv(cache_manager, add_pv, add_uv, is_pub_all=False, pubsub_manager=None):
-        pass
+        if add_pv or add_uv:
+            if add_pv:
+                SiteCollection.pv = yield cache_manager.\
+                    call("INCRBY", site_cache_keys['pv'], add_pv)
+            if add_uv:
+                SiteCollection.pv = yield cache_manager. \
+                    call("INCRBY", site_cache_keys['uv'], add_uv)
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_view_count_updated'])
 
-def get_blog_view_count(db_session):
-    blog_view_count = db_session.query(BlogView).first().num_of_view
-    return blog_view_count
+
 
 
