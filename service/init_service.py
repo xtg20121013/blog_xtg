@@ -14,6 +14,7 @@ from model.models import BlogView, Comment
 from model.site_info import SiteCollection
 from model.constants import Constants
 from plugin_service import PluginService
+from comment_service import CommentService
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ class SiteCacheService(object):
         article_count_updated="article_count_updated",  # article_count更新消息
         article_sources_updated="article_sources_updated",  # article_sources更新消息
         source_articles_count_updated="source_articles_count_updated",  # 某source下的source_articles_count更新消息
+        comment_count_updated='comment_count_updated',  # comment_count更新消息
     )
 
     @staticmethod
@@ -124,6 +126,17 @@ class SiteCacheService(object):
 
     @staticmethod
     @tornado.gen.coroutine
+    def query_comment_count(cache_manager, thread_do, db):
+        comment_count = yield cache_manager.call("GET", site_cache_keys['comment_count'])
+        if comment_count is not None:
+            SiteCollection.comment_count = int(comment_count)
+        if SiteCollection.comment_count is None:
+            comment_count = yield thread_do(CommentService.get_comment_count, db)
+            if comment_count is not None:
+                yield SiteCacheService.update_comment_count(cache_manager, comment_count)
+
+    @staticmethod
+    @tornado.gen.coroutine
     def query_blog_view_count(cache_manager, thread_do, db):
         blog_view_count = yield cache_manager.call("GET", site_cache_keys['blog_view_count'])
         if blog_view_count is not None:
@@ -132,17 +145,6 @@ class SiteCacheService(object):
             SiteCollection.blog_view_count = yield thread_do(get_blog_view_count, db)
             if SiteCollection.blog_view_count is not None:
                 yield cache_manager.call("SET", site_cache_keys['blog_view_count'], SiteCollection.blog_view_count)
-
-    @staticmethod
-    @tornado.gen.coroutine
-    def query_comment_count(cache_manager, thread_do, db):
-        comment_count = yield cache_manager.call("GET", site_cache_keys['comment_count'])
-        if comment_count is not None:
-            SiteCollection.comment_count = int(comment_count)
-        if SiteCollection.comment_count is None:
-            SiteCollection.comment_count = yield thread_do(get_comment_count, db)
-            if SiteCollection.comment_count is not None:
-                yield cache_manager.call("SET", site_cache_keys['comment_count'], SiteCollection.comment_count)
 
 # 下面是缓存更新
 
@@ -162,6 +164,8 @@ class SiteCacheService(object):
             yield SiteCacheService.query_article_count(cache_manager, thread_do, db)
         elif msg == SiteCacheService.PUB_SUB_MSGS['article_sources_updated']:
             yield SiteCacheService.query_article_sources(cache_manager, thread_do, db)
+        elif msg == SiteCacheService.PUB_SUB_MSGS['comment_count_updated']:
+            yield SiteCacheService.query_comment_count(cache_manager, thread_do, db)
         else:
             try:
                 ms = json.loads(msg)
@@ -215,6 +219,15 @@ class SiteCacheService(object):
             yield cache_manager.call("SET", site_cache_keys['article_count'], article_count)
             if is_pub_all:
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['article_count_updated'])
+
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_comment_count(cache_manager, comment_count, is_pub_all=False, pubsub_manager=None):
+        if comment_count:
+            SiteCollection.comment_count = comment_count
+            yield cache_manager.call("SET", site_cache_keys['comment_count'], comment_count)
+            if is_pub_all:
+                yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['comment_count_updated'])
 
     @staticmethod
     @tornado.gen.coroutine
@@ -292,13 +305,27 @@ class SiteCacheService(object):
                     yield pubsub_manager.pub_call(json.dumps(
                         [SiteCacheService.PUB_SUB_MSGS['source_articles_count_updated'], source_id_new]))
 
+    @staticmethod
+    @tornado.gen.coroutine
+    def update_comment_action(cache_manager, action, comments, is_pub_all=False, pubsub_manager=None):
+        if comments:
+            comment_count = 1;
+            if isinstance(comments, list):
+                comment_count = len(comments)
+            if action == Constants.FLUSH_COMMENT_ACTION_ADD:
+                SiteCollection.comment_count = yield cache_manager.\
+                    call("INCRBY", site_cache_keys['comment_count'], comment_count)
+                if is_pub_all:
+                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['comment_count_updated'])
+            elif action == Constants.FLUSH_COMMENT_ACTION_REMOVE:
+                SiteCollection.comment_count = yield cache_manager.\
+                    call("DECRBY", site_cache_keys['comment_count'], comment_count)
+                if is_pub_all:
+                    yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['comment_count_updated'])
+
 
 def get_blog_view_count(db_session):
     blog_view_count = db_session.query(BlogView).first().num_of_view
     return blog_view_count
 
-
-def get_comment_count(db_session):
-    comment_count = db_session.query(Comment).count()
-    return comment_count
 

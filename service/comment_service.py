@@ -76,6 +76,11 @@ class CommentService(object):
         return None
 
     @staticmethod
+    def get_comment_count(db_session):
+        comment_count = db_session.query(Comment).count()
+        return comment_count
+
+    @staticmethod
     def get_comments_count_subquery(db_session):
         stmt = db_session.query(Comment.article_id, func.count('*').label('comments_count')). \
             group_by(Comment.article_id).subquery()

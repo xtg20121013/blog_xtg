@@ -30,6 +30,8 @@ class ArticleHandler(BaseHandler):
     @gen.coroutine
     def get(self, article_id):
         article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
+        if not article:
+            self.redirect("/")
         comments_pager = Pager(self)
         comment_search_params = CommentSearchParams(self)
         comment_search_params.article_id = article_id

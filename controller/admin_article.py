@@ -23,8 +23,8 @@ class ArticleAndCommentsFlush(object):
 
     @coroutine
     def flush_comments_cache(self, action, comments):
-        #  增删评论后的刷新缓存，还未实现
-        pass
+        yield SiteCacheService.update_comment_action(self.cache_manager, action, comments,
+                                                     is_pub_all=True, pubsub_manager=self.pubsub_manager)
 
 
 class AdminArticleHandler(BaseHandler, ArticleAndCommentsFlush):
