@@ -3,7 +3,7 @@ from datetime import datetime
 from model.constants import Constants
 from sqlalchemy.orm import contains_eager, deferred
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, DateTime, Integer, String, Boolean, Text, ForeignKey, BigInteger
+from sqlalchemy import Column, DateTime, Integer, String, Boolean, Text, ForeignKey, BigInteger, DATE
 from sqlalchemy.orm import relationship, backref
 DbBase = declarative_base()
 
@@ -162,12 +162,6 @@ class Plugin(DbBase):
 
 class BlogView(DbBase):
     __tablename__ = 'blog_view'
-    id = Column(Integer, primary_key=True)
-    num_of_view = Column(BigInteger, default=0)
-
-    @staticmethod
-    def add_view(session):
-        view = BlogView.query.first()
-        view.num_of_view += 1
-        session.add(view)
-        session.commit()
+    date = Column(DATE, primary_key=True)
+    pv = Column(BigInteger, default=0)
+    uv = Column(BigInteger, default=0)

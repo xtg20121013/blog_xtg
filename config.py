@@ -1,5 +1,10 @@
 # coding=utf-8
 
+cookie_keys = dict(
+    session_key_name="TR_SESSION_ID",
+    uv_key_name="uv_tag",
+)
+
 # session相关配置（redis实现）
 redis_session_config = dict(
     db_no=0,
@@ -7,7 +12,7 @@ redis_session_config = dict(
     port=6379,
     password=None,
     max_connections=10,
-    session_key_name="TR_SESSION_ID",
+    session_key_name=cookie_keys['session_key_name'],
     session_expires_days=7,
 )
 

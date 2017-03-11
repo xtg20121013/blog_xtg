@@ -323,6 +323,10 @@ class SiteCacheService(object):
                 if is_pub_all:
                     yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['comment_count_updated'])
 
+    @staticmethod
+    @tornado.gen.coroutine
+    def add_pv_uv(cache_manager, add_pv, add_uv, is_pub_all=False, pubsub_manager=None):
+        pass
 
 def get_blog_view_count(db_session):
     blog_view_count = db_session.query(BlogView).first().num_of_view
