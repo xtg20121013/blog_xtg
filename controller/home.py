@@ -30,13 +30,14 @@ class ArticleHandler(BaseHandler):
     @gen.coroutine
     def get(self, article_id):
         article = yield self.async_do(ArticleService.get_article_all, self.db, article_id, True)
-        if not article:
-            self.redirect("/")
-        comments_pager = Pager(self)
-        comment_search_params = CommentSearchParams(self)
-        comment_search_params.article_id = article_id
-        comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, comment_search_params)
-        self.render("article_detials.html", article=article, comments_pager=comments_pager)
+        if article:
+            comments_pager = Pager(self)
+            comment_search_params = CommentSearchParams(self)
+            comment_search_params.article_id = article_id
+            comments_pager = yield self.async_do(CommentService.page_comments, self.db, comments_pager, comment_search_params)
+            self.render("article_detials.html", article=article, comments_pager=comments_pager)
+        else:
+            self.write_error(404)
 
 
 class ArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):

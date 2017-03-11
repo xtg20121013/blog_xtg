@@ -12,6 +12,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from service.pubsub_service import PubSubService
 from extends.cache_tornadis import CacheManager
+from controller.base import BaseHandler
 
 # tornado server相关参数
 settings = dict(
@@ -22,6 +23,7 @@ settings = dict(
     cookie_secret=config['cookie_secret'],
     login_url=config['login_url'],
     debug=config['debug'],
+    default_handler_class=BaseHandler,
 )
 
 

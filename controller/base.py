@@ -94,6 +94,17 @@ class BaseHandler(tornado.web.RequestHandler):
         self.set_header("Content-Type", "application/json; charset=UTF-8")
         self.write(json)
 
+    def write_error(self, status_code, **kwargs):
+        if not config['debug']:
+            if status_code == 403:
+                self.render("403.html")
+            elif status_code == 404 or 405:
+                self.render("404.html")
+            elif status_code == 500:
+                self.render("500.html")
+        if not self._finished:
+            super(BaseHandler, self).write_error(status_code, **kwargs)
+
     def get_gravatar_url(self, email, default=None, size=40):
         body = {'s': str(size)}
         if default:
