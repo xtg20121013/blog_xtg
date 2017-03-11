@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # 读取 项目启动时，命令行上添加的参数项
     options.parse_command_line()
     # 加载日志管理
-    log_config.init(options.port, options.console_log, options.file_log, options.file_log_path)
+    log_config.init(options.port, options.console_log, options.file_log, options.file_log_path, config['log_level'])
     application = Application()
     application.listen(options.port);
     loop = tornado.ioloop.IOLoop.current();
