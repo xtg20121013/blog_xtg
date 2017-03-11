@@ -75,6 +75,7 @@ site_cache_keys = dict(
 # 站点相关配置以及tornado的相关参数
 config = dict(
     debug=True,
+    log_level="INFO",
     compress_response=True,
     xsrf_cookies=True,
     cookie_secret="kjsdhfweiofjhewnfiwehfneiwuhniu",
