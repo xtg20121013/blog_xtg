@@ -74,7 +74,7 @@ site_cache_keys = dict(
 
 # 站点相关配置以及tornado的相关参数
 config = dict(
-    debug=True,
+    debug=False,
     compress_response=True,
     xsrf_cookies=True,
     cookie_secret="kjsdhfweiofjhewnfiwehfneiwuhniu",
@@ -84,7 +84,7 @@ config = dict(
     database=database_config,
     redis_session=redis_session_config,
     session_keys=session_keys,
-    default_master=False,  # 是否为主从节点中的master节点,
+    default_master=False,  # 是否为主节点, (目前主节点作为半夜缓存刷新任务的执行者)
     navbar_styles={"inverse":"魅力黑", "default":"优雅白"},  # 导航栏样式
-    default_avatar_url = "identicon"
+    default_avatar_url="identicon"
 )
