@@ -42,7 +42,7 @@ redis_pub_sub_config = dict(
 # 数据库配置
 database_config = dict(
     engine=None,
-    engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
+    engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog_test',
     engine_setting=dict(
         echo=True,
         echo_pool=False,
@@ -89,8 +89,8 @@ config = dict(
     database=database_config,
     redis_session=redis_session_config,
     session_keys=session_keys,
-    master=False,  # 是否为主从节点中的master节点,
-    navbar_styles={"inverse":"魅力黑", "default":"优雅白"},  # 导航栏样式
+    master=True,  # 是否为主从节点中的master节点, 整个集群有且仅有一个,(要提高可用性的话可以用zookeeper来选主,该项目就暂时不做了)
+    navbar_styles={"inverse": "魅力黑", "default": "优雅白"},  # 导航栏样式
     default_avatar_url="identicon",
     application=None,  # 项目启动后会在这里注册整个server，以便在需要的地方调用，勿修改
 )

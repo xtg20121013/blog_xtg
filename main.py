@@ -12,7 +12,6 @@ from config import config, redis_pub_sub_config, site_cache_config, redis_sessio
 from controller.base import BaseHandler
 from extends.cache_tornadis import CacheManager
 from extends.session_tornadis import SessionManager
-from extends.time_task import TimeTask
 from service.init_service import flush_all_cache
 from service.pubsub_service import PubSubService
 from url_mapping import handlers
@@ -113,6 +112,11 @@ if __name__ == '__main__':
     options.logging = None  # 不用tornado自带的logging配置
     log_config.init(config['port'], config['log_console'],
                     config['log_file'], config['log_file_path'], config['log_level'])
+    # 将数据库更新到最新版本
+    if config['master']:
+        from alembic.config import main
+        main("upgrade head".split(' '), 'alembic')
+    # 创建application
     application = Application()
     application.listen(config['port'])
     # 全局注册application
@@ -124,5 +128,6 @@ if __name__ == '__main__':
     application.pubsub_manager = pubsub_manager
     # 为master节点注册定时任务
     if config['master']:
+        from extends.time_task import TimeTask
         TimeTask(config['database']['engine']).add_cache_flush_task(flush_all_cache).start_tasks()
     loop.start()
