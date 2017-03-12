@@ -42,7 +42,8 @@ redis_pub_sub_config = dict(
 # 数据库配置
 database_config = dict(
     engine=None,
-    engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog_test',
+    # engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog_test',
+    engine_url='mysql+mysqldb://root:1qaz2wsx@localhost:3306/blog_xtg',
     engine_setting=dict(
         echo=True,
         echo_pool=False,
