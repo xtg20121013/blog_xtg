@@ -10,12 +10,12 @@ from config import site_cache_keys
 from custom_service import BlogInfoService
 from extends.utils import AlchemyEncoder, Dict
 from menu_service import MenuService
-from model.models import BlogView, Comment
 from model.site_info import SiteCollection
 from model.constants import Constants
 from plugin_service import PluginService
 from comment_service import CommentService
 from blog_view_service import BlogViewService
+from config import config
 
 logger = logging.getLogger(__name__)
 
@@ -44,113 +44,117 @@ class SiteCacheService(object):
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_all(cache_manager, thread_do, db):
-        yield SiteCacheService.query_blog_info(cache_manager, thread_do, db)
-        yield SiteCacheService.query_menus(cache_manager, thread_do, db)
-        yield SiteCacheService.query_plugins(cache_manager, thread_do, db)
-        yield SiteCacheService.query_blog_view_count(cache_manager, thread_do, db)
-        yield SiteCacheService.query_article_count(cache_manager, thread_do, db)
-        yield SiteCacheService.query_comment_count(cache_manager, thread_do, db)
-        yield SiteCacheService.query_article_sources(cache_manager, thread_do, db)
+    def query_all(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
+        yield SiteCacheService.query_blog_info(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_menus(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_plugins(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_blog_view_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_article_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_comment_count(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+        yield SiteCacheService.query_article_sources(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_blog_info(cache_manager, thread_do, db):
-        SiteCollection.title = yield cache_manager.call("GET", site_cache_keys['title'])
-        SiteCollection.signature = yield cache_manager.call("GET", site_cache_keys['signature'])
-        SiteCollection.navbar = yield cache_manager.call("GET", site_cache_keys['navbar'])
-        if SiteCollection.title is None or SiteCollection.signature is None or SiteCollection.navbar is None:
+    def query_blog_info(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
+        title = yield cache_manager.call("GET", site_cache_keys['title'])
+        signature = yield cache_manager.call("GET", site_cache_keys['signature'])
+        navbar = yield cache_manager.call("GET", site_cache_keys['navbar'])
+        if title is None or signature is None or navbar is None:
             blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
-            yield SiteCacheService.update_blog_info(cache_manager, blog_info)
+            yield SiteCacheService.update_blog_info(cache_manager, blog_info, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.title = title
+            SiteCollection.signature = signature
+            SiteCollection.navbar = navbar
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_menus(cache_manager, thread_do, db):
+    def query_menus(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         menus_json = yield cache_manager.call("GET", site_cache_keys['menus'])
-        if menus_json:
-            menus = json.loads(menus_json, object_hook=Dict);
-            SiteCollection.menus = menus
+        menus = json.loads(menus_json, object_hook=Dict) if menus_json else None
         ats_json = yield cache_manager.call("GET", site_cache_keys['article_types_not_under_menu'])
-        if ats_json:
-            ats = json.loads(ats_json, object_hook=Dict);
-            SiteCollection.article_types_not_under_menu = ats
-        if SiteCollection.menus is None or SiteCollection.article_types_not_under_menu is None:
+        ats = json.loads(ats_json, object_hook=Dict) if ats_json else None
+        if menus is None or ats is None:
             menus = yield thread_do(MenuService.list_menus, db, show_types=True)
-            article_types_not_under_menu = yield thread_do(ArticleTypeService.list_article_types_not_under_menu, db)
-            yield SiteCacheService.update_menus(cache_manager, menus, article_types_not_under_menu)
+            ats = yield thread_do(ArticleTypeService.list_article_types_not_under_menu, db)
+            yield SiteCacheService.update_menus(cache_manager, menus, ats, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.menus = menus
+            SiteCollection.article_types_not_under_menu = ats
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_plugins(cache_manager, thread_do, db):
+    def query_plugins(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         plugins_json = yield cache_manager.call("GET", site_cache_keys['plugins'])
-        if plugins_json:
-            plugins = json.loads(plugins_json, object_hook=Dict);
-            SiteCollection.plugins = plugins
-        if SiteCollection.plugins is None:
+        plugins = json.loads(plugins_json, object_hook=Dict) if plugins_json else None
+        if plugins is None:
             plugins = yield thread_do(PluginService.list_plugins, db)
-            yield SiteCacheService.update_plugins(cache_manager, plugins)
+            yield SiteCacheService.update_plugins(cache_manager, plugins, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.plugins = plugins
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_article_count(cache_manager, thread_do, db):
+    def query_article_count(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         article_count = yield cache_manager.call("GET", site_cache_keys['article_count'])
-        if article_count is not None:
-            SiteCollection.article_count = int(article_count)
-        if SiteCollection.article_count is None:
+        if article_count is None:
             article_count = yield thread_do(ArticleService.get_count, db)
             if article_count is not None:
-                yield SiteCacheService.update_article_count(cache_manager, article_count)
+                yield SiteCacheService.update_article_count(cache_manager, article_count, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.article_count = int(article_count)
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_article_sources(cache_manager, thread_do, db):
+    def query_article_sources(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         article_sources_json = yield cache_manager.call("GET", site_cache_keys['article_sources'])
-        if article_sources_json:
-            article_sources = json.loads(article_sources_json, object_hook=Dict);
-            SiteCollection.article_sources = article_sources
-            yield SiteCacheService.query_source_articles_count(cache_manager)
-        if SiteCollection.article_sources is None:
+        article_sources = json.loads(article_sources_json, object_hook=Dict) if article_sources_json else None
+        if article_sources is None:
             article_sources = yield thread_do(ArticleService.get_article_sources, db)
             if article_sources is not None:
-                yield SiteCacheService.update_article_sources(cache_manager, article_sources)
+                yield SiteCacheService.update_article_sources(
+                    cache_manager, article_sources, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.article_sources = article_sources
+            yield SiteCacheService.query_source_articles_count(cache_manager)
 
     # 仅从cache中查询source下的source_articles_count
     @staticmethod
     @tornado.gen.coroutine
     def query_source_articles_count(cache_manager, source_id=None):
-        flush_all = False if source_id else True
+        flush_all_source_count = False if source_id else True
         if SiteCollection.article_sources:
             for source in SiteCollection.article_sources:
-                if not flush_all and source.id != int(source_id):
+                if not flush_all_source_count and source.id != int(source_id):
                     continue
                 count = yield cache_manager.call("GET", site_cache_keys['source_articles_count'].format(source.id))
                 source.articles_count = int(count) if count else None
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_comment_count(cache_manager, thread_do, db):
+    def query_comment_count(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         comment_count = yield cache_manager.call("GET", site_cache_keys['comment_count'])
-        if comment_count is not None:
-            SiteCollection.comment_count = int(comment_count)
-        if SiteCollection.comment_count is None:
+        if comment_count is None:
             comment_count = yield thread_do(CommentService.get_comment_count, db)
             if comment_count is not None:
-                yield SiteCacheService.update_comment_count(cache_manager, comment_count)
+                yield SiteCacheService.update_comment_count(cache_manager, comment_count, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.comment_count = int(comment_count)
 
     @staticmethod
     @tornado.gen.coroutine
-    def query_blog_view_count(cache_manager, thread_do, db):
+    def query_blog_view_count(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         pv = yield cache_manager.call("GET", site_cache_keys['pv'])
         uv = yield cache_manager.call("GET", site_cache_keys['uv'])
-        if pv and uv:
-            SiteCollection.pv = pv
-            SiteCollection.uv = uv
-        if not SiteCollection.pv or not SiteCollection.uv:
+        if not pv or not uv:
             blog_view = yield thread_do(BlogViewService.get_blog_view, db)
             if blog_view:
                 pv = blog_view.pv
                 uv = blog_view.uv
-                yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv)
+                yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv, is_pub_all, pubsub_manager)
+        else:
+            SiteCollection.pv = pv
+            SiteCollection.uv = uv
 
 # 下面是缓存更新
 
@@ -181,7 +185,6 @@ class SiteCacheService(object):
                     yield SiteCacheService.query_source_articles_count(cache_manager, ms[1])
             except Exception, e:
                 logger.exception(e)
-
 
     @staticmethod
     @tornado.gen.coroutine
@@ -328,7 +331,7 @@ class SiteCacheService(object):
     @tornado.gen.coroutine
     def update_comment_action(cache_manager, action, comments, is_pub_all=False, pubsub_manager=None):
         if comments:
-            comment_count = 1;
+            comment_count = 1
             if isinstance(comments, list):
                 comment_count = len(comments)
             if action == Constants.FLUSH_COMMENT_ACTION_ADD:
@@ -356,5 +359,24 @@ class SiteCacheService(object):
                 yield pubsub_manager.pub_call(SiteCacheService.PUB_SUB_MSGS['blog_view_count_updated'])
 
 
+"""
+刷新所有缓存，从数据库重建缓存并通知其他节点，用于定时任务校准缓存
+"""
+@tornado.gen.coroutine
+def flush_all_cache():
+    application = config['application']
+    thread_do = application.thread_executor.submit
+    db = application.db_pool()
+    cache_manager = application.cache_manager
+    pubsub_manager = application.pubsub_manager
+    yield cache_manager.call("DEL", *get_all_site_cache_keys())
+    yield SiteCacheService.query_all(cache_manager, thread_do, db, True, pubsub_manager)
 
 
+def get_all_site_cache_keys():
+    keys = site_cache_keys.values()
+    keys.remove(site_cache_keys['source_articles_count'])
+    if SiteCollection.article_sources:
+        for source in SiteCollection.article_sources:
+            keys.append(site_cache_keys['source_articles_count'].format(source.id))
+    return keys

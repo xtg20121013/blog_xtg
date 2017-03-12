@@ -41,6 +41,7 @@ redis_pub_sub_config = dict(
 
 # 数据库配置
 database_config = dict(
+    engine=None,
     engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
     engine_setting=dict(
         echo=True,
@@ -87,5 +88,6 @@ config = dict(
     session_keys=session_keys,
     default_master=False,  # 是否为主从节点中的master节点,
     navbar_styles={"inverse":"魅力黑", "default":"优雅白"},  # 导航栏样式
-    default_avatar_url = "identicon"
+    default_avatar_url="identicon",
+    application=None,  # 项目启动后会在这里注册整个server，以便在需要的地方调用，勿修改
 )

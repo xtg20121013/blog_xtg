@@ -11,8 +11,10 @@ from extends.session_tornadis import SessionManager
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from service.pubsub_service import PubSubService
+from service.init_service import flush_all_cache
 from extends.cache_tornadis import CacheManager
 from controller.base import BaseHandler
+from extends.time_task import TimeTask
 
 # tornado server相关参数
 settings = dict(
@@ -31,6 +33,7 @@ settings = dict(
 def db_poll_init():
     engine_config = config['database']['engine_url']
     engine = create_engine(engine_config, **config['database']["engine_setting"])
+    config['database']['engine'] = engine
     db_poll = sessionmaker(bind=engine)
     return db_poll;
 
@@ -65,9 +68,13 @@ if __name__ == '__main__':
     log_config.init(options.port, options.console_log, options.file_log, options.file_log_path, config['log_level'])
     application = Application()
     application.listen(options.port);
+    # 全局注册application
+    config['application'] = application
     loop = tornado.ioloop.IOLoop.current();
     # 加载redis消息监听客户端
     pubsub_manager = PubSubService(redis_pub_sub_config, application, loop)
     pubsub_manager.long_listen()
     application.pubsub_manager = pubsub_manager
+    # 注册定时任务
+    TimeTask(config['database']['engine']).add_cache_flush_task(flush_all_cache).start_tasks()
     loop.start()
