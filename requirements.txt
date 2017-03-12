@@ -1,7 +1,6 @@
-tornado
-sqlalchemy
-redis
-tornadis>=0.8.0
-futures
-alembic
-apscheduler
+tornado==4.4.2
+sqlalchemy==1.0.15
+tornadis==0.8.0
+futures==3.0.5
+alembic==0.9.1
+apscheduler==3.3.1
