@@ -1,5 +1,5 @@
 # coding=utf-8
-import os
+import os, sys
 
 import concurrent.futures
 import tornado.ioloop
@@ -107,20 +107,16 @@ def parse_command_line():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == 'upgradedb':
+            # 更新数据库结构，初次获取或更新版本后调用一次python main.py upgradedb即可
+            from alembic.config import main
+            main("upgrade head".split(' '), 'alembic')
     # 加载命令行配置
     parse_command_line()
     # 加载日志管理
     log_config.init(config['port'], config['log_console'],
                     config['log_file'], config['log_file_path'], config['log_level'])
-    if config['master']:
-        # 将数据库更新到最新版本
-        from alembic.config import main
-        main("upgrade head".split(' '), 'alembic')
-    else:
-        # 这里的代码本应该是阻塞直到数据库初始化或更新完成。
-        # 可以检测数据库版本，或者利用zookeeper管理，这里暂时先不实现了。
-        import time
-        time.sleep(3)
     # 创建application
     application = Application()
     application.listen(config['port'])
