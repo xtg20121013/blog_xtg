@@ -4,6 +4,7 @@ import controller.admin
 import controller.admin_custom
 import controller.admin_article_type
 import controller.admin_article
+import controller.super
 from tornado.web import url
 
 
@@ -55,5 +56,6 @@ handlers = [
     url(r"/admin/comment", controller.admin_article.AdminArticleCommentHandler, name="admin.comments"),
     url(r"/admin/article/([0-9]+)/comment/([0-9]+)/(disable|enable|delete)",
         controller.admin_article.AdminArticleCommentHandler, name="admin.comment.update"),
-
+    # super.init
+    url(r"/super/init", controller.super.SuperHandler, name="super.init"),
 ]
