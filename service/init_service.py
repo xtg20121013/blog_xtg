@@ -148,10 +148,9 @@ class SiteCacheService(object):
         uv = yield cache_manager.call("GET", site_cache_keys['uv'])
         if pv is None or uv is None:
             blog_view = yield thread_do(BlogViewService.get_blog_view, db)
-            if blog_view:
-                pv = blog_view.pv
-                uv = blog_view.uv
-                yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv, is_pub_all, pubsub_manager)
+            pv = blog_view.pv if blog_view else 0
+            uv = blog_view.uv if blog_view else 0
+            yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv, is_pub_all, pubsub_manager)
         else:
             SiteCollection.pv = pv
             SiteCollection.uv = uv
