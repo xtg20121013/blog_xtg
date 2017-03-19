@@ -27,3 +27,18 @@ class UserService(object):
             .update({"password":new_password})
         db_session.commit()
         return count
+
+    @staticmethod
+    def get_count(db_session):
+        return db_session.query(User).count()
+
+    @staticmethod
+    def save_user(db_session, user):
+        user_to_save = User(
+            email=user['email'],
+            username=user['username'],
+            password=user['password'],
+        )
+        db_session.add(user_to_save)
+        db_session.commit()
+        return user_to_save

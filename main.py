@@ -1,5 +1,5 @@
 # coding=utf-8
-import os
+import os, sys
 
 import concurrent.futures
 import tornado.ioloop
@@ -72,6 +72,7 @@ def parse_command_line():
     options.define("redis_db", help="redis db e.g 0", type=int)
 
     # 读取 项目启动时，命令行上添加的参数项
+    options.logging = None  # 不用tornado自带的logging配置
     options.parse_command_line()
     # 覆盖默认的config配置
     if options.port is not None:
@@ -106,16 +107,17 @@ def parse_command_line():
 
 
 if __name__ == '__main__':
+    if len(sys.argv) >= 2:
+        if sys.argv[1] == 'upgradedb':
+            # 更新数据库结构，初次获取或更新版本后调用一次python main.py upgradedb即可
+            from alembic.config import main
+            main("upgrade head".split(' '), 'alembic')
+            exit(0)
     # 加载命令行配置
     parse_command_line()
     # 加载日志管理
-    options.logging = None  # 不用tornado自带的logging配置
     log_config.init(config['port'], config['log_console'],
                     config['log_file'], config['log_file_path'], config['log_level'])
-    # 将数据库更新到最新版本
-    if config['master']:
-        from alembic.config import main
-        main("upgrade head".split(' '), 'alembic')
     # 创建application
     application = Application()
     application.listen(config['port'])

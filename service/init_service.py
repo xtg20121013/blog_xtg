@@ -146,12 +146,11 @@ class SiteCacheService(object):
     def query_blog_view_count(cache_manager, thread_do, db, is_pub_all=False, pubsub_manager=None):
         pv = yield cache_manager.call("GET", site_cache_keys['pv'])
         uv = yield cache_manager.call("GET", site_cache_keys['uv'])
-        if not pv or not uv:
+        if pv is None or uv is None:
             blog_view = yield thread_do(BlogViewService.get_blog_view, db)
-            if blog_view:
-                pv = blog_view.pv
-                uv = blog_view.uv
-                yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv, is_pub_all, pubsub_manager)
+            pv = blog_view.pv if blog_view else 0
+            uv = blog_view.uv if blog_view else 0
+            yield SiteCacheService.update_blog_view_count(cache_manager, pv, uv, is_pub_all, pubsub_manager)
         else:
             SiteCollection.pv = pv
             SiteCollection.uv = uv
@@ -225,7 +224,7 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def update_article_count(cache_manager, article_count, is_pub_all=False, pubsub_manager=None):
-        if article_count:
+        if article_count is not None:
             SiteCollection.article_count = article_count
             yield cache_manager.call("SET", site_cache_keys['article_count'], article_count)
             if is_pub_all:
@@ -234,7 +233,7 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def update_comment_count(cache_manager, comment_count, is_pub_all=False, pubsub_manager=None):
-        if comment_count:
+        if comment_count is not None:
             SiteCollection.comment_count = comment_count
             yield cache_manager.call("SET", site_cache_keys['comment_count'], comment_count)
             if is_pub_all:
@@ -243,7 +242,7 @@ class SiteCacheService(object):
     @staticmethod
     @tornado.gen.coroutine
     def update_blog_view_count(cache_manager, pv, uv, is_pub_all=False, pubsub_manager=None):
-        if pv and uv:
+        if pv is not None and uv is not None:
             SiteCollection.pv = pv
             SiteCollection.uv = uv
             yield cache_manager.call("SET", site_cache_keys['pv'], pv)
