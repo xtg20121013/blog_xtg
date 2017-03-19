@@ -1,8 +1,8 @@
+#!/bin/sh
 set -e
 
 if [ "$1" == "upgradedb" ]
 then
-    exec python main.py upgradedb
-else
-    exec supervisord -n
+    python main.py upgradedb
 fi
+exec supervisord -n

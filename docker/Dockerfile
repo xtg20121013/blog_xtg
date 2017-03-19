@@ -140,11 +140,18 @@ COPY . /home/xtg/blog-xtg
 
 WORKDIR /home/xtg/blog-xtg
 #安装项目依赖
-RUN pip install -r requirements.txt
+RUN apk add --update --no-cache mariadb-client-libs \
+	&& apk add --no-cahe --virtual .build-deps \
+		mariadb-dev \
+		gcc \
+		musl-dev \
+	&& pip install -r requirements.txt \
+	&& apk del .build-deps
 
 EXPOSE 80
 VOLUME /home/xtg/blog-xtg/logs
 
 COPY docker/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 ENTRYPOINT ["entrypoint.sh"]
-#CMD ["upgradedb"]
+CMD ["upgradedb"]
