@@ -5,6 +5,7 @@ import re
 from model.site_info import SiteCollection
 from sqlalchemy.orm import joinedload, undefer
 from model.models import Article, Source
+from model.constants import Constants
 from model.search_params.article_params import ArticleSearchParams
 from . import BaseService
 from comment_service import CommentService
@@ -134,3 +135,13 @@ class ArticleService(object):
             for source in article_sources:
                 source.fetch_articles_count()
         return article_sources
+
+    @staticmethod
+    def set_article_type_default_by_article_type_id(db_session, article_type_id, auto_commit=True):
+        try:
+            db_session.query(Article).filter(Article.articleType_id == article_type_id).\
+                update({Article.articleType_id: Constants.ARTICLE_TYPE_DEFAULT_ID})
+            if auto_commit:
+                db_session.commit()
+        except Exception, e:
+            logger.exception(e)

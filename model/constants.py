@@ -1,7 +1,7 @@
 # coding=utf-8
 
 
-class Constants:
+class Constants(object):
     SYSTEM_PLUGIN = "system_plugin"
 
     COMMENT_RANK_ADMIN = "admin"
@@ -17,6 +17,4 @@ class Constants:
     FLUSH_COMMENT_ACTION_UPDATE = "update"
     FLUSH_COMMENT_ACTION_REMOVE = "remove"
 
-    def __init__(self):
-        pass
-
+    ARTICLE_TYPE_DEFAULT_ID = 1

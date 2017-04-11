@@ -4,6 +4,7 @@ from sqlalchemy.orm import contains_eager, joinedload
 from model.models import ArticleType, ArticleTypeSetting
 from model.search_params.article_type_params import ArticleTypeSearchParams
 from . import BaseService
+from article_service import ArticleService
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +70,7 @@ class ArticleTypeService(object):
         article_type_to_delete = db_session.query(ArticleType).get(article_type_id)
         if article_type_to_delete and not article_type_to_delete.is_protected:
             # 未将文章分类移除到未分类
+            ArticleService.set_article_type_default_by_article_type_id(db_session, article_type_id, False)
             db_session.delete(article_type_to_delete.setting)
             db_session.delete(article_type_to_delete)
             db_session.commit()
