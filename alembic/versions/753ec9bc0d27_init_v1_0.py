@@ -8,7 +8,7 @@ Create Date: 2017-03-12 20:17:20.958379
 """
 from alembic import op
 import sqlalchemy as sa
-
+from model.constants import Constants
 
 # revision identifiers, used by Alembic.
 revision = '753ec9bc0d27'
@@ -142,7 +142,7 @@ def upgrade():
         dict(id=3, name=u'翻译', ),
     ])
     op.bulk_insert(articleTypes, [
-        dict(id=1,
+        dict(id=Constants.ARTICLE_TYPE_DEFAULT_ID,
              name=u'未分类',
              introduction=u'系统默认分类，不可删除。',
              setting_id=1,
