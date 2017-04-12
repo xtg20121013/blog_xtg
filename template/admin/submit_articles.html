@@ -6,6 +6,7 @@
 
 {% block private_stylesheet %}
     <link rel="stylesheet" type="text/css" media="screen" href="{{ static_url('css/bootstrap-markdown.min.css')}}">
+    <link rel="stylesheet" href="{{ static_url('css/highlight/default.min.css') }}" />
 {% end %}
 
 {% block admin_content %}
@@ -48,6 +49,7 @@
 
 {% block private_script %}
     <script src="//cdn.bootcss.com/markdown.js/0.5.0/markdown.min.js"></script>
+    <script src="{{ static_url('js/highlight/highlight.min.js') }}"></script>
     <script src="{{ static_url('js/markdown/to-markdown.js')}}"></script>
     <script src="{{ static_url('js/markdown/bootstrap-markdown.js')}}"></script>
     <script src="{{ static_url('js/markdown/locale/bootstrap-markdown.zh.js')}}"></script>

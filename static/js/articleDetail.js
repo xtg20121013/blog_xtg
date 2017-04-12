@@ -36,6 +36,7 @@ window.onload = function(){
     $('.article-content').html(markdown.toHTML(content));
     $('.article-loading').hide();
     $('.article-content').show();
+    codeHighLight();
     var scrollName = location.hash;
     if(scrollName) {
         $("body,html").animate({scrollTop: $(scrollName).offset().top}, "fast");

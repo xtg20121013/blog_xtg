@@ -12,5 +12,8 @@ $(function () {
             content_length = content.replace(markdown_reg, '').length;
             $('#markdown-counter').html(content_length);
         },
+        afterShowPreview: function (e) {
+            codeHighLight();
+        }
     })
 });
