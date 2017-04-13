@@ -3,7 +3,9 @@
 {% block title %}
     {{ article.title }}
 {% end %}
-
+{% block private_stylesheet %}
+    <link rel="stylesheet" href="{{ static_url('css/highlight/default.min.css') }}" />
+{% end %}
 {% block content %}
 <div id='article-detials' class="entry-box">
     <div class="article-entry-header">
@@ -35,7 +37,7 @@
     <div>
         <img class="article-loading" src="{{ static_url('images/loading154.gif') }}">
         <p class="article-content" style="display: none">
-            {% raw article.content %}
+            {{ article.content }}
         </p>
     </div>
     <br><br>
@@ -87,6 +89,7 @@
 {% end %}
 
 {% block script %}
-    <script src="//cdn.bootcss.com/markdown.js/0.5.0/markdown.min.js"></script>
+    <script src="{{ static_url('js/markdown/markdown.js') }}"></script>
+    <script src="{{ static_url('js/highlight/highlight.min.js') }}"></script>
     <script src="{{ static_url('js/articleDetail.js') }}"></script>
 {% end %}

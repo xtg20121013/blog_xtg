@@ -21,6 +21,13 @@ function alertXtg(category, message, timeout) {
     }
 }
 
+function codeHighLight() {
+    if(typeof(hljs) != "undefined" ) {
+        $('pre code').each(function (i, block) {
+            hljs.highlightBlock(block);
+        });
+    }
+}
 
 $(document).ready(function(){
     //$('#goTop').click(function(){
