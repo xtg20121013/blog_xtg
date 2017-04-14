@@ -1,50 +1,52 @@
 {% extends 'admin_base.html' %}
 
 {% block title2 %}
-    帮助
+帮助
 {% end %}
 
 {% block admin_content %}
 <div class="entry-box">
-    <h4><strong>Blog_mini帮助页面</strong></h4>
+    <h4><strong>blog_xtg帮助页面</strong></h4>
     <hr/>
-    <h5 style="color: #337ab7"><strong>1.Blog_mini是什么？</strong></h5>
-    <p>
-        &nbsp;&nbsp;&nbsp;Blog_mini由Python爱好者<code>香飘叶子</code>开发完成，是一个开源的个人博客系统，其采用Web框架为Flask，
-        有如下主要特点：
-    </p>
-    <p>
-        1.简洁的用户界面，使用前端框架为Bootstrap，支持响应式
-    </p>
-    <p>
-        2.强大的后台管理功能，一旦部署完成，即可轻松管理你的博客
-    </p>
-    <p>
-        3.通俗易懂的源代码，代码不会很复杂，方便阅读和理解
-    </p>
-    <p>
-        4.详细的部署文档，涵盖在CentOS/Ubuntu/Heroku等平台的部署
-    </p>
-    <p>
-        5.技术支持，对于部署和使用出现的问题，作者将提供无偿的技术支持
-    </p>
-    <p>
-        &nbsp;&nbsp;&nbsp;由于其具有以上特点，因此使用Blog_mini来作为个人博客平台，是一个非常不错的选择！
-    </p>
-    <h5 style="color: #337ab7"><strong>2.Blog_mini免费吗？</strong></h5>
-    <p>
-        &nbsp;&nbsp;&nbsp;Blog_mini是开源的，所以绝对是免费的，并且你不用担心任何版权问题，因此你可以在GitHub上获得它的全部源代码，
-        并进行修改和扩展开发。
-    </p>
-    <h5 style="color: #337ab7"><strong>3.如何获得Blog_mini的帮助与支持？</strong></h5>
-    <p>
-        &nbsp;&nbsp;&nbsp;本着自由与分享的精神，作者不仅将Blog_mini分享给大家，同时撰写了较为详尽的完整部署文档，
-        并且无偿提供技术支持，你可以在后面给出的链接地址中得到相关信息。
-    </p>
-    <h5 style="color: #337ab7"><strong>4.相关链接</strong></h5>
-    <p>Blog_mini源码地址：<a href="https://github.com/xpleaf/Blog_mini" target="_blank">https://github.com/xpleaf/Blog_mini</a></p>
-    <p>个人社交博客系统：<a href="https://flasky-mini.herokuapp.com" target="_blank">https://flasky-mini.herokuapp.com</a></p>
-    <p>51cto博客：<a href="http://xpleaf.blog.51cto.com" target="_blank">http://xpleaf.blog.51cto.com</a>（开源项目一栏）</p>
-    <strong>有问题请在51cto博客上给我留言，作者承诺将无限期提供技术支持。</strong>
+    <h5>一、blog_xtg简介</h5>
+
+    <p><a href="https://github.com/xtg20121013/blog_xtg">blog_xtg</a> 是作者<code>xiaotaogou</code>基于<a
+            href="https://github.com/xpleaf/Blog_mini">Blog_mini</a>重构的个人分布式博客系统。</p>
+
+    <p>由于不太擅长前端，所以基本照搬<a href="https://github.com/xpleaf/Blog_mini">Blog_mini</a>的页面，但是整个后端逻辑都是重写的，以下是与<a
+            href="https://github.com/xpleaf/Blog_mini">Blog_mini</a>的主要区别：</p>
+
+    <ol>
+        <li>改用tornado框架，是个基于异步IO的web server。</li>
+        <li>分布式架构，可以多进程多主机启动server实例，再通过nginx等代理服务器做负载均衡，实现横向扩展提高并发性能。</li>
+        <li>
+            提高多数主要页面访问性能。对频繁查询的组件（例如博客标题、菜单、公告、访问统计）进行缓存，优化sql查询（多条sql语句合并一次执行、仅查需要的字段，例如搜索博文列表不查博文的具体内容）以提高首页博文等主要页面访问性能。
+        </li>
+        <li>访问统计改为日pv和日uv。</li>
+        <li>博文编辑器改为markdown编辑器。</li>
+        <li>引入alembic管理数据库版本。</li>
+        <li>可使用docker快速部署。</li>
+    </ol>
+
+    <h5>二、开源声明</h5>
+
+    <ol>
+        <li><a href="https://github.com/xtg20121013/blog_xtg">blog_xtg</a>是完全开源的，你可以在GitHub获取他的全部代码，当然也可以对他进行二次开发。</li>
+        <li>作者不对任何基于<a href="https://github.com/xtg20121013/blog_xtg">blog_xtg</a>开发的或搭建的项目、站点负责。</li>
+        <li>如果没有获得作者授权，请勿将其商用。</li>
+    </ol>
+
+    <h5>三、技术支持</h5>
+
+    <p>如果你有任何疑问，可以给作者留言:</p>
+
+    <p>附： </p>
+
+    <ul>
+        <li><p>作者博客：<a href="http://blog.xiaotaogou.site">http://blog.xiaotaogou.site</a></p></li>
+        <li><p>作者简书：<a href="http://www.jianshu.com/u/dfb6bf87c35e">http://www.jianshu.com/u/dfb6bf87c35e</a></p></li>
+        <li><p>blog_xtg的github地址：<a href="https://github.com/xtg20121013/blog_xtg">https://github.com/xtg20121013/blog_xtg</a>
+        </p></li>
+    </ul>
 </div>
 {% end %}
