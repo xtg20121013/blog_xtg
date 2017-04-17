@@ -1,9 +1,9 @@
->[blog_xtg](https://github.com/xtg20121013/blog_xtg)是我个人写的一个开源分布式博客，其web框架使用的是tornado(一个基于异步IO的python web框架)。同时我把它设计成一个可以多进程多主机部署的分布式架构，如果你对异步IO的web框架感兴趣，或者对高并发分布式的架构感兴趣并处于入门阶段，那么很希望你来尝试blog_xtg，一定会有所收获。
+[blog_xtg](https://github.com/xtg20121013/blog_xtg)是我个人写的一个开源分布式博客，其web框架使用的是tornado(一个基于异步IO的python web框架)。同时我把它设计成一个可以多进程多主机部署的分布式架构，如果你对异步IO的web框架感兴趣，或者对高并发分布式的架构感兴趣并处于入门阶段，那么很希望你来尝试blog_xtg，一定会有所收获。
 
-###一、为什么写blog_xtg
+### 一、为什么写blog_xtg
 作为一个码农怎么能没有一个属于自己的个人博客呢？即便没人看，作为日记来记录编码生涯也是很有必要。其实开源的blog有很多，比如WordPress、LifeType等等，但是There are a thousand Hamlets in a thousand people's eyes（一千个读者眼里有一千个哈姆雷特），所以我还是喜欢自己写属于自己的"哈姆雷特"。既然要做新项目，那不用点新东西就会觉得没有意义。恰逢当时淘宝双11，双11会场的页面都是由node.js支撑，node.js做web项目最大的特点就是异步IO，我js不怎么熟，我就选择了python的异步IO框架tornado。但是单个tornado实例无法充分利用多核CPU的资源，所以就实现了blog_xtg这样一个简单的基于tornado的分布式架构博客。
 
-###二、blog_xtg简介
+### 二、blog_xtg简介
 首先非常感谢开源博客[Blog_mini](https://github.com/xpleaf/Blog_mini)，因为整个blog_xtg是基于[Blog_mini](https://github.com/xpleaf/Blog_mini)重构的。
 
 我不太擅长前端，所以基本照搬[Blog_mini](https://github.com/xpleaf/Blog_mini)的页面，但是整个后端逻辑都是重写的，以下是与[Blog_mini](https://github.com/xpleaf/Blog_mini)的主要区别：
@@ -18,8 +18,8 @@
 
 但是，作为一个个人blog，其实并不需要分布式的架构，即便引入了这样的架构，我依然希望其他开发者能够快捷的搭建环境并上手使用，因此blog_xtg只是简单的实现了分布式，并不能保证绝对的高可用，主从需要启动实例时手动指定，存在单点故障的可能，如果有开发者希望以此架构扩展到大型生产环境请自行配合zookeeper等实现动态选主+完整的日志分析、性能监控以及完善报警机制来保证高可用。
 
-###三、blog_xtg部署与开发环境搭建
-####1. 如果你熟悉docker，那么可以用docker来快速部署。
+### 三、blog_xtg部署与开发环境搭建
+#### 1. 如果你熟悉docker，那么可以用docker来快速部署。
 	
 	#新建数据库（理论上支持sqlalchemy支持的所有数据库，表会自动创建更新）
 	#搭建redis
@@ -28,32 +28,32 @@
 	#通过docker启动后即可访问
 	docker run -d -p 80:80 --restart=always --name blog_xtg -v xxx/config.py:/home/xtg/blog-xtg/config.py daocloud.io/xtg20121013/blog_xtg:latest
 这个镜像启动时包含两个server实例(一主一从)+nginx(动静分离、负载均衡)+supervisor(进程管理)，当然你也可以根据自己的需求构建镜像，Dockerfile在项目/docker目录下。
-####2. 构建运行环境
-######需要安装以下组件：
+#### 2. 构建运行环境
+###### 需要安装以下组件：
 
 1. python2.7(python3 没试过，不知道行不行)
 2. mysql(或者其他sqlalchemy支持的数据库)
 3. redis
 
-######clone项目，安装依赖：
+###### clone项目，安装依赖：
 
 	git clone https://github.com/xtg20121013/blog_xtg.git
 	#项目依赖（如果用的不是mysql可以将MySQL-python替换使用的数据库成所对应的依赖包）
 	pip install -r requirements.txt
-######创建数据库
-######启动redis
-######修改config.py，配置数据库、redis、日志等
-######创建数据库或更新表
+###### 创建数据库
+###### 启动redis
+###### 修改config.py，配置数据库、redis、日志等
+###### 创建数据库或更新表
 	python main.py upgradedb
-######启动server
+###### 启动server
 	python main.py --master=true --port=8888
 
-######初始化管理员账户
+###### 初始化管理员账户
 访问http://[host]:[port]/super/init注册管理员账号。
 
 注:仅没有任何管理员时才可以访问到该页面。
 
-###四、开发注意事项
+### 四、开发注意事项
 blog_xtg是个异步IO的架构，相对于常见的同步IO框架，需要注意以下几点：
 
 - IO密集型的操作请务必使用异步的client，否则无法利用到异步的优势
@@ -74,7 +74,7 @@ blog_xtg是分布式的架构，相对于单进程的项目一般需要注意以
 
 1. [开源博客blog_xtg技术架构-非阻塞IO web框架tornado](http://blog.xiaotaogou.site/article/10)
 
-###五、技术支持
+### 五、技术支持
 如果你有任何疑问，可以给我留言:
 
 附：	
