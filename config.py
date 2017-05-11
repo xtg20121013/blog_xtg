@@ -43,7 +43,9 @@ redis_pub_sub_config = dict(
 database_config = dict(
     engine=None,
     # engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
-    engine_url='mysql+mysqldb://root:1qaz2wsx@localhost:3306/blog_xtg',
+    # 如果是使用mysql+mysqldb，在确认所有的库表列都是uft8编码后，依然有字符编码报错，
+    # 可以尝试在该url末尾加上queryString charset=utf8
+    engine_url='mysql+mysqldb://root:1qaz2wsx@localhost:3306/blog_xtg?charset=utf8',
     engine_setting=dict(
         echo=True,
         echo_pool=False,
