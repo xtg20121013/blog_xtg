@@ -40,7 +40,7 @@
 	git clone https://github.com/xtg20121013/blog_xtg.git
 	#项目依赖（如果用的不是mysql可以将MySQL-python替换使用的数据库成所对应的依赖包）
 	pip install -r requirements.txt
-###### 创建数据库
+###### 创建数据库(注意使用utf-8编码)
 ###### 启动redis
 ###### 修改config.py，配置数据库、redis、日志等
 ###### 创建数据库或更新表
