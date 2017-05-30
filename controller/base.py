@@ -88,7 +88,7 @@ class BaseHandler(tornado.web.RequestHandler):
         self.current_user = None
 
     def has_message(self):
-        if session_keys['messages'] in self.session:
+        if self.session and session_keys['messages'] in self.session:
             return bool(self.session[session_keys['messages']])
         else:
             return False
