@@ -1,0 +1,938 @@
+2017-06-21 14:03:11,392 - tornado.application - ioloop.py[line:633] - ERROR - Exception in callback <functools.partial object at 0x106d9f2b8>
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 604, in _run_callback
+    ret = callback()
+  File "/Library/Python/2.7/site-packages/tornado/stack_context.py", line 275, in null_wrapper
+    return fn(*args, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 619, in <lambda>
+    self.add_future(ret, lambda f: f.result())
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/extends/pub_sub_tornadis.py", line 57, in connect_and_listen
+    yield self.first_do_after_subscribed()
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/pubsub_service.py", line 30, in first_do_after_subscribed
+    yield SiteCacheService.query_all(self.cache_manager, self.thread_do, self.db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 48, in query_all
+    yield SiteCacheService.query_blog_info(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 63, in query_blog_info
+    blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/custom_service.py", line 13, in get_blog_info
+    blog = db_session.query(BlogInfo).first()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2659, in first
+    ret = list(self[0:1])
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2457, in __getitem__
+    return list(res)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_info' doesn't exist") [SQL: u'SELECT blog_info.id AS blog_info_id, blog_info.title AS blog_info_title, blog_info.signature AS blog_info_signature, blog_info.navbar AS blog_info_navbar \nFROM blog_info \n LIMIT %s'] [parameters: (1,)]
+2017-06-21 14:04:17,318 - tornado.application - web.py[line:1548] - ERROR - Uncaught exception GET / (::1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='GET', uri='/', version='HTTP/1.1', remote_ip='::1', headers={'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Host': 'localhost:8888', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', 'Connection': 'keep-alive', 'Upgrade-Insecure-Requests': '1'})
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 1469, in _execute
+    result = yield result
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/home.py", line 24, in get
+    pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/article_service.py", line 58, in page_articles
+    pager = BaseService.query_pager(query, pager, count)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/__init__.py", line 10, in query_pager
+    pager.set_total_count(query.count())
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2980, in count
+    return self.from_self(col).scalar()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2749, in scalar
+    ret = self.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.articles' doesn't exist") [SQL: u'SELECT count(*) AS count_1 \nFROM (SELECT articles.summary AS articles_summary, articles.id AS articles_id, articles.title AS articles_title, articles.create_time AS articles_create_time, articles.num_of_view AS articles_num_of_view, articles.`articleType_id` AS `articles_articleType_id`, articles.source_id AS articles_source_id, anon_2.comments_count AS anon_2_comments_count \nFROM articles LEFT OUTER JOIN (SELECT comments.article_id AS article_id, count(%s) AS comments_count \nFROM comments GROUP BY comments.article_id) AS anon_2 ON articles.id = anon_2.article_id ORDER BY articles.create_time DESC) AS anon_1'] [parameters: ('*',)]
+2017-06-21 14:04:17,334 - tornado.application - web.py[line:996] - ERROR - Uncaught exception in write_error
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 994, in send_error
+    self.write_error(status_code, **kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 122, in write_error
+    self.render("404.html")
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 719, in render
+    html = self.render_string(template_name, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 826, in render_string
+    return t.generate(**namespace)
+  File "/Library/Python/2.7/site-packages/tornado/template.py", line 348, in generate
+    return execute()
+  File "404_html.generated.py", line 51, in _tt_execute
+    for menu in SiteCollection.menus:  # base.html:43
+TypeError: 'NoneType' object is not iterable
+2017-06-21 14:04:17,336 - tornado.access - web.py[line:1971] - ERROR - 500 GET / (::1) 34.41ms
+2017-06-21 14:04:17,355 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:04:20,346 - tornado.application - web.py[line:1548] - ERROR - Uncaught exception GET / (::1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='GET', uri='/', version='HTTP/1.1', remote_ip='::1', headers={'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Host': 'localhost:8888', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', 'Connection': 'keep-alive', 'Cookie': 'uv_tag="2|1:0|10:1498025057|6:uv_tag|4:MjE=|9b93b0d8949413cbfd2177ad839adac7a0f2c0e153332cc1695635d2455ed2ec"', 'Cache-Control': 'max-age=0', 'Upgrade-Insecure-Requests': '1'})
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 1469, in _execute
+    result = yield result
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/home.py", line 24, in get
+    pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/article_service.py", line 58, in page_articles
+    pager = BaseService.query_pager(query, pager, count)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/__init__.py", line 10, in query_pager
+    pager.set_total_count(query.count())
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2980, in count
+    return self.from_self(col).scalar()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2749, in scalar
+    ret = self.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.articles' doesn't exist") [SQL: u'SELECT count(*) AS count_1 \nFROM (SELECT articles.summary AS articles_summary, articles.id AS articles_id, articles.title AS articles_title, articles.create_time AS articles_create_time, articles.num_of_view AS articles_num_of_view, articles.`articleType_id` AS `articles_articleType_id`, articles.source_id AS articles_source_id, anon_2.comments_count AS anon_2_comments_count \nFROM articles LEFT OUTER JOIN (SELECT comments.article_id AS article_id, count(%s) AS comments_count \nFROM comments GROUP BY comments.article_id) AS anon_2 ON articles.id = anon_2.article_id ORDER BY articles.create_time DESC) AS anon_1'] [parameters: ('*',)]
+2017-06-21 14:04:20,348 - tornado.application - web.py[line:996] - ERROR - Uncaught exception in write_error
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 994, in send_error
+    self.write_error(status_code, **kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 122, in write_error
+    self.render("404.html")
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 719, in render
+    html = self.render_string(template_name, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 826, in render_string
+    return t.generate(**namespace)
+  File "/Library/Python/2.7/site-packages/tornado/template.py", line 348, in generate
+    return execute()
+  File "404_html.generated.py", line 51, in _tt_execute
+    for menu in SiteCollection.menus:  # base.html:43
+TypeError: 'NoneType' object is not iterable
+2017-06-21 14:04:20,349 - tornado.access - web.py[line:1971] - ERROR - 500 GET / (::1) 15.09ms
+2017-06-21 14:04:20,358 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:05:27,503 - tornado.application - ioloop.py[line:633] - ERROR - Exception in callback <functools.partial object at 0x110b9c310>
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 604, in _run_callback
+    ret = callback()
+  File "/Library/Python/2.7/site-packages/tornado/stack_context.py", line 275, in null_wrapper
+    return fn(*args, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 619, in <lambda>
+    self.add_future(ret, lambda f: f.result())
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/extends/pub_sub_tornadis.py", line 57, in connect_and_listen
+    yield self.first_do_after_subscribed()
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/pubsub_service.py", line 30, in first_do_after_subscribed
+    yield SiteCacheService.query_all(self.cache_manager, self.thread_do, self.db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 48, in query_all
+    yield SiteCacheService.query_blog_info(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 63, in query_blog_info
+    blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/custom_service.py", line 13, in get_blog_info
+    blog = db_session.query(BlogInfo).first()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2659, in first
+    ret = list(self[0:1])
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2457, in __getitem__
+    return list(res)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_info' doesn't exist") [SQL: u'SELECT blog_info.id AS blog_info_id, blog_info.title AS blog_info_title, blog_info.signature AS blog_info_signature, blog_info.navbar AS blog_info_navbar \nFROM blog_info \n LIMIT %s'] [parameters: (1,)]
+2017-06-21 14:05:31,634 - tornado.application - web.py[line:1548] - ERROR - Uncaught exception GET / (::1)
+HTTPServerRequest(protocol='http', host='localhost:8888', method='GET', uri='/', version='HTTP/1.1', remote_ip='::1', headers={'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Host': 'localhost:8888', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', 'Connection': 'keep-alive', 'Cookie': 'uv_tag="2|1:0|10:1498025057|6:uv_tag|4:MjE=|9b93b0d8949413cbfd2177ad839adac7a0f2c0e153332cc1695635d2455ed2ec"', 'Cache-Control': 'max-age=0', 'Upgrade-Insecure-Requests': '1'})
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 1469, in _execute
+    result = yield result
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/home.py", line 24, in get
+    pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/article_service.py", line 58, in page_articles
+    pager = BaseService.query_pager(query, pager, count)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/__init__.py", line 10, in query_pager
+    pager.set_total_count(query.count())
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2980, in count
+    return self.from_self(col).scalar()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2749, in scalar
+    ret = self.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.articles' doesn't exist") [SQL: u'SELECT count(*) AS count_1 \nFROM (SELECT articles.summary AS articles_summary, articles.id AS articles_id, articles.title AS articles_title, articles.create_time AS articles_create_time, articles.num_of_view AS articles_num_of_view, articles.`articleType_id` AS `articles_articleType_id`, articles.source_id AS articles_source_id, anon_2.comments_count AS anon_2_comments_count \nFROM articles LEFT OUTER JOIN (SELECT comments.article_id AS article_id, count(%s) AS comments_count \nFROM comments GROUP BY comments.article_id) AS anon_2 ON articles.id = anon_2.article_id ORDER BY articles.create_time DESC) AS anon_1'] [parameters: ('*',)]
+2017-06-21 14:05:31,652 - tornado.application - web.py[line:996] - ERROR - Uncaught exception in write_error
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 994, in send_error
+    self.write_error(status_code, **kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 122, in write_error
+    self.render("404.html")
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 719, in render
+    html = self.render_string(template_name, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 826, in render_string
+    return t.generate(**namespace)
+  File "/Library/Python/2.7/site-packages/tornado/template.py", line 348, in generate
+    return execute()
+  File "404_html.generated.py", line 51, in _tt_execute
+    for menu in SiteCollection.menus:  # base.html:43
+TypeError: 'NoneType' object is not iterable
+2017-06-21 14:05:31,655 - tornado.access - web.py[line:1971] - ERROR - 500 GET / (::1) 33.90ms
+2017-06-21 14:05:31,664 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:05:44,763 - tornado.application - web.py[line:1548] - ERROR - Uncaught exception GET / (127.0.0.1)
+HTTPServerRequest(protocol='http', host='127.0.0.1:8888', method='GET', uri='/', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Host': '127.0.0.1:8888', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', 'Connection': 'keep-alive', 'Upgrade-Insecure-Requests': '1'})
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 1469, in _execute
+    result = yield result
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/home.py", line 24, in get
+    pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/article_service.py", line 58, in page_articles
+    pager = BaseService.query_pager(query, pager, count)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/__init__.py", line 10, in query_pager
+    pager.set_total_count(query.count())
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2980, in count
+    return self.from_self(col).scalar()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2749, in scalar
+    ret = self.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.articles' doesn't exist") [SQL: u'SELECT count(*) AS count_1 \nFROM (SELECT articles.summary AS articles_summary, articles.id AS articles_id, articles.title AS articles_title, articles.create_time AS articles_create_time, articles.num_of_view AS articles_num_of_view, articles.`articleType_id` AS `articles_articleType_id`, articles.source_id AS articles_source_id, anon_2.comments_count AS anon_2_comments_count \nFROM articles LEFT OUTER JOIN (SELECT comments.article_id AS article_id, count(%s) AS comments_count \nFROM comments GROUP BY comments.article_id) AS anon_2 ON articles.id = anon_2.article_id ORDER BY articles.create_time DESC) AS anon_1'] [parameters: ('*',)]
+2017-06-21 14:05:44,764 - tornado.application - web.py[line:996] - ERROR - Uncaught exception in write_error
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 994, in send_error
+    self.write_error(status_code, **kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 122, in write_error
+    self.render("404.html")
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 719, in render
+    html = self.render_string(template_name, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 826, in render_string
+    return t.generate(**namespace)
+  File "/Library/Python/2.7/site-packages/tornado/template.py", line 348, in generate
+    return execute()
+  File "404_html.generated.py", line 51, in _tt_execute
+    for menu in SiteCollection.menus:  # base.html:43
+TypeError: 'NoneType' object is not iterable
+2017-06-21 14:05:44,765 - tornado.access - web.py[line:1971] - ERROR - 500 GET / (127.0.0.1) 11.59ms
+2017-06-21 14:05:44,772 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:06:00,902 - tornado.application - ioloop.py[line:633] - ERROR - Exception in callback <functools.partial object at 0x105471310>
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 604, in _run_callback
+    ret = callback()
+  File "/Library/Python/2.7/site-packages/tornado/stack_context.py", line 275, in null_wrapper
+    return fn(*args, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 619, in <lambda>
+    self.add_future(ret, lambda f: f.result())
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/extends/pub_sub_tornadis.py", line 57, in connect_and_listen
+    yield self.first_do_after_subscribed()
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/pubsub_service.py", line 30, in first_do_after_subscribed
+    yield SiteCacheService.query_all(self.cache_manager, self.thread_do, self.db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 48, in query_all
+    yield SiteCacheService.query_blog_info(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 63, in query_blog_info
+    blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/custom_service.py", line 13, in get_blog_info
+    blog = db_session.query(BlogInfo).first()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2659, in first
+    ret = list(self[0:1])
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2457, in __getitem__
+    return list(res)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_info' doesn't exist") [SQL: u'SELECT blog_info.id AS blog_info_id, blog_info.title AS blog_info_title, blog_info.signature AS blog_info_signature, blog_info.navbar AS blog_info_navbar \nFROM blog_info \n LIMIT %s'] [parameters: (1,)]
+2017-06-21 14:06:01,835 - tornado.application - web.py[line:1548] - ERROR - Uncaught exception GET / (127.0.0.1)
+HTTPServerRequest(protocol='http', host='127.0.0.1:8888', method='GET', uri='/', version='HTTP/1.1', remote_ip='127.0.0.1', headers={'Accept-Language': 'zh-CN,zh;q=0.8,en;q=0.6', 'Accept-Encoding': 'gzip, deflate, sdch, br', 'Host': '127.0.0.1:8888', 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8', 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36', 'Connection': 'keep-alive', 'Cookie': 'uv_tag="2|1:0|10:1498025144|6:uv_tag|4:MjE=|9dd05b5222e7c946e959c4ff65ddc8d0c1b190344d9d32429e1a6c5fa10a0839"', 'Cache-Control': 'max-age=0', 'Upgrade-Insecure-Requests': '1'})
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 1469, in _execute
+    result = yield result
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/home.py", line 24, in get
+    pager = yield self.async_do(ArticleService.page_articles, self.db, pager, article_search_params)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/article_service.py", line 58, in page_articles
+    pager = BaseService.query_pager(query, pager, count)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/__init__.py", line 10, in query_pager
+    pager.set_total_count(query.count())
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2980, in count
+    return self.from_self(col).scalar()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2749, in scalar
+    ret = self.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.articles' doesn't exist") [SQL: u'SELECT count(*) AS count_1 \nFROM (SELECT articles.summary AS articles_summary, articles.id AS articles_id, articles.title AS articles_title, articles.create_time AS articles_create_time, articles.num_of_view AS articles_num_of_view, articles.`articleType_id` AS `articles_articleType_id`, articles.source_id AS articles_source_id, anon_2.comments_count AS anon_2_comments_count \nFROM articles LEFT OUTER JOIN (SELECT comments.article_id AS article_id, count(%s) AS comments_count \nFROM comments GROUP BY comments.article_id) AS anon_2 ON articles.id = anon_2.article_id ORDER BY articles.create_time DESC) AS anon_1'] [parameters: ('*',)]
+2017-06-21 14:06:01,850 - tornado.application - web.py[line:996] - ERROR - Uncaught exception in write_error
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 994, in send_error
+    self.write_error(status_code, **kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 122, in write_error
+    self.render("404.html")
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 719, in render
+    html = self.render_string(template_name, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/web.py", line 826, in render_string
+    return t.generate(**namespace)
+  File "/Library/Python/2.7/site-packages/tornado/template.py", line 348, in generate
+    return execute()
+  File "404_html.generated.py", line 51, in _tt_execute
+    for menu in SiteCollection.menus:  # base.html:43
+TypeError: 'NoneType' object is not iterable
+2017-06-21 14:06:01,852 - tornado.access - web.py[line:1971] - ERROR - 500 GET / (127.0.0.1) 30.02ms
+2017-06-21 14:06:01,859 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:06:13,347 - tornado.application - concurrent.py[line:129] - ERROR - Future exception was never retrieved: Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/controller/base.py", line 52, in add_pv_uv
+    yield self.async_do(BlogViewService.add_blog_view, self.application.db_pool(), add_pv, add_uv, date)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 21, in add_blog_view
+    blog_view = BlogViewService.get_blog_view(db_session, date)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/blog_view_service.py", line 14, in get_blog_view
+    blog_view = db_session.query(BlogView).get(date)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 831, in get
+    return self._get_impl(ident, loading.load_on_ident)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 864, in _get_impl
+    return fallback_fn(self, key)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/loading.py", line 219, in load_on_ident
+    return q.one()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2718, in one
+    ret = list(self)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_view' doesn't exist") [SQL: u'SELECT blog_view.date AS blog_view_date, blog_view.pv AS blog_view_pv, blog_view.uv AS blog_view_uv \nFROM blog_view \nWHERE blog_view.date = %s'] [parameters: (datetime.date(2017, 6, 21),)]
+2017-06-21 14:07:13,973 - tornado.application - ioloop.py[line:633] - ERROR - Exception in callback <functools.partial object at 0x104401368>
+Traceback (most recent call last):
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 604, in _run_callback
+    ret = callback()
+  File "/Library/Python/2.7/site-packages/tornado/stack_context.py", line 275, in null_wrapper
+    return fn(*args, **kwargs)
+  File "/Library/Python/2.7/site-packages/tornado/ioloop.py", line 619, in <lambda>
+    self.add_future(ret, lambda f: f.result())
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/extends/pub_sub_tornadis.py", line 57, in connect_and_listen
+    yield self.first_do_after_subscribed()
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/pubsub_service.py", line 30, in first_do_after_subscribed
+    yield SiteCacheService.query_all(self.cache_manager, self.thread_do, self.db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 48, in query_all
+    yield SiteCacheService.query_blog_info(cache_manager, thread_do, db, is_pub_all, pubsub_manager)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/tornado/concurrent.py", line 237, in result
+    raise_exc_info(self._exc_info)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1021, in run
+    yielded = self.gen.throw(*exc_info)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/init_service.py", line 63, in query_blog_info
+    blog_info = yield thread_do(BlogInfoService.get_blog_info, db)
+  File "/Library/Python/2.7/site-packages/tornado/gen.py", line 1015, in run
+    value = future.result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/_base.py", line 398, in result
+    return self.__get_result()
+  File "/Library/Python/2.7/site-packages/concurrent/futures/thread.py", line 55, in run
+    result = self.fn(*self.args, **self.kwargs)
+  File "/Users/dearx/PycharmProjects/blog_xtg/service/custom_service.py", line 13, in get_blog_info
+    blog = db_session.query(BlogInfo).first()
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2659, in first
+    ret = list(self[0:1])
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2457, in __getitem__
+    return list(res)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2761, in __iter__
+    return self._execute_and_instances(context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/orm/query.py", line 2776, in _execute_and_instances
+    result = conn.execute(querycontext.statement, self._params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 914, in execute
+    return meth(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/sql/elements.py", line 323, in _execute_on_connection
+    return connection._execute_clauseelement(self, multiparams, params)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1010, in _execute_clauseelement
+    compiled_sql, distilled_params
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1146, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1341, in _handle_dbapi_exception
+    exc_info
+  File "/Library/Python/2.7/site-packages/sqlalchemy/util/compat.py", line 202, in raise_from_cause
+    reraise(type(exception), exception, tb=exc_tb, cause=cause)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/base.py", line 1139, in _execute_context
+    context)
+  File "/Library/Python/2.7/site-packages/sqlalchemy/engine/default.py", line 450, in do_execute
+    cursor.execute(statement, parameters)
+  File "/Library/Python/2.7/site-packages/MySQLdb/cursors.py", line 205, in execute
+    self.errorhandler(self, exc, value)
+  File "/Library/Python/2.7/site-packages/MySQLdb/connections.py", line 36, in defaulterrorhandler
+    raise errorclass, errorvalue
+ProgrammingError: (_mysql_exceptions.ProgrammingError) (1146, "Table 'blog_xtg.blog_info' doesn't exist") [SQL: u'SELECT blog_info.id AS blog_info_id, blog_info.title AS blog_info_title, blog_info.signature AS blog_info_signature, blog_info.navbar AS blog_info_navbar \nFROM blog_info \n LIMIT %s'] [parameters: (1,)]
