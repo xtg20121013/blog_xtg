@@ -1,0 +1,30 @@
+2017-08-08 17:40:56,776 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.225.206) 2.01ms
+2017-08-08 18:00:41,814 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.225.206) 1.98ms
+2017-08-09 07:51:47,737 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,738 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.84ms
+2017-08-09 07:51:47,749 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,749 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.33ms
+2017-08-09 07:51:47,757 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,758 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.15ms
+2017-08-09 07:51:47,766 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,767 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.31ms
+2017-08-09 07:51:47,790 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,791 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.24ms
+2017-08-09 07:51:47,799 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,800 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.19ms
+2017-08-09 07:51:47,808 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-08-09 07:51:47,809 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.24ms
+2017-08-09 08:32:16,316 - tornado.access - web.py[line:1971] - WARNING - 405 GET /phpmyadmin/index.php (47.52.92.160) 2.15ms
+2017-08-09 08:32:16,327 - tornado.access - web.py[line:1971] - WARNING - 405 GET /phpmyadmin/index.php (47.52.92.160) 1.55ms
+2017-08-09 09:11:39,032 - sqlalchemy.pool.QueuePool - pool.py[line:643] - ERROR - Exception during reset or similar
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 636, in _finalize_fairy
+    fairy._reset(pool)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 776, in _reset
+    pool._dialect.do_rollback(self)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/dialects/mysql/base.py", line 2542, in do_rollback
+    dbapi_connection.rollback()
+OperationalError: (2006, 'MySQL server has gone away')
+2017-08-09 09:48:05,982 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.05ms
+2017-08-09 15:19:49,820 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.225.193) 1.97ms
+2017-08-09 15:21:10,667 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.225.193) 3.28ms

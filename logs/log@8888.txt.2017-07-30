@@ -1,0 +1,28 @@
+2017-07-30 22:19:45,432 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,433 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 2.20ms
+2017-07-30 22:19:45,442 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,443 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 2.17ms
+2017-07-30 22:19:45,450 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,451 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.27ms
+2017-07-30 22:19:45,458 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,459 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.29ms
+2017-07-30 22:19:45,471 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,472 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.33ms
+2017-07-30 22:19:45,498 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,500 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.43ms
+2017-07-30 22:19:45,508 - tornado.general - web.py[line:1545] - WARNING - 403 POST /login.action (47.52.92.160): '_xsrf' argument missing from POST
+2017-07-30 22:19:45,509 - tornado.access - web.py[line:1971] - WARNING - 403 POST /login.action (47.52.92.160) 1.34ms
+2017-07-30 22:58:37,356 - tornado.access - web.py[line:1971] - WARNING - 405 GET /phpmyadmin/index.php (47.52.27.37) 2.11ms
+2017-07-30 22:58:37,365 - tornado.access - web.py[line:1971] - WARNING - 405 GET /phpmyadmin/index.php (47.52.27.37) 1.65ms
+2017-07-30 23:30:20,677 - tornado.access - web.py[line:1971] - WARNING - 404 GET /robots.txt (127.0.0.1) 1.68ms
+2017-07-31 17:20:25,332 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.225.190) 2.01ms
+2017-07-31 17:21:43,951 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.225.190) 1.95ms
+2017-07-31 18:51:54,500 - sqlalchemy.pool.QueuePool - pool.py[line:643] - ERROR - Exception during reset or similar
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 636, in _finalize_fairy
+    fairy._reset(pool)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 776, in _reset
+    pool._dialect.do_rollback(self)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/dialects/mysql/base.py", line 2542, in do_rollback
+    dbapi_connection.rollback()
+OperationalError: (2006, 'MySQL server has gone away')
