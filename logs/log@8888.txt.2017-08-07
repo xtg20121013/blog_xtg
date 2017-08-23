@@ -1,0 +1,22 @@
+2017-08-07 17:24:34,778 - sqlalchemy.pool.QueuePool - pool.py[line:643] - ERROR - Exception during reset or similar
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 636, in _finalize_fairy
+    fairy._reset(pool)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 776, in _reset
+    pool._dialect.do_rollback(self)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/dialects/mysql/base.py", line 2542, in do_rollback
+    dbapi_connection.rollback()
+OperationalError: (2006, 'MySQL server has gone away')
+2017-08-07 17:24:37,196 - tornado.access - web.py[line:1971] - WARNING - 405 GET /wp-login.php?action=register (127.0.0.1) 2.33ms
+2017-08-07 17:24:39,771 - tornado.access - web.py[line:1971] - WARNING - 405 GET /index.php?option=com_user&task=register (127.0.0.1) 2.44ms
+2017-08-07 17:24:42,533 - tornado.access - web.py[line:1971] - WARNING - 405 GET /user/register (127.0.0.1) 2.21ms
+2017-08-07 19:22:03,401 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.201.34) 1.95ms
+2017-08-07 19:45:03,429 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.201.34) 1.98ms
+2017-08-07 21:38:51,148 - tornado.access - web.py[line:1971] - WARNING - 405 GET /login.php (14.17.65.83) 2.01ms
+2017-08-07 23:36:24,474 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD / (127.0.0.1) 2.01ms
+2017-08-08 01:19:04,438 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD / (127.0.0.1) 1.96ms
+2017-08-08 02:56:55,422 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD / (127.0.0.1) 2.00ms
+2017-08-08 04:30:05,869 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://www.qq.com/404/search_children.js (120.132.3.151) 2.01ms
+2017-08-08 04:33:02,983 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD / (127.0.0.1) 1.95ms
+2017-08-08 06:09:04,588 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD / (127.0.0.1) 1.97ms
+2017-08-08 08:57:41,212 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.09ms

@@ -1,0 +1,14 @@
+2017-08-10 22:12:26,583 - tornado.access - web.py[line:1971] - WARNING - 405 GET /WORDPRESS (127.0.0.1) 2.32ms
+2017-08-10 22:12:27,149 - tornado.access - web.py[line:1971] - WARNING - 405 GET /wp (127.0.0.1) 2.32ms
+2017-08-10 22:12:29,359 - tornado.access - web.py[line:1971] - WARNING - 405 GET /blog (127.0.0.1) 2.32ms
+2017-08-11 04:11:43,126 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://www.qq.com/404/search_children.js (120.132.3.151) 1.99ms
+2017-08-11 10:49:42,776 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.01ms
+2017-08-11 14:45:37,048 - sqlalchemy.pool.QueuePool - pool.py[line:643] - ERROR - Exception during reset or similar
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 636, in _finalize_fairy
+    fairy._reset(pool)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 776, in _reset
+    pool._dialect.do_rollback(self)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/dialects/mysql/base.py", line 2542, in do_rollback
+    dbapi_connection.rollback()
+OperationalError: (2006, 'MySQL server has gone away')

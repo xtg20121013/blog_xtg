@@ -1,0 +1,12 @@
+2017-07-20 17:46:47,197 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.225.204) 2.09ms
+2017-07-20 17:47:30,857 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.225.204) 1.93ms
+2017-07-21 12:16:38,227 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.06ms
+2017-07-21 16:09:38,697 - sqlalchemy.pool.QueuePool - pool.py[line:643] - ERROR - Exception during reset or similar
+Traceback (most recent call last):
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 636, in _finalize_fairy
+    fairy._reset(pool)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/pool.py", line 776, in _reset
+    pool._dialect.do_rollback(self)
+  File "/usr/lib/python2.7/site-packages/sqlalchemy/dialects/mysql/base.py", line 2542, in do_rollback
+    dbapi_connection.rollback()
+OperationalError: (2006, 'MySQL server has gone away')
