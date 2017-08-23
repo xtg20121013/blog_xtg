@@ -33,7 +33,7 @@ function go_to_reply(comment_type, reply_to_id, reply_to_floor) {
 //Reset the follow value when refresh page
 window.onload = function(){
     var content = $('.article-content').text();
-    $('.article-content').html(markdown.toHTML(content));
+    $('.article-content').html(marked(content));
     $('.article-loading').hide();
     $('.article-content').show();
     codeHighLight();
