@@ -56,14 +56,14 @@
 注:仅没有任何管理员时才可以访问到该页面。
 
 ### 四、开发注意事项
-blog_xtg是个异步IO的架构，相对于常见的同步IO框架，需要注意以下几点：
+#### 1.blog_xtg是个异步IO的架构，相对于常见的同步IO框架，需要注意以下几点：
 
 - IO密集型的操作请务必使用异步的client，否则无法利用到异步的优势
 - 由于多数异步IO的框架都是单线程的，所以对于CPU密集型的操作最好交由外部系统处理，防止阻塞，大型项目可以配合消息队列使用更佳
 - 如果必须用同步的IO组件，可以配合线程池使用（blog_xtg中使用了sqlalchemy就是配合线程池使用的）
 - 如果你是ORM+线程池使用(blog_xtg中就是sqlalchemy+线程池)，一般的ORM都有lazy load的机制，在异步框架中请勿使用，因为lazy load的执行在主线程中，很可能会阻塞主线程，影响别的请求。
 
-blog_xtg是分布式的架构，相对于单进程的项目一般需要注意以下几点：
+#### 2.blog_xtg是分布式的架构，相对于单进程的项目一般需要注意以下几点：
 
 - 多实例间的日志冲突。
 - 多实例间的缓存同步。
@@ -77,7 +77,7 @@ blog_xtg是分布式的架构，相对于单进程的项目一般需要注意以
 1. [开源博客blog_xtg技术架构-非阻塞IO web框架tornado](http://blog.52xtg.com/article/10)
 
 
-对于博文编辑的markdown的问题：
+#### 3.对于博文编辑的markdown的问题：
 
 我用的是[Bootstrap Markdown](http://www.codingdrama.com/bootstrap-markdown)，好像只支持标准的markdown语法，可能大家对代码段的标注语法只知道```的形式，而真正的标准语法是代码段的每一行开头添加4个空格，如果大家不喜欢的话可以尝试更换为[marked](https://github.com/chjj/marked)，参见：[修复markdown编辑器无法编写多行code的问题 #2](https://github.com/xtg20121013/blog_xtg/pull/2)
 
