@@ -76,6 +76,11 @@ blog_xtg是分布式的架构，相对于单进程的项目一般需要注意以
 
 1. [开源博客blog_xtg技术架构-非阻塞IO web框架tornado](http://blog.52xtg.com/article/10)
 
+
+对于博文编辑的markdown的问题：
+
+我用的是[Bootstrap Markdown](http://www.codingdrama.com/bootstrap-markdown)，好像只支持标准的markdown语法，可能大家对代码段的标注语法只知道```的形式，而真正的标准语法是代码段的每一行开头添加4个空格，如果大家不喜欢的话可以尝试更换为[marked](https://github.com/chjj/marked)，参见：[修复markdown编辑器无法编写多行code的问题 #2](https://github.com/xtg20121013/blog_xtg/pull/2)
+
 ### 五、技术支持
 如果你有任何疑问，可以给我留言:
 
