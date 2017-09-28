@@ -1,7 +1,0 @@
-2017-08-02 01:34:47,837 - tornado.access - web.py[line:1971] - WARNING - 404 GET /robots.txt (127.0.0.1) 1.53ms
-2017-08-02 01:34:48,300 - tornado.access - web.py[line:1971] - WARNING - 405 GET /sitemap.xml (127.0.0.1) 2.09ms
-2017-08-02 09:41:17,127 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.01ms
-2017-08-02 13:20:51,161 - tornado.access - web.py[line:1971] - WARNING - 405 GET /phpmyadmin (124.65.231.110) 2.16ms
-2017-08-02 19:50:55,555 - tornado.access - web.py[line:1971] - WARNING - 405 HEAD /phpmyadmin/ (139.159.229.172) 1.92ms
-2017-08-02 23:03:32,417 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.201.31) 1.94ms
-2017-08-02 23:20:54,513 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.201.31) 2.00ms

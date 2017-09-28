@@ -1,7 +1,0 @@
-2017-08-18 22:59:45,788 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.201.34) 2.04ms
-2017-08-18 23:52:49,215 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.201.34) 2.00ms
-2017-08-19 01:27:55,773 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.201.34) 2.08ms
-2017-08-19 01:54:07,935 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.201.34) 1.92ms
-2017-08-19 11:45:46,371 - tornado.access - web.py[line:1971] - WARNING - 405 GET http://clientapi.ipip.net/echo.php?info=1234567890 (139.162.81.62) 2.04ms
-2017-08-19 15:51:25,779 - tornado.access - web.py[line:1971] - WARNING - 405 GET /master-status (140.205.225.200) 2.00ms
-2017-08-19 15:58:08,456 - tornado.access - web.py[line:1971] - WARNING - 405 GET /about/ (140.205.225.200) 1.95ms
