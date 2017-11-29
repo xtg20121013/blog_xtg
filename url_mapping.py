@@ -20,6 +20,7 @@ handlers = [
     # article
     url(r"/article/([0-9]+)", controller.home.ArticleHandler, name="article"),
     url(r"/article/([0-9]+)/comment", controller.home.ArticleCommentHandler, name="articleComment"),
+    url(r"/article/comment/code", controller.home.ArticleCommentCode, name="articleCommentCode"),
     # admin
     url(r"/admin/account", controller.admin.AdminAccountHandler, name="admin.account"),
     url(r"/admin/help", controller.admin.AdminHelpHandler, name="admin.help"),

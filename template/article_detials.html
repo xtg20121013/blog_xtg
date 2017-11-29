@@ -76,6 +76,13 @@
             <label for="email">邮箱</label>
             <input class="form-control" id="email" name="author_email" required="" type="text"
                    value="{{ current_user['email'] if current_user else '' }}">
+            <label for="email">验证码</label>
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="">
+                <span class="input-group-btn">
+                <button id="send_code" class="btn btn-default" type="button">发送验证码</button>
+                </span>
+            </div><!-- /input-group -->
             <label for="content">内容</label>
             <textarea class="form-control" id="content" name="content" required=""></textarea>
             <button type="submit" class="btn btn-default">
@@ -92,4 +99,24 @@
     <script src="{{ static_url('js/markdown/marked.js') }}"></script>
     <script src="{{ static_url('js/highlight/highlight.min.js') }}"></script>
     <script src="{{ static_url('js/articleDetail.js') }}"></script>
+    <script>
+        $(send_code).click(function () {
+            //禁用按钮状态
+            $("#send_code").attr("disabled","disabled");
+
+            var url = "{{ reverse_url('articleCommentCode') }}"
+            url = url + "?email=" + $(email).val()
+            $.get(url,function(data,status){
+                //打开点击状态
+                $("#send_code").removeAttr("disabled");
+                if(status == "success")
+                    if(data["code"] == 0)
+                        alert("发送成功")
+                    else
+                        alert(data["message"])
+                else
+                    alert(status)
+              });
+        })
+    </script>
 {% end %}
