@@ -1,11 +1,12 @@
 # coding=utf-8
 import logging
 
-from model.models import Comment
+from model.models import Comment,CommentCode
 from sqlalchemy.sql import func
 from sqlalchemy.orm import joinedload
 from model.search_params.comment_params import CommentSearchParams
 from . import BaseService
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -31,6 +32,27 @@ class CommentService(object):
         db_session.add(comment_to_add)
         db_session.commit()
         return comment_to_add
+
+    @staticmethod
+    def add_comments_code(db_session, email, code):
+
+        commen = CommentCode(email=email,code=code,update_time=int(time.time()))
+        db_session.add(commen)
+        try:
+            db_session.commit()
+        except Exception,e:
+            db_session.rollback()
+            db_session.query(CommentCode).filter(CommentCode.email == email,).update(
+                {CommentCode.code: code,
+                 CommentCode.update_time:int(time.time())}
+            )
+            db_session.commit()
+        return commen
+
+    @staticmethod
+    def get_comments_code(db_session, email):
+        result = db_session.query(CommentCode).filter_by(email=email).first()
+        return result
 
     @staticmethod
     def update_comment_disabled(db_session, article_id, comment_id, disabled):

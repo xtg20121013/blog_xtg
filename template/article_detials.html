@@ -78,7 +78,7 @@
                    value="{{ current_user['email'] if current_user else '' }}">
             <label for="email">验证码</label>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="">
+                <input type="text" class="form-control" name="code">
                 <span class="input-group-btn">
                 <button id="send_code" class="btn btn-default" type="button">发送验证码</button>
                 </span>

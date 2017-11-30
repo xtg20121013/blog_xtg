@@ -15,6 +15,7 @@ import smtplib
 from email.mime.text import MIMEText
 import re
 import random
+import time
 
 class HomeHandler(BaseHandler):
     @gen.coroutine
@@ -45,6 +46,7 @@ class ArticleHandler(BaseHandler):
 
 class ArticleCommentCode(BaseHandler):
 
+    @gen.coroutine
     def get(self):
         resv_email = self.get_argument("email")
         #校验邮箱地址是否正确
@@ -85,6 +87,8 @@ class ArticleCommentCode(BaseHandler):
             resp_data["message"] = "发送失败"
             self.write_json(resp_data)
         else:
+            # 把验证码写入数据库
+            commentCodeCount = yield self.async_do(CommentService.add_comments_code, self.db, resv_email,code)
             self.write_json(resp_data)
         finally:
             s.quit()
@@ -92,6 +96,28 @@ class ArticleCommentCode(BaseHandler):
 class ArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
     @gen.coroutine
     def post(self, article_id):
+
+        #校验验证码
+        commentCode = yield self.async_do(CommentService.get_comments_code,self.db,self.get_argument('author_email'))
+        try:
+            if commentCode.code != int(self.get_argument("code")):
+                raise
+
+            # 设置验证码有效期30分钟（30 * 60）
+            if (commentCode.update_time + 1800) < int(time.time()):
+                raise
+
+        except Exception,e:
+            # print e
+            self.add_message('danger', u'评论失败')
+            next_url = self.get_argument('next', None)
+            if next_url:
+                self.redirect(next_url)
+            else:
+                self.redirect(self.reverse_url('article', article_id) + "?pageNo=-1#comments")
+
+            return
+
         comment = dict(
             content=self.get_argument('content'),
             author_name=self.get_argument('author_name'),

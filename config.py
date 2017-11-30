@@ -104,3 +104,11 @@ config = dict(
     default_avatar_url="identicon",
     application=None,  # 项目启动后会在这里注册整个server，以便在需要的地方调用，勿修改
 )
+
+# 评论功能的邮件发送
+email = dict(
+    email_host="smtp.qq.com",
+    stmp_port=465,
+    email_user="root@dearx.me",  # 邮箱账户，特别注意邮箱需要打开smtp功能，比如qq邮箱，请自行搜索如何打开smtp功能
+    email_pw="password" # 邮箱的密码，特别注意邮箱需要打开smtp功能
+)

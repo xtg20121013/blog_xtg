@@ -118,6 +118,12 @@ class Comment(DbBase):
     reply_to_id = Column(Integer)
     reply_to_floor = Column(String(64))
 
+class CommentCode(DbBase):
+    __tablename__ = 'commentCode'
+    id = Column(Integer,primary_key=True)
+    email = Column(String(64),unique=True,nullable=False)
+    code = Column(Integer,nullable=False)
+    update_time = Column(Integer,nullable=False)
 
 class Article(DbBase):
     __tablename__ = 'articles'
