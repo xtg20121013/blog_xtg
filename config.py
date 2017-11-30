@@ -110,5 +110,5 @@ email = dict(
     email_host="smtp.qq.com",
     stmp_port=465,
     email_user="root@dearx.me",  # 邮箱账户，特别注意邮箱需要打开smtp功能，比如qq邮箱，请自行搜索如何打开smtp功能
-    email_pw="password" # 邮箱的密码，特别注意邮箱需要打开smtp功能
+    email_pw="8623dulinxiang" # 邮箱的密码，特别注意邮箱需要打开smtp功能
 )
