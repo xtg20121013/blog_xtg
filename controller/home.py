@@ -10,7 +10,12 @@ from model.search_params.comment_params import CommentSearchParams
 from service.user_service import UserService
 from service.article_service import ArticleService
 from service.comment_service import CommentService
-
+import config
+import smtplib
+from email.mime.text import MIMEText
+import re
+import random
+import time
 
 class HomeHandler(BaseHandler):
     @gen.coroutine
@@ -39,10 +44,80 @@ class ArticleHandler(BaseHandler):
         else:
             self.write_error(404)
 
+class ArticleCommentCode(BaseHandler):
+
+    @gen.coroutine
+    def get(self):
+        resv_email = self.get_argument("email")
+        #校验邮箱地址是否正确
+        pattern = "(.*?)@(.*?)\.(.*?)"
+        re_result = re.match(pattern,resv_email)
+
+        resp_data = {
+            "code": 0,
+            "message": "success"
+        }
+
+        if re_result == None:
+            resp_data["code"] = 1
+            resp_data["message"] = "邮箱格式错误"
+            self.write_json(resp_data)
+            return
+
+        #给此邮箱发送验证码
+
+        msg_from = config.email["email_user"]  # 发送方邮箱
+        passwd = config.email["email_pw"]  # 填入发送方邮箱的授权码
+        msg_to = resv_email  # 收件人邮箱
+
+        subject = "评论验证码"  # 主题
+        rd = random.randrange(start=0,stop=9999)
+        code = str(rd).zfill(4)
+        content = "您的评论验证码为:" + code + ",感谢您向世界发出您的声音！"  # 正文
+        msg = MIMEText(content)
+        msg['Subject'] = subject
+        msg['From'] = msg_from
+        msg['To'] = msg_to
+        try:
+            s = smtplib.SMTP_SSL(config.email["email_host"],config.email["stmp_port"])  # 邮件服务器及端口号
+            s.login(msg_from, passwd)
+            s.sendmail(msg_from, msg_to, msg.as_string())
+        except Exception, e:
+            resp_data["code"] = 1
+            resp_data["message"] = "发送失败"
+            self.write_json(resp_data)
+        else:
+            # 把验证码写入数据库
+            commentCodeCount = yield self.async_do(CommentService.add_comments_code, self.db, resv_email,code)
+            self.write_json(resp_data)
+        finally:
+            s.quit()
 
 class ArticleCommentHandler(BaseHandler, ArticleAndCommentsFlush):
     @gen.coroutine
     def post(self, article_id):
+
+        #校验验证码
+        commentCode = yield self.async_do(CommentService.get_comments_code,self.db,self.get_argument('author_email'))
+        try:
+            if commentCode.code != int(self.get_argument("code")):
+                raise
+
+            # 设置验证码有效期30分钟（30 * 60）
+            if (commentCode.update_time + 1800) < int(time.time()):
+                raise
+
+        except Exception,e:
+            # print e
+            self.add_message('danger', u'评论失败')
+            next_url = self.get_argument('next', None)
+            if next_url:
+                self.redirect(next_url)
+            else:
+                self.redirect(self.reverse_url('article', article_id) + "?pageNo=-1#comments")
+
+            return
+
         comment = dict(
             content=self.get_argument('content'),
             author_name=self.get_argument('author_name'),
