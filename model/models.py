@@ -113,7 +113,7 @@ class Comment(DbBase):
     article_id = Column(Integer, ForeignKey('articles.id'))
     disabled = Column(Boolean, default=False)
     comment_type = Column(String(64), default=Constants.COMMENT_TYPE_COMMENT)
-    rank = Column(String(64), default=Constants.COMMENT_RANK_NORMAL)
+    rank = Column(String(64), name='rk', default=Constants.COMMENT_RANK_NORMAL)
     floor = Column(Integer, nullable=False)
     reply_to_id = Column(Integer)
     reply_to_floor = Column(String(64))

@@ -1,4 +1,5 @@
 # coding=utf-8
+from urllib import quote_plus as urlquote
 
 cookie_keys = dict(
     session_key_name="TR_SESSION_ID",
@@ -45,7 +46,7 @@ database_config = dict(
     # engine_url='postgresql+psycopg2://mhq:1qaz2wsx@localhost:5432/blog',
     # 如果是使用mysql+mysqldb，在确认所有的库表列都是uft8编码后，依然有字符编码报错，
     # 可以尝试在该url末尾加上queryString charset=utf8
-    engine_url='mysql+mysqldb://root:1qaz2wsx@localhost:3306/blog_xtg?charset=utf8',
+    engine_url='mysql+mysqlconnector://root:%s@localhost:3306/blog_xtg?charset=utf8' % urlquote('MyPass@123'),
     engine_setting=dict(
         echo=False,  # print sql
         echo_pool=False,
@@ -86,9 +87,9 @@ site_cache_keys = dict(
 # 站点相关配置以及tornado的相关参数
 config = dict(
     debug=False,
-    log_level="WARNING",
-    log_console=False,
-    log_file=True,
+    log_level="INFO",
+    log_console=True,
+    log_file=False,
     log_file_path="logs/log",  # 末尾自动添加 @端口号.txt_日期
     compress_response=True,
     xsrf_cookies=True,

@@ -110,7 +110,7 @@ def upgrade():
     sa.Column('article_id', sa.Integer(), nullable=True),
     sa.Column('disabled', sa.Boolean(), nullable=True),
     sa.Column('comment_type', sa.String(length=64), nullable=True),
-    sa.Column('rank', sa.String(length=64), nullable=True),
+    sa.Column('rk', sa.String(length=64), nullable=True),
     sa.Column('floor', sa.Integer(), nullable=False),
     sa.Column('reply_to_id', sa.Integer(), nullable=True),
     sa.Column('reply_to_floor', sa.String(length=64), nullable=True),

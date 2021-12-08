@@ -4,4 +4,4 @@ tornadis==0.8.0
 futures==3.0.5
 alembic==0.9.1
 apscheduler==3.3.1
-MySQL-python==1.2.5
+mysql-connector-python==8.0.23
